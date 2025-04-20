@@ -1,0 +1,46 @@
+
+
+"standard baabnq:
+
+    "(A::Int, B::Int) => (Prod::Int)
+    lab Math::Mul;
+        sub Stack::Swap; pull _b;
+        sub Stack::Swap; pull _a;
+
+        put _c = 0;
+
+        lab Math::Mul::Loop;
+            jump Math::Mul::Done ~ _a == 0;
+
+            put _c = _c + _b;
+            put _a = _a + 1;
+
+            jump Math::Mul::Loop;
+        lab Math::Mul::Done;
+
+        push _c;
+        sub Stack::Swap;
+        return;
+
+
+"prototype:
+"variables would be scoped
+"same with labels
+    
+
+    func Math::Mul
+        (Int a, Int b) => (Int c)
+    {
+        put c = 0;
+
+        lab Math::Mul::Loop;
+            jump Math::Mul::Done ~ a == 0;
+
+            put c = c + b;
+            put a = a + 1;
+
+            jump Math::Mul::Loop;
+        lab Math::Mul::Done;
+    }
+
+
