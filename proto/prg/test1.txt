@@ -1,0 +1,47 @@
+
+"(A::Int, B::Int) => (Prod::Int)
+func mul
+{
+    pull b;
+    pull a;
+
+    put c = 0;
+
+    lab loop;
+        jump done ~ a == 0;
+
+        put c = c + b;
+        put a = a + 1;
+
+        jump loop;
+    lab done;
+
+    push c; 
+}
+
+
+func main
+{
+    in 10;
+    in 20;
+    call mul
+    out _;
+
+    print _;
+}
+
+
+
+func Fac
+{
+    pull n;
+
+    save;
+    push n - 1;
+    sub Fac;
+    load;
+
+    push n;
+    sub Math::Mul;
+}
+
