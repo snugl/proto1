@@ -50,6 +50,11 @@ def tokenize(raw):
     return stream[::-1]
 
 
+class sym:
+    ops = ('+', '-', '|', '&', '^', '>>', '<<', '==', '!=', '<', '>')
+    cond = '~'
+
+
 
 @dataclass
 class ast:
@@ -69,7 +74,7 @@ class ast:
         def parse_expr(cls, stream):
             left = ast.expr.parse_factor(stream)
 
-            if stream[-1] not in ('+', '-', '|', '&', '^', '>>', '<<'):
+            if stream[-1] not in sym.ops:
                 return left
 
             op = stream.pop()
@@ -107,28 +112,28 @@ class ast:
 
 
     @dataclass
-    class pull:
+    class _pull:
         expr : typing.Any 
         @classmethod
         def parse(cls, stream):
             return cls(ast.expr.parse(stream))
 
     @dataclass
-    class push:
+    class _push:
         expr : typing.Any
         @classmethod
         def parse(cls, stream):
             return cls(ast.expr.parse(stream))
 
     @dataclass
-    class print:
+    class _print:
         expr : typing.Any
         @classmethod
         def parse(cls, stream):
             return cls(ast.expr.parse(stream))
 
     @dataclass
-    class put:
+    class _put:
         target : typing.Any
         expr   : typing.Any
         @classmethod
@@ -140,28 +145,69 @@ class ast:
 
 
     @dataclass
-    class lab:
-        iden : str
+    class _lab:
+        label : str
         @classmethod
         def parse(cls, stream):
             return cls(stream.pop())
             
 
-    class jump: pass
-    class sub:  pass
+    @dataclass
+    class _jump:
+        label : str
+        cond  : typing.Any
+        @classmethod
+        def parse(cls, stream):
+            label = stream.pop()
+            
+            if stream[-1] != sym.cond:
+                return cls(label, cond=None)
 
-    class save:
+            assert stream.pop() == sym.cond
+            cond = ast.expr.parse(stream)
+            return cls(label, cond)
+
+    @dataclass
+    class _sub:
+        label : str
+        cond  : typing.Any
+        @classmethod
+        def parse(cls, stream):
+            label = stream.pop()
+            
+            if stream[-1] != sym.cond:
+                return cls(label, cond=None)
+
+            assert stream.pop() == sym.cond
+            cond = ast.expr.parse(stream)
+            return cls(label, cond)
+
+    class _save:
         @classmethod
         def parse(cls, _):
             return cls()
-    class load:
+    class _load:
         @classmethod
         def parse(cls, _):
             return cls()
+
+    @dataclass
+    class _in:
+        expr : typing.Any
+        @classmethod
+        def parse(cls, stream):
+            return cls(ast.expr.parse(stream))
+
+    @dataclass
+    class _out:
+        expr : typing.Any
+        @classmethod
+        def parse(cls, stream):
+            return cls(ast.expr.parse(stream))
 
 
     @dataclass
-    class rout:
+    class _rout:
         name  : str
         nodes : typing.Any
 
@@ -182,7 +228,8 @@ class ast:
         while stream and stream[-1] != '}':
             word = stream.pop()
 
-            node = getattr(ast, word).parse(stream)
+            name = f"_{word}"
+            node = getattr(ast, name).parse(stream)
             assert stream.pop() == ';'    
             print(node)
 
