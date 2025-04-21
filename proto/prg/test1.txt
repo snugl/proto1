@@ -1,6 +1,6 @@
 
-"(A::Int, B::Int) => (Prod::Int)
-func mul
+"(Int a, Int b) => (Int c)
+rout Math::Mul
 {
     pull b;
     pull a;
@@ -20,28 +20,32 @@ func mul
 }
 
 
-func main
+
+"(Int a) => (Int !a)
+rout Math::Fac
+{
+    pull n;
+
+    save;
+    push n - 1;
+    sub Math::Fac;
+    load;
+
+    push n;
+    sub Math::Mul;
+}
+
+
+
+rout main
 {
     in 10;
     in 20;
-    call mul
+    sub Math::Mul;
     out _;
 
     print _;
 }
 
 
-
-func Fac
-{
-    pull n;
-
-    save;
-    push n - 1;
-    sub Fac;
-    load;
-
-    push n;
-    sub Math::Mul;
-}
 
