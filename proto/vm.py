@@ -43,7 +43,7 @@ def run(prog):
             case 'store': mem[arg] = acc
             case 'jump':  pc = arg
             case 'branch':
-                if acc == 0: pc = arg
+                if acc != 0: pc = arg
             case 'call':
                 stack.append(pc + 1)
                 pc = arg
