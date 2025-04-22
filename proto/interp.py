@@ -59,6 +59,15 @@ class sym:
 @dataclass
 class ast:
     nodes : list[typing.Any]
+
+    def __iter__(self):
+        return iter(self.nodes)
+
+    def __len__(self):
+        return len(self.nodes)
+
+    def __getitem__(self, key):
+        return self.nodes[key]
     
 
     @dataclass
@@ -208,18 +217,41 @@ class ast:
 
     @dataclass
     class _rout:
+        #parse
         name  : str
         nodes : typing.Any
+
+        #eval
+        labels : typing.Any = field(default_factory=lambda: {})
+        locals : typing.Any = field(default_factory=lambda: {})
+        exec_index : int = 0
+
+        pending_in  : typing.Any = field(default_factory=lambda: {})
+        pending_out : typing.Any = field(default_factory=lambda: {})
+        
+        def resolve(self):
+            for index, node in enumerate(self.nodes):
+                if type(node) is not ast._lab:
+                    continue
+
+                self.labels[node.label] = index
+
+        def eval(self, globals):
+            pass            
+
+
 
         @classmethod
         def parse(cls, stream):
             name    = stream.pop()
             assert stream.pop() == "{"
-            nodes = ast.parse(stream)
+            subnodes = ast.parse(stream)
             assert stream.pop() == "}"
 
             stream.append(';')
-            return cls(name, nodes)
+            node = cls(name, subnodes)
+            node.resolve()
+            return node
 
     @classmethod
     def parse(cls, stream):
@@ -230,8 +262,7 @@ class ast:
 
             name = f"_{word}"
             node = getattr(ast, name).parse(stream)
-            assert stream.pop() == ';'    
-            print(node)
+            assert stream.pop() == ';'
 
             nodes.append(node)
 
@@ -239,7 +270,15 @@ class ast:
 
     
 
-    
+#global execution environment
+class env:
+    stack : list[int] = field(default_factory=lambda: [])
+
+    def __init__(self, root_node):
+        self.map = {
+            x.name : x for x in root_node
+            if type(x) is ast._rout
+        }
 
 
 
@@ -248,7 +287,7 @@ def compile(path):
         src = f.read()
 
     stream = tokenize(src)
-    ast.parse(stream)
+    root = ast.parse(stream)
 
 
 def main():
