@@ -1,5 +1,30 @@
 const 10
+push
+pull
 store 0
-const 20
-add 0
+const 30
+push
+pull
+store 1
+load 1
+push
+load 0
+push
+load 0
+push
+pull
+store 100
+pull
+add 100
+push
+pull
+store 100
+pull
+sub 100
+push
+pull
+store 2
+load 2
+push
+pull
 debug

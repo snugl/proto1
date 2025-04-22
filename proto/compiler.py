@@ -118,6 +118,25 @@ class ast:
             return ast.expr.parse_expr(stream)
 
 
+        def generate(self, output, locals):
+            match self.kind:
+                case 'num':
+                    output('const', self.content)
+                    output('push')
+                case 'var':
+                    output('load', locals[self.content])
+                    output('push')
+                case 'op':
+                    self.left.generate(output, locals)
+                    self.right.generate(output, locals)
+                    output('pull')
+                    output('store', 100) # 100 compiler temp
+                    output('pull')
+                    output({
+                        '+': 'add',
+                        '-': 'sub',
+                    }[self.content], 100)
+                    output('push')
 
 
     @dataclass
@@ -135,11 +154,18 @@ class ast:
             return cls(ast.expr.parse(stream))
 
     @dataclass
-    class _print:
+    class _debug:
         expr : typing.Any
         @classmethod
         def parse(cls, stream):
             return cls(ast.expr.parse(stream))
+
+        def generate(self, output, locals, _):
+            self.expr.generate(output, locals)
+            output('pull')
+            output('debug')
+
+
 
     @dataclass
     class _put:
@@ -151,6 +177,15 @@ class ast:
             assert stream.pop() == '='
             expr = ast.expr.parse(stream)
             return cls(target, expr)
+
+        def generate(self, output, locals, allocator):
+            if self.target not in locals.keys():
+                locals[self.target] = next(allocator)
+
+            self.expr.generate(output, locals)
+            output('pull')
+            output('store', locals[self.target])
+
 
 
     @dataclass
@@ -222,22 +257,14 @@ class ast:
         nodes : typing.Any
 
         #eval
-        labels : typing.Any = field(default_factory=lambda: {})
         locals : typing.Any = field(default_factory=lambda: {})
-        exec_index : int = 0
 
-        pending_in  : typing.Any = field(default_factory=lambda: {})
-        pending_out : typing.Any = field(default_factory=lambda: {})
-        
-        def resolve(self):
-            for index, node in enumerate(self.nodes):
-                if type(node) is not ast._lab:
-                    continue
+        def generate(self, output):
+            allocator = iter(range(16))
+            
+            for node in self.nodes:
+                node.generate(output, self.locals, allocator)
 
-                self.labels[node.label] = index
-
-        def eval(self, globals):
-            pass            
 
 
 
@@ -250,7 +277,6 @@ class ast:
 
             stream.append(';')
             node = cls(name, subnodes)
-            node.resolve()
             return node
 
     @classmethod
@@ -268,11 +294,40 @@ class ast:
 
         return cls(nodes)
 
+    def generate(self, output):
+        table = {}
+
+        for rout_node in self.nodes:
+            table[rout_node.name] = output.address()
+            rout_node.generate(output)
+
+        return table
+
+    
 
 
+@dataclass
+class emission:
+    cmds : typing.Any = field(default_factory=lambda: [])
 
-def 
+    @dataclass
+    class command: 
+        inst : str
+        arg : typing.Any
 
+        def render(self):
+            str_arg = self.arg if self.arg is not None else ''
+            return f"{self.inst} {str_arg}".strip()
+
+    def __call__(self, inst, arg=None):
+        cmd = emission.command(inst, arg)
+        self.cmds.append(cmd)
+
+    def address(self):
+        return len(self.cmds)
+
+    def render(self):
+        return "\n".join(map(lambda x: x.render(), self.cmds))
 
 
     
@@ -285,6 +340,11 @@ def compile(path):
     stream = tokenize(src)
     root = ast.parse(stream)
 
+    output = emission()
+    sym_table = root.generate(output)
+    
+    with open('build.txt', "w") as f:
+        f.write(output.render())
 
 
 
