@@ -1,0 +1,10 @@
+
+
+
+rout main
+{
+    put a = 10;
+    put b = 30;
+    put c = b - (a + a);
+    debug c;
+}
