@@ -41,8 +41,8 @@ rout main
 {
     in 10;
     in 20;
-    sub Math::Mul;
     out _;
+    sub Math::Mul;
 
     print _;
 }
