@@ -268,18 +268,14 @@ class ast:
 
         return cls(nodes)
 
+
+
+
+def 
+
+
+
     
-
-#global execution environment
-class env:
-    stack : list[int] = field(default_factory=lambda: [])
-
-    def __init__(self, root_node):
-        self.map = {
-            x.name : x for x in root_node
-            if type(x) is ast._rout
-        }
-
 
 
 def compile(path):
@@ -288,6 +284,8 @@ def compile(path):
 
     stream = tokenize(src)
     root = ast.parse(stream)
+
+
 
 
 def main():
