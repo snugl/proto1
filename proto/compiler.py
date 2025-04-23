@@ -135,6 +135,8 @@ class ast:
                     output({
                         '+': 'add',
                         '-': 'sub',
+                        '>': 'greater', #acc is greater
+                        '<': 'lesser',  #acc is lesser
                     }[self.content], 100)
                     output('push')
 
@@ -215,11 +217,14 @@ class ast:
             return cls(label, cond)
 
         def generate(self, output, ctx):
+            target_label = emission.label(self.label, output)
             if self.cond is None:
-                output('jump', emission.label(self.label, output))
+                output('jump', target_label)
 
             else:
-                print("TODO: jump cond")
+                self.cond.generate(output, ctx.vars)
+                output('pull')
+                output('branch', target_label)
 
     @dataclass
     class _sub:

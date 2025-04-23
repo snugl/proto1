@@ -36,6 +36,8 @@ def run(prog):
             case 'const': acc = int(arg)
             case 'add':   acc += mem[arg]
             case 'sub':   acc -= mem[arg]
+            case 'greater': acc = acc > mem[arg]
+            case 'lesser' : acc = acc < mem[arg]
             #case 'equal':   acc -= mem[arg]
             case 'push':  stack.append(acc)
             case 'pull':  acc = stack.pop()

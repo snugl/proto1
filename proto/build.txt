@@ -29,4 +29,14 @@ load 2
 push
 pull
 debug
-jump 8
+load 2
+push
+const 1000000
+push
+pull
+store 100
+pull
+lesser 100
+push
+pull
+branch 8
