@@ -194,6 +194,9 @@ class ast:
         @classmethod
         def parse(cls, stream):
             return cls(stream.pop())
+
+        def generate(self, output, _):
+            output.define(self.label)
             
 
     @dataclass
@@ -210,6 +213,13 @@ class ast:
             assert stream.pop() == sym.cond
             cond = ast.expr.parse(stream)
             return cls(label, cond)
+
+        def generate(self, output, ctx):
+            if self.cond is None:
+                output('jump', emission.label(self.label, output))
+
+            else:
+                print("TODO: jump cond")
 
     @dataclass
     class _sub:
@@ -260,20 +270,13 @@ class ast:
         @dataclass
         class _ctx:
             vars : typing.Any
-            label_map : typing.Any
             var_allocer : typing.Iterator
-
-        def scan_labels(self, offset):
-            for node in self.nodes:
-                if type(node) is ast._lab:
-                    print(node)
 
 
         def generate(self, output):
             #build compilation context
             ctx = self._ctx(
                 vars = {},
-                label_map = self.scan_labels(output.address()),
                 var_allocer = iter(range(16))
             )
             
@@ -324,6 +327,7 @@ class ast:
 @dataclass
 class emission:
     cmds : typing.Any = field(default_factory=lambda: [])
+    labels : typing.Any = field(default_factory=lambda: {})
 
     @dataclass
     class command: 
@@ -331,8 +335,20 @@ class emission:
         arg : typing.Any
 
         def render(self):
-            str_arg = self.arg if self.arg is not None else ''
+            str_arg = str(self.arg) if self.arg is not None else ''
             return f"{self.inst} {str_arg}".strip()
+
+    @dataclass
+    class label:
+        name : str
+        emission : typing.Any
+
+        def __str__(self):
+            return str(self.emission.labels[self.name])
+
+    def define(self, name):
+        self.labels[name] = self.address()
+
 
     def __call__(self, inst, arg=None):
         cmd = emission.command(inst, arg)
