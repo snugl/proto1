@@ -118,17 +118,17 @@ class ast:
             return ast.expr.parse_expr(stream)
 
 
-        def generate(self, output, locals):
+        def generate(self, output, vars):
             match self.kind:
                 case 'num':
                     output('const', self.content)
                     output('push')
                 case 'var':
-                    output('load', locals[self.content])
+                    output('load', vars[self.content])
                     output('push')
                 case 'op':
-                    self.left.generate(output, locals)
-                    self.right.generate(output, locals)
+                    self.left.generate(output, vars)
+                    self.right.generate(output, vars)
                     output('pull')
                     output('store', 100) # 100 compiler temp
                     output('pull')
@@ -160,8 +160,8 @@ class ast:
         def parse(cls, stream):
             return cls(ast.expr.parse(stream))
 
-        def generate(self, output, locals, _):
-            self.expr.generate(output, locals)
+        def generate(self, output, ctx):
+            self.expr.generate(output, ctx.vars)
             output('pull')
             output('debug')
 
@@ -178,13 +178,13 @@ class ast:
             expr = ast.expr.parse(stream)
             return cls(target, expr)
 
-        def generate(self, output, locals, allocator):
-            if self.target not in locals.keys():
-                locals[self.target] = next(allocator)
+        def generate(self, output, ctx):
+            if self.target not in ctx.vars.keys():
+                ctx.vars[self.target] = next(ctx.var_allocer)
 
-            self.expr.generate(output, locals)
+            self.expr.generate(output, ctx.vars)
             output('pull')
-            output('store', locals[self.target])
+            output('store', ctx.vars[self.target])
 
 
 
@@ -256,14 +256,29 @@ class ast:
         name  : str
         nodes : typing.Any
 
-        #eval
-        locals : typing.Any = field(default_factory=lambda: {})
+        #local compilation context
+        @dataclass
+        class _ctx:
+            vars : typing.Any
+            label_map : typing.Any
+            var_allocer : typing.Iterator
+
+        def scan_labels(self, offset):
+            for node in self.nodes:
+                if type(node) is ast._lab:
+                    print(node)
+
 
         def generate(self, output):
-            allocator = iter(range(16))
+            #build compilation context
+            ctx = self._ctx(
+                vars = {},
+                label_map = self.scan_labels(output.address()),
+                var_allocer = iter(range(16))
+            )
             
             for node in self.nodes:
-                node.generate(output, self.locals, allocator)
+                node.generate(output, ctx)
 
 
 
