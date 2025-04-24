@@ -13,7 +13,10 @@ def gen():
 
 
 
-def tokenize(raw):
+def tokenize(path):
+    with open(path, "r") as f:
+        raw = f.read()
+
     def get_kind(char):
         match char:
             case '"':               return 'comment'
@@ -25,29 +28,65 @@ def tokenize(raw):
             case ' ':               return 'space'
             case _:                 return 'symbol'
 
+    @dataclass
+    class token:
+        content : str
+        line : int
+        path : str
 
-    stream = []
+        def __str__(self):
+            return self.content
+
+
+
+    token_buffer = []
     buffer = []
     kind_old = None
     comment = False
+    line = 1
     for char in raw:
+        if char == '\n': line += 1
         kind_new = get_kind(char)
+
 
         if kind_new == 'comment': comment = True
         if kind_new == 'newline': comment = False
         if comment: continue
 
         if kind_new != kind_old:
-            token = "".join(buffer)
+            token_content = "".join(buffer)
             buffer = []
 
-            if kind_old not in ('space', 'newline') and token:
-                stream.append(token)
+            if kind_old not in ('space', 'newline') and token_content:
+                token_buffer.append(token(
+                    token_content, line, path
+                ))
 
         buffer.append(char)
         kind_old = kind_new
 
-    return stream[::-1]
+    @dataclass
+    class streamer:
+        token_buffer : list[token]
+
+        def _pop(self):
+            return self.token_buffer.pop(0)
+
+        def pop(self):
+            return self._pop().content
+
+        def peek(self):
+            return self.token_buffer[0].content
+
+        def expect(self, content):
+            token = self._pop()
+            if content != str(token):
+                print(f"Error at {token.path}:{token.line}")
+                print(f"\tExpected '{content}' but got '{token}'")
+                sys.exit(1)
+
+
+    return streamer(token_buffer)
 
 
 class sym:
@@ -83,7 +122,7 @@ class ast:
         def parse_expr(cls, stream):
             left = ast.expr.parse_factor(stream)
 
-            if stream[-1] not in sym.ops:
+            if stream.peek() not in sym.ops:
                 return left
 
             op = stream.pop()
@@ -100,7 +139,7 @@ class ast:
             match stream.pop():
                 case "(":
                     expr = ast.expr.parse_expr(stream)
-                    assert stream.pop() == ")"
+                    stream.expect(")")
                     return expr
                 case x if x.isdigit():
                     return cls(
@@ -176,7 +215,7 @@ class ast:
         @classmethod
         def parse(cls, stream):
             target = stream.pop()
-            assert stream.pop() == '='
+            stream.expect("=")
             expr = ast.expr.parse(stream)
             return cls(target, expr)
 
@@ -209,10 +248,10 @@ class ast:
         def parse(cls, stream):
             label = stream.pop()
             
-            if stream[-1] != sym.cond:
+            if stream.peek() != sym.cond:
                 return cls(label, cond=None)
 
-            assert stream.pop() == sym.cond
+            stream.expect(sym.cond)
             cond = ast.expr.parse(stream)
             return cls(label, cond)
 
@@ -234,10 +273,10 @@ class ast:
         def parse(cls, stream):
             label = stream.pop()
             
-            if stream[-1] != sym.cond:
+            if stream.peek() != sym.cond:
                 return cls(label, cond=None)
 
-            assert stream.pop() == sym.cond
+            stream.expect(sym.cond)
             cond = ast.expr.parse(stream)
             return cls(label, cond)
 
@@ -294,11 +333,10 @@ class ast:
         @classmethod
         def parse(cls, stream):
             name    = stream.pop()
-            assert stream.pop() == "{"
+            stream.expect("{")
             subnodes = ast.parse(stream)
-            assert stream.pop() == "}"
+            stream.expect("}")
 
-            stream.append(';')
             node = cls(name, subnodes)
             return node
 
@@ -306,12 +344,13 @@ class ast:
     def parse(cls, stream):
         nodes = []
 
-        while stream and stream[-1] != '}':
+        while stream and stream.peek() != '}':
             word = stream.pop()
 
             name = f"_{word}"
             node = getattr(ast, name).parse(stream)
-            assert stream.pop() == ';'
+            if word != "rout":
+                stream.expect(";")
 
             nodes.append(node)
 
@@ -370,10 +409,7 @@ class emission:
 
 
 def compile(path):
-    with open(path, "r") as f:
-        src = f.read()
-
-    stream = tokenize(src)
+    stream = tokenize(path)
     root = ast.parse(stream)
 
     output = emission()
