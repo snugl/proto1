@@ -476,7 +476,7 @@ def compile(path):
     address = root.routine(output, 'main')
     build = output.link(address)
     
-    with open('build.txt', "w") as f:
+    with open('build', "w") as f:
         f.write(build)
 
 
