@@ -1,0 +1,8 @@
+
+
+new statements:
+    -stack
+        -drop
+        -swap
+        -dup
+    -memory stuff
