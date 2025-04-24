@@ -27,8 +27,10 @@ def run(prog):
     acc = 0
     mem = [0 for _ in range(128)]
     stack = []
+    running = True
 
-    while pc < len(prog):
+    while pc < len(prog) and running:
+        print(pc)
         inst, arg = prog[pc]
         pc += 1
 
@@ -47,13 +49,13 @@ def run(prog):
             case 'branch':
                 if acc != 0: pc = arg
             case 'call':
-                stack.append(pc + 1)
+                stack.append(pc)
                 pc = arg
             case 'return':
                 pc = stack.pop()
 
-            case 'debug':
-                print(acc)
+            case 'debug': print(acc)
+            case 'halt':  running = False
 
 
 
