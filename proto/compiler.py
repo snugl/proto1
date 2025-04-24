@@ -363,6 +363,8 @@ class ast:
             for node in self.nodes:
                 node.generate(output, ctx)
 
+            output('return')
+
 
 
 
@@ -417,6 +419,12 @@ class emission:
     cmds : typing.Any = field(default_factory=lambda: [])
     labels : typing.Any = field(default_factory=lambda: {})
 
+    #the link header gets put at the start of the build executable.
+    #it consists of 2 commands to call the main routine:
+    #   call <address of main>
+    #   halt
+    link_header_size = 2
+
     @dataclass
     class command: 
         inst : str
@@ -443,10 +451,17 @@ class emission:
         self.cmds.append(cmd)
 
     def address(self):
-        return len(self.cmds)
+        return len(self.cmds) + self.link_header_size
 
     def render(self):
         return "\n".join(map(lambda x: x.render(), self.cmds))
+
+    def link(self, address):
+        self.cmds.insert(0, self.command('call', address))
+        self.cmds.insert(1, self.command('halt', None))
+
+        return self.render()
+
 
 
     
@@ -458,9 +473,10 @@ def compile(path):
 
     output = emission()
     address = root.routine(output, 'main')
+    build = output.link(address)
     
     with open('build.txt', "w") as f:
-        f.write(output.render())
+        f.write(build)
 
 
 
