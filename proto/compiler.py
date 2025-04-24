@@ -190,6 +190,7 @@ class ast:
                         '-': 'sub',
                         '>': 'greater', #acc is greater
                         '<': 'lesser',  #acc is lesser
+                        '==': 'equal',
                     }[self.content], 100)
                     output('push')
 
