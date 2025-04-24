@@ -27,10 +27,10 @@ def run(prog):
     acc = 0
     mem = [0 for _ in range(128)]
     stack = []
+    vars  = []
     running = True
 
     while pc < len(prog) and running:
-        print(pc)
         inst, arg = prog[pc]
         pc += 1
 
@@ -56,6 +56,10 @@ def run(prog):
 
             case 'debug': print(acc)
             case 'halt':  running = False
+
+            #variable stack
+            case 'save':    vars.append(mem[arg])
+            case 'restore': mem[arg] = vars.pop()
 
 
 
