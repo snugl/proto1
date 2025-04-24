@@ -1,6 +1,6 @@
 
-"(Int a, Int b) => (Int c)
 rout Math::Mul
+    "(Int a, Int b) => (Int c)
 {
     pull b;
     pull a;
@@ -11,7 +11,7 @@ rout Math::Mul
         jump done ~ a == 0;
 
         put c = c + b;
-        put a = a + 1;
+        put a = a - 1;
 
         jump loop;
     lab done;
@@ -26,25 +26,28 @@ rout Math::Fac
 {
     pull n;
 
-    save;
+    "base case
+    push 1;
+    jump return ~ n == 0;
+    pull _;
+
     push n - 1;
     sub Math::Fac;
-    load;
-
     push n;
     sub Math::Mul;
+
+    lab return;
 }
 
 
 
 rout main
 {
-    in 10;
-    in 20;
-    out _;
-    sub Math::Mul;
+    push 5;
+    sub Math::Fac;
+    pull _;
 
-    print _;
+    debug _;
 }
 
 
