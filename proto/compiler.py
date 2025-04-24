@@ -89,6 +89,9 @@ def tokenize(path):
                 print(f"\tExpected '{content}' but got '{token}'")
                 sys.exit(1)
 
+        def has(self):
+            return len(self.token_buffer) > 0
+
 
     return streamer(token_buffer)
 
@@ -348,7 +351,7 @@ class ast:
     def parse(cls, stream):
         nodes = []
 
-        while stream and stream.peek() != '}':
+        while stream.has() and stream.peek() != '}':
             word = stream.pop()
 
             name = f"_{word}"
