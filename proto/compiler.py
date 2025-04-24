@@ -30,9 +30,9 @@ def tokenize(path):
 
     @dataclass
     class token:
-        content : str
-        line : int
-        path : str
+        content : str = ""
+        line    : int = 0
+        path    : str = ""
 
         def __str__(self):
             return self.content
@@ -45,7 +45,6 @@ def tokenize(path):
     comment = False
     line = 1
     for char in raw:
-        if char == '\n': line += 1
         kind_new = get_kind(char)
 
 
@@ -64,16 +63,21 @@ def tokenize(path):
 
         buffer.append(char)
         kind_old = kind_new
+        if char == '\n': line += 1
 
     @dataclass
     class streamer:
         token_buffer : list[token]
 
+        #in case something goes wrong, this token is responsible
+        last_token : token = field(default_factory=token)
+
         def _pop(self):
             return self.token_buffer.pop(0)
 
         def pop(self):
-            return self._pop().content
+            self.last_token = self._pop()
+            return self.last_token.content
 
         def peek(self):
             return self.token_buffer[0].content
@@ -81,7 +85,7 @@ def tokenize(path):
         def expect(self, content):
             token = self._pop()
             if content != str(token):
-                print(f"Error at {token.path}:{token.line}")
+                print(f"Error at {self.last_token.path}:{self.last_token.line}")
                 print(f"\tExpected '{content}' but got '{token}'")
                 sys.exit(1)
 
