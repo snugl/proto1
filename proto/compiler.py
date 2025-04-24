@@ -20,9 +20,9 @@ def tokenize(path):
     def get_kind(char):
         match char:
             case '"':               return 'comment'
-            case x if x.isalpha():  return 'alpha' 
-            case ":"             :  return 'alpha' #colon is part of identifier scoping
-            case x if x.isdigit():  return 'digit'
+            case x if x.isalpha():  return 'iden' 
+            case x if x.isdigit():  return 'iden'
+            case ":"             :  return 'iden' #colon is part of identifier scoping
             case ';':               return 'eos'
             case '\n':              return 'newline'
             case ' ':               return 'space'
@@ -101,12 +101,6 @@ class sym:
     cond = '~'
 
 
-def ensure_is_allocated(ctx, target):
-    if target not in ctx.vars.keys():
-        ctx.vars[target] = next(ctx.var_allocer)
-
-
-
 
 
 @dataclass
@@ -160,7 +154,7 @@ class ast:
                         kind = 'num',
                         content = int(x)
                     )
-                case x if x.isalpha():
+                case _:
                     return cls(
                         kind = 'var',
                         content = x
@@ -203,9 +197,12 @@ class ast:
         def parse(cls, stream):
             return cls(stream.pop())
 
+        def infer(self, ctx):
+            ctx.allocate_variable(self.target)
+
         def generate(self, output, ctx):
-            ensure_is_allocated(ctx, self.target)
-            output('pull', ctx.vars[self.target])
+            output('pull')
+            output('store', ctx.vars[self.target])
 
 
     @dataclass
@@ -243,9 +240,10 @@ class ast:
             expr = ast.expr.parse(stream)
             return cls(target, expr)
 
-        def generate(self, output, ctx):
-            ensure_is_allocated(ctx, self.target)
+        def infer(self, ctx):
+            ctx.allocate_variable(self.target)
 
+        def generate(self, output, ctx):
             self.expr.generate(output, ctx)
             output('pull')
             output('store', ctx.vars[self.target])
@@ -306,35 +304,6 @@ class ast:
         def generate(self, output, ctx):
             output('call', ctx.rout_sym_table[self.target])
 
-    class _save:
-        @classmethod
-        def parse(cls, _):
-            return cls()
-    class _load:
-        @classmethod
-        def parse(cls, _):
-            return cls()
-
-    @dataclass
-    class _in:
-        expr : typing.Any
-        @classmethod
-        def parse(cls, stream):
-            return cls(ast.expr.parse(stream))
-
-        def generate(self, _, ctx):
-            ctx.pending_in_param.append(self.expr)
-
-    @dataclass
-    class _out:
-        expr : typing.Any
-        @classmethod
-        def parse(cls, stream):
-            return cls(ast.expr.parse(stream))
-
-        def generate(self, _, ctx):
-            ctx.pending_out_param.append(self.expr)
-
 
     @dataclass
     class _rout:
@@ -351,6 +320,10 @@ class ast:
             pending_in_param  : typing.Any = field(default_factory=lambda: [])
             pending_out_param : typing.Any = field(default_factory=lambda: [])
 
+            def allocate_variable(self, name):
+                if name not in self.vars.keys():
+                    self.vars[name] = next(self.var_allocer)
+
 
         def generate(self, output, rout_sym_table):
             #build compilation context
@@ -359,9 +332,37 @@ class ast:
                 var_allocer = iter(range(16)),
                 rout_sym_table = rout_sym_table
             )
+
+            ret_addr_var = next(ctx.var_allocer)
+
+            #infer variables
+            for node in self.nodes:
+                if hasattr(node, "infer"):
+                    node.infer(ctx)
+
+            var_addrs = list(ctx.vars.values())
+            #save callee context
+            for var_addr in var_addrs:
+                output('save', var_addr)
+
+            #save return address
+            output('save', ret_addr_var)
+            output('pull')
+            output('store', ret_addr_var)
             
+            #generate routine behavior
             for node in self.nodes:
                 node.generate(output, ctx)
+
+            #restore return address
+            output('load', ret_addr_var)
+            output('push')
+            output('restore', ret_addr_var)
+
+            #restore callee context
+            for var_addr in var_addrs[::-1]:
+                output('restore', var_addr)
+           
 
             output('return')
 
