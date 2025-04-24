@@ -1,0 +1,34 @@
+
+
+
+
+rout mul
+"(Int a, Int b) => (Int prod)
+{
+    pull multiplicand;
+    pull multiplier;
+
+    put product = 0;
+    lab loop;
+        jump done ~ multiplier == 0;
+
+        put product = product + multiplicand;
+        put multiplier = multiplier - 1;
+
+        jump loop;
+    lab done;
+
+    push product;
+}
+
+
+rout main
+{
+    push 3;
+    push 7;
+    sub mul;
+    pull _;
+    
+    debug _;
+}
+
