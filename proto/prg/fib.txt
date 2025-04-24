@@ -12,5 +12,5 @@ rout main
         put b = c;
 
         debug c;
-    jump loop ~ c < 1000000;
+    jump loop ~ c < 300;
 }
