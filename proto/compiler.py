@@ -171,7 +171,8 @@ class ast:
             return ast.expr.parse_expr(stream)
 
 
-        def generate(self, output, vars):
+        def generate(self, output, ctx):
+            vars = ctx.vars
             match self.kind:
                 case 'num':
                     output('const', self.content)
@@ -180,8 +181,8 @@ class ast:
                     output('load', vars[self.content])
                     output('push')
                 case 'op':
-                    self.left.generate(output, vars)
-                    self.right.generate(output, vars)
+                    self.left.generate(output, ctx)
+                    self.right.generate(output, ctx)
                     output('pull')
                     output('store', 100) # 100 compiler temp
                     output('pull')
@@ -214,6 +215,9 @@ class ast:
         def parse(cls, stream):
             return cls(ast.expr.parse(stream))
 
+        def generate(self, output, ctx):
+            self.expr.generate(output, ctx)
+
     @dataclass
     class _debug:
         expr : typing.Any
@@ -222,7 +226,7 @@ class ast:
             return cls(ast.expr.parse(stream))
 
         def generate(self, output, ctx):
-            self.expr.generate(output, ctx.vars)
+            self.expr.generate(output, ctx)
             output('pull')
             output('debug')
 
@@ -242,7 +246,7 @@ class ast:
         def generate(self, output, ctx):
             ensure_is_allocated(ctx, self.target)
 
-            self.expr.generate(output, ctx.vars)
+            self.expr.generate(output, ctx)
             output('pull')
             output('store', ctx.vars[self.target])
 
@@ -280,7 +284,7 @@ class ast:
                 output('jump', target_label)
 
             else:
-                self.cond.generate(output, ctx.vars)
+                self.cond.generate(output, ctx)
                 output('pull')
                 output('branch', target_label)
 
