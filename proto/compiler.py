@@ -101,6 +101,13 @@ class sym:
     cond = '~'
 
 
+def ensure_is_allocated(ctx, target):
+    if target not in ctx.vars.keys():
+        ctx.vars[target] = next(ctx.var_allocer)
+
+
+
+
 
 @dataclass
 class ast:
@@ -189,10 +196,15 @@ class ast:
 
     @dataclass
     class _pull:
-        expr : typing.Any 
+        target : typing.Any 
         @classmethod
         def parse(cls, stream):
-            return cls(ast.expr.parse(stream))
+            return cls(stream.pop())
+
+        def generate(self, output, ctx):
+            ensure_is_allocated(ctx, self.target)
+            output('pull', ctx.vars[self.target])
+
 
     @dataclass
     class _push:
@@ -227,8 +239,7 @@ class ast:
             return cls(target, expr)
 
         def generate(self, output, ctx):
-            if self.target not in ctx.vars.keys():
-                ctx.vars[self.target] = next(ctx.var_allocer)
+            ensure_is_allocated(ctx, self.target)
 
             self.expr.generate(output, ctx.vars)
             output('pull')
