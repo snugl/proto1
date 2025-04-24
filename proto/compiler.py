@@ -290,18 +290,21 @@ class ast:
 
     @dataclass
     class _sub:
-        label : str
+        target : str
         cond  : typing.Any
         @classmethod
         def parse(cls, stream):
-            label = stream.pop()
+            target = stream.pop()
             
             if stream.peek() != sym.cond:
-                return cls(label, cond=None)
+                return cls(target, cond=None)
 
             stream.expect(sym.cond)
             cond = ast.expr.parse(stream)
             return cls(label, cond)
+
+        def generate(self, output, ctx):
+            output('call', ctx.rout_sym_table[self.target])
 
     class _save:
         @classmethod
@@ -319,12 +322,18 @@ class ast:
         def parse(cls, stream):
             return cls(ast.expr.parse(stream))
 
+        def generate(self, _, ctx):
+            ctx.pending_in_param.append(self.expr)
+
     @dataclass
     class _out:
         expr : typing.Any
         @classmethod
         def parse(cls, stream):
             return cls(ast.expr.parse(stream))
+
+        def generate(self, _, ctx):
+            ctx.pending_out_param.append(self.expr)
 
 
     @dataclass
@@ -338,13 +347,17 @@ class ast:
         class _ctx:
             vars : typing.Any
             var_allocer : typing.Iterator
+            rout_sym_table : typing.Any
+            pending_in_param  : typing.Any = field(default_factory=lambda: [])
+            pending_out_param : typing.Any = field(default_factory=lambda: [])
 
 
-        def generate(self, output):
+        def generate(self, output, rout_sym_table):
             #build compilation context
             ctx = self._ctx(
                 vars = {},
-                var_allocer = iter(range(16))
+                var_allocer = iter(range(16)),
+                rout_sym_table = rout_sym_table
             )
             
             for node in self.nodes:
@@ -379,14 +392,22 @@ class ast:
 
         return cls(nodes)
 
-    def generate(self, output):
-        table = {}
+    def routine(self, output, target_name):
+        target_routine = [
+            x for x in self.nodes 
+            if x.name == target_name
+        ][0]
 
-        for rout_node in self.nodes:
-            table[rout_node.name] = output.address()
-            rout_node.generate(output)
+        #collect and emit dependencies of routine
+        depend_table = {}
+        for node in target_routine.nodes:
+            if type(node) is ast._sub:
+                depend_name = node.target
+                depend_table[depend_name] = self.routine(output, depend_name)
 
-        return table
+        target_address = output.address()
+        target_routine.generate(output, depend_table)
+        return target_address
 
     
 
@@ -436,7 +457,7 @@ def compile(path):
     root = ast.parse(stream)
 
     output = emission()
-    sym_table = root.generate(output)
+    address = root.routine(output, 'main')
     
     with open('build.txt', "w") as f:
         f.write(output.render())
