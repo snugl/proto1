@@ -1,0 +1,36 @@
+
+
+
+rout add2
+{
+    pull value;
+    push value + 2;
+}
+
+rout dup
+{
+    pull _;
+    push _;
+    push _;
+}
+
+
+rout print
+{
+    pull _;
+    debug _;
+}
+
+
+rout main
+{
+    push 3;
+
+    sub add2;
+    sub dup; sub print;
+    sub add2; sub print; 
+}
+
+
+
+
