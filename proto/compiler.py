@@ -345,19 +345,9 @@ class ast:
             for var_addr in var_addrs:
                 output('save', var_addr)
 
-            #save return address
-            output('save', ret_addr_var)
-            output('pull')
-            output('store', ret_addr_var)
-            
             #generate routine behavior
             for node in self.nodes:
                 node.generate(output, ctx)
-
-            #restore return address
-            output('load', ret_addr_var)
-            output('push')
-            output('restore', ret_addr_var)
 
             #restore callee context
             for var_addr in var_addrs[::-1]:

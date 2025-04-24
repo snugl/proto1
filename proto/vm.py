@@ -26,8 +26,8 @@ def run(prog):
     pc = 0
     acc = 0
     mem = [0 for _ in range(128)]
-    stack = []
-    vars  = []
+    call_stack = []
+    data_stack = []
     running = True
 
     while pc < len(prog) and running:
@@ -41,25 +41,25 @@ def run(prog):
             case 'greater': acc = acc > mem[arg]
             case 'lesser' : acc = acc < mem[arg]
             case 'equal':   acc = acc == mem[arg]
-            case 'push':  stack.append(acc)
-            case 'pull':  acc = stack.pop()
+            case 'push':  data_stack.append(acc)
+            case 'pull':  acc = data_stack.pop()
             case 'load':  acc = mem[arg]
             case 'store': mem[arg] = acc
             case 'jump':  pc = arg
             case 'branch':
                 if acc != 0: pc = arg
             case 'call':
-                stack.append(pc)
+                call_stack.append(pc)
                 pc = arg
             case 'return':
-                pc = stack.pop()
+                pc = call_stack.pop()
 
             case 'debug': print(acc)
             case 'halt':  running = False
 
-            #variable stack
-            case 'save':    vars.append(mem[arg])
-            case 'restore': mem[arg] = vars.pop()
+            #frames
+            case 'save':    call_stack.append(mem[arg])
+            case 'restore': mem[arg] = call_stack.pop()
 
 
 
