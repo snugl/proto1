@@ -317,8 +317,6 @@ class ast:
             vars : typing.Any
             var_allocer : typing.Iterator
             rout_sym_table : typing.Any
-            pending_in_param  : typing.Any = field(default_factory=lambda: [])
-            pending_out_param : typing.Any = field(default_factory=lambda: [])
 
             def allocate_variable(self, name):
                 if name not in self.vars.keys():
@@ -339,6 +337,10 @@ class ast:
             for node in self.nodes:
                 if hasattr(node, "infer"):
                     node.infer(ctx)
+
+            output.annotate(f"== rout {self.name} ==")
+            output.annotate(f"\tvars: {next(ctx.var_allocer)}")
+
 
             var_addrs = list(ctx.vars.values())
             #save callee context
@@ -413,6 +415,7 @@ class ast:
 class emission:
     cmds : typing.Any = field(default_factory=lambda: [])
     labels : typing.Any = field(default_factory=lambda: {})
+    annos : typing.Any = field(default_factory=lambda: [])
 
     #the link header gets put at the start of the build executable.
     #it consists of 2 commands to call the main routine:
@@ -437,6 +440,17 @@ class emission:
         def __str__(self):
             return str(self.emission.labels[self.name])
 
+    @dataclass
+    class anno:
+        msg : str
+        line : int
+
+        def __str__(self):
+            return self.msg
+
+    def annotate(self, msg):
+        self.annos.append(self.anno(msg, self.address()))
+
     def define(self, name):
         self.labels[name] = self.address()
 
@@ -449,7 +463,18 @@ class emission:
         return len(self.cmds) + self.link_header_size
 
     def render(self):
-        return "\n".join(map(lambda x: x.render(), self.cmds))
+        buffer = []
+
+        for line, cmd in enumerate(self.cmds):
+            #annotations
+            while self.annos and line == self.annos[0].line:
+                msg = self.annos.pop(0).msg
+                buffer.append(f'"{msg}')
+
+            #actual content
+            buffer.append(cmd.render())
+
+        return "\n".join(buffer)
 
     def link(self, address):
         self.cmds.insert(0, self.command('call', address))
@@ -467,6 +492,8 @@ def compile(path):
     root = ast.parse(stream)
 
     output = emission()
+
+
     address = root.routine(output, 'main')
     build = output.link(address)
     
