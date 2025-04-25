@@ -257,8 +257,8 @@ class ast:
         def parse(cls, stream):
             return cls(stream.pop())
 
-        def generate(self, output, _):
-            output.define(self.label)
+        def generate(self, output, ctx):
+            output.define(self.label, ctx.routine)
             
 
     @dataclass
@@ -277,7 +277,7 @@ class ast:
             return cls(label, cond)
 
         def generate(self, output, ctx):
-            target_label = emission.label(self.label, output)
+            target_label = emission.label_reference(self.label, ctx.routine, output)
             if self.cond is None:
                 output('jump', target_label)
 
@@ -317,6 +317,7 @@ class ast:
             vars : typing.Any
             var_allocer : typing.Iterator
             rout_sym_table : typing.Any
+            routine : typing.Any
 
             def allocate_variable(self, name):
                 if name not in self.vars.keys():
@@ -328,7 +329,8 @@ class ast:
             ctx = self._ctx(
                 vars = {},
                 var_allocer = iter(range(16)),
-                rout_sym_table = rout_sym_table
+                rout_sym_table = rout_sym_table,
+                routine = self
             )
 
             ret_addr_var = next(ctx.var_allocer)
@@ -413,6 +415,9 @@ class ast:
 
 @dataclass
 class emission:
+    seq : typing.Any = field(default_factory=lambda: []) 
+    addr : int = 0
+
     cmds : typing.Any = field(default_factory=lambda: [])
     labels : typing.Any = field(default_factory=lambda: {})
     annos : typing.Any = field(default_factory=lambda: [])
@@ -428,17 +433,40 @@ class emission:
         inst : str
         arg : typing.Any
 
-        def render(self):
+        def __str__(self):
             str_arg = str(self.arg) if self.arg is not None else ''
             return f"{self.inst} {str_arg}".strip()
 
     @dataclass
-    class label:
+    class label_reference:
         name : str
+        routine : str
         emission : typing.Any
 
         def __str__(self):
-            return str(self.emission.labels[self.name])
+            obj = emission.label_definition.find(self.emission, self.name, self.routine)
+            return str(obj.address)
+
+    @dataclass
+    class label_definition:
+        name : str
+        routine : str
+        address : int
+
+        @staticmethod
+        def find(emission_ctx, name, routine):
+            for obj in emission_ctx.seq:
+                if type(obj) is not emission.label_definition:
+                    continue
+                
+                if obj.name == name and obj.routine == routine:
+                    return obj
+
+            return None
+
+
+        def __str__(self):
+            return f'"label {self.routine.name}.{self.name}'
 
     @dataclass
     class anno:
@@ -449,39 +477,36 @@ class emission:
             return self.msg
 
     def annotate(self, msg):
-        self.annos.append(self.anno(msg, self.address()))
+        self.seq.append(self.anno(msg, self.address()))
 
-    def define(self, name):
-        self.labels[name] = self.address()
+    def define(self, name, routine):
+        label = self.label_definition(
+            name = name,
+            routine = routine,
+            address = self.address()
+        )
+        self.seq.append(label)
 
 
     def __call__(self, inst, arg=None):
         cmd = emission.command(inst, arg)
-        self.cmds.append(cmd)
+        self.seq.append(cmd)
+        self.addr += 1
 
     def address(self):
-        return len(self.cmds) + self.link_header_size
+        return self.addr + self.link_header_size
 
     def render(self):
-        buffer = []
+        return "\n".join(map(str, self.seq))
 
-        for line, cmd in enumerate(self.cmds):
-            #annotations
-            while self.annos and line == self.annos[0].line:
-                msg = self.annos.pop(0).msg
-                buffer.append(f'"{msg}')
-
-            #actual content
-            buffer.append(cmd.render())
-
-        return "\n".join(buffer)
-
-    def link(self, address):
-        self.cmds.insert(0, self.command('call', address))
-        self.cmds.insert(1, self.command('halt', None))
+    def assemble(self, address):
+        self.seq.insert(0, self.command('call', address))
+        self.seq.insert(1, self.command('halt', None))
 
         return self.render()
 
+    def optimize(self):
+        pass
 
 
     
@@ -495,7 +520,7 @@ def compile(path):
 
 
     address = root.routine(output, 'main')
-    build = output.link(address)
+    build = output.assemble(address)
     
     with open('build', "w") as f:
         f.write(build)
