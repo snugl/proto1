@@ -11,6 +11,7 @@ def lex(raw):
     for line_raw in raw.split('\n'):
         line = line_raw.strip().replace('  ', ' ')
         if not line: continue
+        if line.startswith('"'): continue
 
         comps = line.split(' ')
         inst = comps[0]
