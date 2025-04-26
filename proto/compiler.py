@@ -474,7 +474,7 @@ class emission:
         line : int
 
         def __str__(self):
-            return self.msg
+            return f'"self.msg'
 
     def annotate(self, msg):
         self.seq.append(self.anno(msg, self.address()))
@@ -504,10 +504,6 @@ class emission:
         self.seq.insert(1, self.command('halt', None))
 
         return self.render()
-
-    def optimize(self):
-        pass
-
 
     
 
