@@ -1,11 +1,13 @@
 
 from dataclasses import dataclass
+from dataclasses import field
 import typing
 
 import expr
 import sym
 import emission
 import tree
+import abstract
 
 @dataclass
 class _pull:
@@ -125,8 +127,10 @@ class _sub:
 @dataclass
 class _rout:
     #parse
-    name  : str
-    nodes : typing.Any
+    name  : str = ""
+    nodes : typing.Any = None
+
+    pinter : abstract.param_interface = field(default_factory=lambda: abstract.param_interface())
 
     #local compilation context
     @dataclass
@@ -150,6 +154,8 @@ class _rout:
             routine = self
         )
 
+        #generate interface binding
+        ctx.vars.update(self.pinter.generate_variable_binding())
 
         #infer variables
         for node in self.nodes:
@@ -177,10 +183,21 @@ class _rout:
 
     @classmethod
     def parse(cls, stream):
-        name    = stream.pop()
+        self = cls()
+        self.name = stream.pop()
+        
+        #interface
+        if stream.peek() == "(":
+            stream.expect("(")
+            while stream.peek() != ")":
+                match stream.pop():
+                    case "in":  self.pinter.add_in(stream.pop())
+                    case "out": self.pinter.add_out(stream.pop())
+                stream.expect(";")
+            stream.expect(")")
+
         stream.expect("{")
-        subnodes = tree.parse(stream)
+        self.nodes = tree.parse(stream)
         stream.expect("}")
 
-        node = cls(name, subnodes)
-        return node
+        return self
