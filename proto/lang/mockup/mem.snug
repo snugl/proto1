@@ -1,0 +1,29 @@
+
+
+
+seq core::types
+{
+    add,
+    sub
+}
+
+
+
+seq core::node
+{
+    type,   ":types
+    prev,   ":node
+    next,   ":node
+    sub,    ":void
+    content ":int
+}
+
+
+rout core::main
+{
+    new node n;
+    put [n + core::node::type] = core::types::add;
+
+}
+
+

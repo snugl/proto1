@@ -2,7 +2,9 @@
 -optimizations
 -bytecode
 
-new statements:
+new features:
+    -structs
+    -enums
     -stack
         -drop
         -swap
