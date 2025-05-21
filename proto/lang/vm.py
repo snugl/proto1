@@ -26,41 +26,77 @@ def run(prog):
      
     pc = 0
     acc = 0
-    mem = [0 for _ in range(128)]
-    call_stack = []
-    data_stack = []
+    mem = [0 for _ in range(65536)]
+    stack = 0 #stack pointer
+    base  = 0 #base  pointer
+
     running = True
+
+    def push(x):
+        nonlocal mem, stack
+        mem[stack] = x
+        stack += 1
+
+    def pull():
+        nonlocal mem, stack
+        stack -= 1
+        return mem[stack]
 
     while pc < len(prog) and running:
         inst, arg = prog[pc]
         pc += 1
 
+        #virtual arg, relative to stack frame
+        varg = base + arg if arg else 0
+
         match inst:
             case 'const': acc = int(arg)
-            case 'add':   acc += mem[arg]
-            case 'sub':   acc -= mem[arg]
-            case 'greater': acc = acc > mem[arg]
-            case 'lesser' : acc = acc < mem[arg]
-            case 'equal':   acc = acc == mem[arg]
-            case 'push':  data_stack.append(acc)
-            case 'pull':  acc = data_stack.pop()
-            case 'load':  acc = mem[arg]
-            case 'store': mem[arg] = acc
+
+            #arithmatic
+            case 'add':   acc += mem[varg]
+            case 'sub':   acc -= mem[varg]
+            case 'greater': acc = acc > mem[varg]
+            case 'lesser' : acc = acc < mem[varg]
+            case 'equal':   acc = acc == mem[varg]
+
+            #stack interface
+            case 'push': push(acc)
+            case 'pull': acc = pull()
+
+            #memory interface
+            case 'load':  acc = mem[varg]
+            case 'store': mem[varg] = acc
+
+            #branching
             case 'jump':  pc = arg
             case 'branch':
                 if acc != 0: pc = arg
-            case 'call':
-                call_stack.append(pc)
-                pc = arg
-            case 'return':
-                pc = call_stack.pop()
 
+            #routines
+            case 'call':
+                #flow control
+                push(pc)
+                pc = arg
+
+                #frame control
+                push(base) #save base pointer
+                base = stack #construct new frame
+
+            case 'return':
+                base = pull() #reconstruct frame
+                pc = pull()   #reconstruct flow
+
+            #memory manage
+            case 'alloc': #allocate n spaces on stack
+                stack += arg
+
+            case 'free':  #free n spaces on stack
+                stack -= arg
+
+
+            #misc
             case 'debug': print(acc)
             case 'halt':  running = False
-
-            #frames
-            case 'save':    call_stack.append(mem[arg])
-            case 'restore': mem[arg] = call_stack.pop()
 
 
 
