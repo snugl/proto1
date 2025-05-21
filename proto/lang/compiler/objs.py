@@ -2,6 +2,11 @@
 from dataclasses import dataclass
 import typing
 
+import expr
+import sym
+import emission
+import tree
+
 @dataclass
 class _pull:
     target : typing.Any 
@@ -22,7 +27,7 @@ class _push:
     expr : typing.Any
     @classmethod
     def parse(cls, stream):
-        return cls(ast.expr.parse(stream))
+        return cls(expr.parse(stream))
 
     def generate(self, output, ctx):
         self.expr.generate(output, ctx)
@@ -32,7 +37,7 @@ class _debug:
     expr : typing.Any
     @classmethod
     def parse(cls, stream):
-        return cls(ast.expr.parse(stream))
+        return cls(expr.parse(stream))
 
     def generate(self, output, ctx):
         self.expr.generate(output, ctx)
@@ -49,8 +54,8 @@ class _put:
     def parse(cls, stream):
         target = stream.pop()
         stream.expect("=")
-        expr = ast.expr.parse(stream)
-        return cls(target, expr)
+        node = expr.parse(stream)
+        return cls(target, node)
 
     def infer(self, ctx):
         ctx.allocate_variable(self.target)
@@ -85,11 +90,11 @@ class _jump:
             return cls(label, cond=None)
 
         stream.expect(sym.cond)
-        cond = ast.expr.parse(stream)
+        cond = expr.parse(stream)
         return cls(label, cond)
 
     def generate(self, output, ctx):
-        target_label = emission.label_reference(self.label, ctx.routine, output)
+        target_label = emission.reference(self.label, ctx.routine, output)
         if self.cond is None:
             output('jump', target_label)
 
@@ -110,8 +115,8 @@ class _sub:
             return cls(target, cond=None)
 
         stream.expect(sym.cond)
-        cond = ast.expr.parse(stream)
-        return cls(label, cond)
+        cond = expr.parse(stream)
+        return cls(target, cond)
 
     def generate(self, output, ctx):
         output('call', ctx.rout_sym_table[self.target])
@@ -152,8 +157,8 @@ class _rout:
             if hasattr(node, "infer"):
                 node.infer(ctx)
 
-        output.annotate(f"== rout {self.name} ==")
-        output.annotate(f"\tvars: {next(ctx.var_allocer)}")
+        output.annotate(f'"== rout {self.name} ==')
+        output.annotate(f'"\tvars: {next(ctx.var_allocer)}')
 
 
         var_addrs = list(ctx.vars.values())
@@ -174,12 +179,11 @@ class _rout:
 
 
 
-
     @classmethod
     def parse(cls, stream):
         name    = stream.pop()
         stream.expect("{")
-        subnodes = ast.parse(stream)
+        subnodes = tree.parse(stream)
         stream.expect("}")
 
         node = cls(name, subnodes)

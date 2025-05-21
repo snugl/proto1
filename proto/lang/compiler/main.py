@@ -1,13 +1,16 @@
 #!/usr/bin/python3
 
 import sys
+import lex
+import tree
+import emission
 
 
 def compile(path):
-    stream = tokenize(path)
-    root = ast.parse(stream)
+    stream = lex.tokenize(path)
+    root = tree.parse(stream)
 
-    output = emission()
+    output = emission.output()
 
     address = root.routine(output, 'main')
     build = output.assemble(address)
