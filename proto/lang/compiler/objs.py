@@ -150,30 +150,26 @@ class _rout:
             routine = self
         )
 
-        ret_addr_var = next(ctx.var_allocer)
 
         #infer variables
         for node in self.nodes:
             if hasattr(node, "infer"):
                 node.infer(ctx)
 
+        #reserve local stack space for variables
+        var_count = next(ctx.var_allocer)
+        output("alloc", var_count)
+
         output.annotate(f'"== rout {self.name} ==')
-        output.annotate(f'"\tvars: {next(ctx.var_allocer)}')
+        output.annotate(f'"\tvars: {var_count}')
 
-
-        var_addrs = list(ctx.vars.values())
-        #save callee context
-        for var_addr in var_addrs:
-            output('save', var_addr)
 
         #generate routine behavior
         for node in self.nodes:
             node.generate(output, ctx)
 
-        #restore callee context
-        for var_addr in var_addrs[::-1]:
-            output('restore', var_addr)
-       
+        #free variable space
+        output("free", var_count)
 
         output('return')
 
