@@ -109,19 +109,46 @@ class _jump:
 class _sub:
     target : str
     cond  : typing.Any
+    imap : typing.Any = field(default_factory=lambda: {})
     @classmethod
     def parse(cls, stream):
         target = stream.pop()
         
-        if stream.peek() != sym.cond:
-            return cls(target, cond=None)
+        cond = None
 
-        stream.expect(sym.cond)
-        cond = expr.parse(stream)
-        return cls(target, cond)
+        if stream.peek() == sym.cond:
+            stream.expect(sym.cond)
+            cond = expr.parse(stream)
+
+        if stream.peek() == ";":
+            return cls(target, cond)
+
+        print("interface")
+
+        #interface
+        imap = {}
+        stream.expect("(")
+        while stream.peek() != ")":
+            internal = stream.pop() #callee side
+            stream.expect("|")
+            external = expr.parse(stream) if stream.peek() != ";" else None
+            stream.expect(";")
+            imap[internal] = external
+        stream.expect(")")
+        return cls(target, cond, imap)
+
 
     def generate(self, output, ctx):
-        output('call', ctx.rout_sym_table[self.target])
+        target_obj = ctx.tree.get(self.target)
+        pinter = target_obj.pinter
+
+        #construct in-paramter space
+
+
+        #construct parameter space
+        output('alloc', pinter.get_space_size())
+
+        output('call', target_obj.address)
 
 
 @dataclass
@@ -132,12 +159,14 @@ class _rout:
 
     pinter : abstract.param_interface = field(default_factory=lambda: abstract.param_interface())
 
+    address : typing.Any = None
+
     #local compilation context
     @dataclass
     class _ctx:
         vars : typing.Any
         var_allocer : typing.Iterator
-        rout_sym_table : typing.Any
+        tree : typing.Any
         routine : typing.Any
 
         def allocate_variable(self, name):
@@ -145,12 +174,14 @@ class _rout:
                 self.vars[name] = next(self.var_allocer)
 
 
-    def generate(self, output, rout_sym_table):
+    def generate(self, output, tree):
+        self.address = output.address() #routine origin address
+
         #build compilation context
         ctx = self._ctx(
             vars = {},
             var_allocer = iter(range(16)),
-            rout_sym_table = rout_sym_table,
+            tree = tree,
             routine = self
         )
 
