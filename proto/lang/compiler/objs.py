@@ -55,7 +55,7 @@ class _put:
     @classmethod
     def parse(cls, stream):
         target = stream.pop()
-        stream.expect("=")
+        stream.expect(sym.assign)
         node = expr.parse(stream)
         return cls(target, node)
 
@@ -120,13 +120,13 @@ class _sub:
             stream.expect(sym.cond)
             cond = expr.parse(stream)
 
-        if stream.peek() == ";":
+        if stream.peek() == sym.eos:
             return cls(target, cond)
 
         #interface
         imap = {}
-        stream.expect("(")
-        while stream.peek() != ")":
+        stream.expect(sym.param_start)
+        while stream.peek() != sym.param_end:
             #callee side
             internal = stream.pop()
             stream.expect("|")
@@ -136,7 +136,7 @@ class _sub:
                 stream.pop()
 
             imap[internal] = external
-        stream.expect(")")
+        stream.expect(sym.param_end)
 
         return cls(target, cond, imap)
 
@@ -232,14 +232,14 @@ class _rout:
         self.name = stream.pop()
         
         #interface
-        if stream.peek() == "(":
-            stream.expect("(")
-            while stream.peek() != ")":
+        if stream.peek() == sym.param_start:
+            stream.expect(sym.param_start)
+            while stream.peek() != sym.param_end:
                 match stream.pop():
                     case "in":  self.pinter.add_in(stream.pop())
                     case "out": self.pinter.add_out(stream.pop())
-                stream.expect(";")
-            stream.expect(")")
+                stream.expect(sym.eos)
+            stream.expect(sym.param_end)
 
         stream.expect("{")
         self.nodes = tree.parse(stream)

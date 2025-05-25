@@ -2,9 +2,10 @@
 from dataclasses import dataclass
 from dataclasses import field
 import typing
+import sys
 
 import objs
-import sys
+import sym
 
 
 
@@ -56,7 +57,7 @@ def parse(stream):
         name = f"_{iden}"
         sub = getattr(objs, name).parse(stream)
         if iden != "rout":
-            stream.expect(";")
+            stream.expect(sym.eos)
 
         root.subs.append(sub)
 
