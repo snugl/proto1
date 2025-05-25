@@ -1,10 +1,9 @@
 
 rout Math::Mul
-    "(Int a, Int b) => (Int c)
+(
+    in a; in b; out c;
+)
 {
-    pull b;
-    pull a;
-
     put c = 0;
 
     lab loop;
@@ -15,26 +14,24 @@ rout Math::Mul
 
         jump loop;
     lab done;
-
-    push c; 
 }
 
 
 
 "(Int a) => (Int !a)
 rout Math::Fac
+(
+    in n; out res;
+)
 {
-    pull n;
+    put res = 1;
 
     "base case
-    push 1;
     jump return ~ n == 0;
-    pull _;
 
-    push n - 1;
-    sub Math::Fac;
-    push n;
-    sub Math::Mul;
+    put tmp = 0;
+    sub Math::Fac ( n | n - 1, res | tmp, );
+    sub Math::Mul ( a | n, b | tmp, c | res, );
 
     lab return;
 }
@@ -43,9 +40,12 @@ rout Math::Fac
 
 rout main
 {
-    push 5;
-    sub Math::Fac;
-    pull _;
+    put _ = 0;
+    sub Math::Fac
+    (
+        n | 5,
+        res | _,
+    );
 
     debug _;
 }
