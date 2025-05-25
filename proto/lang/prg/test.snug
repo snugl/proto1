@@ -1,0 +1,12 @@
+
+
+
+rout main
+(
+    in a;
+    out b;
+)
+{
+    debug 10;
+}
+
