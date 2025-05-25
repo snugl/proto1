@@ -28,7 +28,7 @@ def run(prog):
     acc = 0
     mem = [0 for _ in range(65536)]
     stack = 0 #stack pointer
-    base  = 0 #base  pointer
+    base  = stack #base  pointer
 
     running = True
 
@@ -46,8 +46,11 @@ def run(prog):
         inst, arg = prog[pc]
         pc += 1
 
+        #print(pc, inst, arg, stack, base)
+        #input()
+
         #virtual arg, relative to stack frame
-        varg = base + arg if arg else 0
+        varg = (base + arg) if arg is not None else 0
 
         match inst:
             case 'const': acc = int(arg)
