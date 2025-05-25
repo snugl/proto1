@@ -23,6 +23,7 @@ def get_kind(char):
         case x if x.isdigit():  return 'iden'
         case ":"             :  return 'iden' #colon is part of identifier scoping
         case ';':               return 'eos'
+        case ',':               return 'delim'
         case '\n':              return 'newline'
         case ' ':               return 'space'
         case _:                 return 'symbol'

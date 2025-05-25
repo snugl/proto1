@@ -110,10 +110,10 @@ class _sub:
     target : str
     cond  : typing.Any
     imap : typing.Any = field(default_factory=lambda: {})
+
     @classmethod
     def parse(cls, stream):
         target = stream.pop()
-        
         cond = None
 
         if stream.peek() == sym.cond:
@@ -123,18 +123,20 @@ class _sub:
         if stream.peek() == ";":
             return cls(target, cond)
 
-        print("interface")
-
         #interface
         imap = {}
         stream.expect("(")
         while stream.peek() != ")":
-            internal = stream.pop() #callee side
+            #callee side
+            internal = stream.pop()
             stream.expect("|")
-            external = expr.parse(stream) if stream.peek() != ";" else None
-            stream.expect(";")
+            #caller side
+            external = expr.parse(stream) #if stream.peek() != ";" else None
+            stream.expect(",")
+
             imap[internal] = external
         stream.expect(")")
+
         return cls(target, cond, imap)
 
 
@@ -143,12 +145,23 @@ class _sub:
         pinter = target_obj.pinter
 
         #construct in-paramter space
+        #THE ORDER IS IMPORTANT
+        for param in pinter.in_param:
+            self.imap[param].generate(output, ctx)
 
-
-        #construct parameter space
-        output('alloc', pinter.get_space_size())
+        #construct out-parameter space
+        output('alloc', len(pinter.out_param))
 
         output('call', target_obj.address)
+
+        #deconstruct out-parameters
+        for param in pinter.out_param:
+            target = self.imap[param].content
+            output('pull')
+            output('store', ctx.vars[target])     
+
+        #deconstruct in-paramters
+        output('free', len(pinter.in_param))
 
 
 @dataclass
@@ -195,10 +208,9 @@ class _rout:
 
         #reserve local stack space for variables
         var_count = next(ctx.var_allocer)
-        output("alloc", var_count)
-
         output.annotate(f'"== rout {self.name} ==')
         output.annotate(f'"\tvars: {var_count}')
+        output("alloc", var_count)
 
 
         #generate routine behavior

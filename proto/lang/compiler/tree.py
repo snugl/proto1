@@ -1,13 +1,17 @@
 
 from dataclasses import dataclass
+from dataclasses import field
 import typing
 
 import objs
+import sys
+
 
 
 @dataclass
 class node:
-    subs : list[typing.Any]
+    #subs : typing.Any = field(default_factory=lambda: {})
+    subs : typing.Any = field(default_factory=lambda: [])
 
     def __iter__(self):
         return iter(self.subs)
@@ -19,39 +23,41 @@ class node:
         return self.subs[key]
 
 
-    def routine(self, output, target_name):
-        target_routine = [
-            x for x in self.subs 
-            if x.name == target_name
-        ][0]
+    def get(self, name):
+        for sub in self.subs:
+            if sub.name == name:
+                return sub
 
+        sys.exit(1)
+
+
+    def routine(self, output, target):
         #collect and emit dependencies of routine
-        depend_table = {}
-        for node in target_routine.nodes:
-            if type(node) is objs._sub:
-                depend_name = node.target
-                if depend_name == target_name: #recursion
-                    continue
+        for node in target.nodes:
+            if type(node) is not objs._sub:
+                continue 
 
-                depend_table[depend_name] = self.routine(output, depend_name)
+            depend = self.get(node.target)
+            if target.name == depend.name: #recursion
+                continue
 
-        target_address = output.address()
-        depend_table[target_name] = target_address #in case of recursion
-        target_routine.generate(output, depend_table)
-        return target_address
+            self.routine(output, depend)
+
+        target.generate(output, self)
+        return target
 
     
 def parse(stream):
-    subs = []
+    root = node()
 
     while stream.has() and stream.peek() != '}':
-        word = stream.pop()
+        iden = stream.pop()
 
-        name = f"_{word}"
+        name = f"_{iden}"
         sub = getattr(objs, name).parse(stream)
-        if word != "rout":
+        if iden != "rout":
             stream.expect(";")
 
-        subs.append(sub)
+        root.subs.append(sub)
 
-    return node(subs)
+    return root
