@@ -132,7 +132,8 @@ class _sub:
             stream.expect("|")
             #caller side
             external = expr.parse(stream) #if stream.peek() != ";" else None
-            stream.expect(",")
+            if stream.peek() == ",":
+                stream.pop()
 
             imap[internal] = external
         stream.expect(")")
