@@ -2,7 +2,8 @@
 from dataclasses import dataclass
 from dataclasses import field
 
-import sys
+import error
+
 
 
 @dataclass
@@ -49,9 +50,11 @@ class stream:
     def expect(self, content):
         token = self._pop()
         if content != str(token):
-            print(f"Error at {self.last_token.path}:{self.last_token.line}")
-            print(f"\tExpected '{content}' but got '{token}'")
-            sys.exit(1)
+            error.path_line_error(
+                self.last_token.path, 
+                self.last_token.line, 
+                f"Expected '{content}' but got '{token}'"
+            )
 
     def has(self):
         return len(self.token_buffer) > 0

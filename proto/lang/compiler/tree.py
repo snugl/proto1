@@ -2,10 +2,10 @@
 from dataclasses import dataclass
 from dataclasses import field
 import typing
-import sys
 
 import objs
 import sym
+import error
 
 
 
@@ -29,7 +29,7 @@ class node:
             if sub.name == name:
                 return sub
 
-        sys.exit(1)
+        error.error(f"Unable to resolve routine name: {name}")
 
 
     def routine(self, output, target):
@@ -53,8 +53,11 @@ def parse(stream):
 
     while stream.has() and stream.peek() != '}':
         iden = stream.pop()
-
         name = f"_{iden}"
+
+        if not hasattr(objs, name):
+            error.stream_error(stream, f"Invalid statement entry base name: {iden}")
+
         sub = getattr(objs, name).parse(stream)
         if iden != "rout":
             stream.expect(sym.eos)
