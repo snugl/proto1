@@ -157,6 +157,7 @@ class _sub:
         #deconstruct out-parameters
         for param in pinter.out_param:
             target = self.imap[param].content
+            ctx.allocate_variable(target)
             output('pull')
             output('store', ctx.vars[target])     
 
