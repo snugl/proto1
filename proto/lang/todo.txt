@@ -1,5 +1,18 @@
 
+
+-make interface to allocs
+-change interface parsing
+
+
+-put eos into sym.py
+-better error messages
+    -for main
+        -check no inteface
+        -check exists
+
 -optimizations
+    -for emission
+    -for allocer 
 -bytecode
 
 new features:
