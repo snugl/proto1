@@ -119,7 +119,17 @@ class output:
                 self.seq.pop(index_low)
                 offset += 2
 
-        print(offset)
+            if low.inst == 'alloc' and low.arg == 0:
+                self.seq.pop(index_low)
+                offset += 1
+
+            if low.inst == 'free' and low.arg == 0:
+                self.seq.pop(index_low)
+                offset += 1
+
+
+
+        print(f"[info] optimized {offset} commands")
 
     def assemble(self, routine):
         self.seq.insert(0, command('call', reference(
