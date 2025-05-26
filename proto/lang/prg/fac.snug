@@ -42,7 +42,8 @@ rout main
 {
     sub Math::Fac
     (
-        n | 5, res | _
+        n | 5, 
+        res | _
     );
 
     debug _;

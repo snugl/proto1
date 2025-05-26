@@ -3,31 +3,32 @@
 
 
 rout mul
-"(Int a, Int b) => (Int prod)
+(
+    in a;
+    in b;
+    out c;
+)
 {
-    pull multiplicand;
-    pull multiplier;
-
-    put product = 0;
+    put c = 0;
     lab loop;
-        jump done ~ multiplier == 0;
+        jump done ~ a == 0;
 
-        put product = product + multiplicand;
-        put multiplier = multiplier - 1;
+        put c = c + b;
+        put a = a - 1;
 
         jump loop;
     lab done;
-
-    push product;
 }
 
 
 rout main
 {
-    push 3;
-    push 7;
-    sub mul;
-    pull _;
+    sub mul
+    (
+        a | 3,
+        b | 7,
+        c | _
+    );
     
     debug _;
 }
