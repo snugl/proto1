@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from dataclasses import field
 import typing
 
+import error
 
 
 @dataclass
@@ -24,8 +25,7 @@ class reference:
 
     def __str__(self):
         defi = definition.find(self.emission, self.name, self.routine)
-        return str(defi.address)
-
+        return defi.render()
 
 
 @dataclass
@@ -33,6 +33,9 @@ class definition:
     name : str
     routine : str
     address : int
+
+    def render(self):
+        return str(self.address) 
 
     @staticmethod
     def find(emission_ctx, name, routine):
@@ -43,17 +46,16 @@ class definition:
             if obj.name == name and obj.routine == routine:
                 return obj
 
-        return None
+        error.error(f"Unable to resolve definition {name} in routine scope {routine}")
 
     def __str__(self):
-        return f'"label {self.routine.name}.{self.name}'
+        return f'"label {self.routine}.{self.name}'
 
 
 
 @dataclass
 class anno:
     msg : str
-    line : int
 
     def __str__(self):
         return self.msg
@@ -71,7 +73,7 @@ class output:
 
 
     def annotate(self, msg):
-        self.seq.append(anno(msg, self.address()))
+        self.seq.append(anno(msg))
 
     def define(self, name, routine):
         label = definition(
@@ -93,8 +95,38 @@ class output:
     def render(self):
         return "\n".join(map(str, self.seq))
 
-    def assemble(self, address):
-        self.seq.insert(0, command('call', address))
+    def optimize(self):
+        offset = 0
+
+        index = 0
+        while index < len(self.seq)-1:
+            index_low  = index
+            index_high = index + 1
+            index += 1
+
+            low  = self.seq[index_low]
+            high = self.seq[index_high]
+
+            #adjust definition origin
+            if type(low) is definition:
+                low.address -= offset
+
+            if type(low)  in (anno, definition): continue
+            if type(high) in (anno, definition): continue
+
+            if low.inst == 'push' and high.inst == 'pull':
+                self.seq.pop(index_high)
+                self.seq.pop(index_low)
+                offset += 2
+
+        print(offset)
+
+    def assemble(self, routine):
+        self.seq.insert(0, command('call', reference(
+            name = None,
+            routine = routine,
+            emission = self,
+        )))
         self.seq.insert(1, command('halt', None))
 
         return self.render()

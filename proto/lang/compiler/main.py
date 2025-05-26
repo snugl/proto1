@@ -7,6 +7,8 @@ import emission
 import error
 
 
+entry_name = "main"
+
 def compile(path):
     #lex and parse
     stream = lex.tokenize(path)
@@ -16,7 +18,7 @@ def compile(path):
     output = emission.output()
 
     #actualy compilation
-    entry = root.get('main')
+    entry = root.get(entry_name)
     root.routine(output, entry)
 
     #verify integrety
@@ -24,8 +26,11 @@ def compile(path):
     if pcount > 0:
         error.error("Cannot bind parameter interface for entry function")
 
+    #optimize emission
+    output.optimize()
+
     #render ir
-    build = output.assemble(entry.address)
+    build = output.assemble(entry_name)
     
     with open('build', "w") as f:
         f.write(build)

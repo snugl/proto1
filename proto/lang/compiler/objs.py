@@ -77,7 +77,7 @@ class _lab:
         return cls(stream.pop())
 
     def generate(self, output, ctx):
-        output.define(self.label, ctx.routine)
+        output.define(self.label, ctx.routine.name)
         
 
 @dataclass
@@ -96,7 +96,7 @@ class _jump:
         return cls(label, cond)
 
     def generate(self, output, ctx):
-        target_label = emission.reference(self.label, ctx.routine, output)
+        target_label = emission.reference(self.label, ctx.routine.name, output)
         if self.cond is None:
             output('jump', target_label)
 
@@ -153,7 +153,8 @@ class _sub:
         #construct out-parameter space
         output('alloc', len(pinter.out_param))
 
-        output('call', target_obj.address)
+        target_label = emission.reference(None, target_obj.name, output)
+        output('call', target_label)
 
         #deconstruct out-parameters
         for param in pinter.out_param:
@@ -174,8 +175,6 @@ class _rout:
 
     pinter : abstract.param_interface = field(default_factory=lambda: abstract.param_interface())
 
-    address : typing.Any = None
-
     #local compilation context
     @dataclass
     class _ctx:
@@ -190,7 +189,7 @@ class _rout:
 
 
     def generate(self, output, tree):
-        self.address = output.address() #routine origin address
+        output.define(None, self.name)
 
         #build compilation context
         ctx = self._ctx(
@@ -210,8 +209,8 @@ class _rout:
 
         #reserve local stack space for variables
         var_count = next(ctx.var_allocer)
-        output.annotate(f'"== rout {self.name} ==')
-        output.annotate(f'"\tvars: {var_count}')
+        output.annotate(f'"rout {self.name}')
+        output.annotate(f'"\tvars: {list(ctx.vars)}')
         output("alloc", var_count)
 
 
