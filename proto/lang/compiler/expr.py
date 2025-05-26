@@ -11,29 +11,25 @@ class node:
     left  : typing.Any = None
     right : typing.Any = None
      
+    #generate outputs to acc
     def generate(self, output, ctx):
         vars = ctx.vars
         match self.kind:
             case 'num':
                 output('const', self.content)
-                output('push')
             case 'var':
                 output('load', vars[self.content])
-                output('push')
             case 'op':
-                self.left.generate(output, ctx)
                 self.right.generate(output, ctx)
-                output('pull')
-                output('store', 100) # 100 compiler temp
-                output('pull')
+                output('push')
+                self.left.generate(output, ctx)
                 output({
                     '+': 'add',
                     '-': 'sub',
                     '>': 'greater', #acc is greater
                     '<': 'lesser',  #acc is lesser
                     '==': 'equal',
-                }[self.content], 100)
-                output('push')
+                }[self.content])
 
 
 def parse_expr(stream):

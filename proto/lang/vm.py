@@ -56,11 +56,11 @@ def run(prog):
             case 'const': acc = int(arg)
 
             #arithmatic
-            case 'add':   acc += mem[varg]
-            case 'sub':   acc -= mem[varg]
-            case 'greater': acc = acc > mem[varg]
-            case 'lesser' : acc = acc < mem[varg]
-            case 'equal':   acc = acc == mem[varg]
+            case 'add':     acc += pull()
+            case 'sub':     acc -= pull()
+            case 'greater': acc = (acc > pull())
+            case 'lesser' : acc = (acc < pull())
+            case 'equal':   acc = (acc == pull())
 
             #stack interface
             case 'push': push(acc)

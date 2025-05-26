@@ -33,6 +33,7 @@ class _push:
 
     def generate(self, output, ctx):
         self.expr.generate(output, ctx)
+        output('push')
 
 @dataclass
 class _debug:
@@ -43,7 +44,6 @@ class _debug:
 
     def generate(self, output, ctx):
         self.expr.generate(output, ctx)
-        output('pull')
         output('debug')
 
 
@@ -64,7 +64,6 @@ class _put:
 
     def generate(self, output, ctx):
         self.expr.generate(output, ctx)
-        output('pull')
         output('store', ctx.vars[self.target])
 
 
@@ -102,7 +101,6 @@ class _jump:
 
         else:
             self.cond.generate(output, ctx)
-            output('pull')
             output('branch', target_label)
 
 @dataclass
@@ -149,6 +147,7 @@ class _sub:
         #THE ORDER IS IMPORTANT
         for param in pinter.in_param:
             self.imap[param].generate(output, ctx)
+            output('push')
 
         #construct out-parameter space
         output('alloc', len(pinter.out_param))
