@@ -1,28 +1,45 @@
 
 
 
-seq core::types
+seq type
 {
-    add,
-    sub
+    add, sub
+}
+
+seq node
+{
+    type,
+    prev,
+    next,
+    sub,
+    content
 }
 
 
-
-seq core::node
-{
-    type,   ":types
-    prev,   ":node
-    next,   ":node
-    sub,    ":void
-    content ":int
-}
-
-
-rout core::main
+rout main
 {
     new node n;
-    put [n + core::node::type] = core::types::add;
+    put n.node::type = type::add;
+
+    
+    new 10 array;
+    put array.0 = 2;
+    put array.1 = 3;
+    put array.2 = 5;
+    put array.3 = 7;
+    
+    "a.b = *(a+b) = a[b]
+    "the dot operator can access field using seqs
+
+    put i = 0;
+    lab loop;
+        put value = array.i;
+        put i = i + 1;
+        debug value;
+    jump loop;
+
+    "notice: no freeing
+    "objects get automatically deallocated at the end of the scope they're declared in!
 
 }
 
