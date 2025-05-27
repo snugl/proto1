@@ -198,7 +198,7 @@ class _rout:
             routine = self
         )
 
-        #generate interface binding
+        #generate and interlace interface binding
         ctx.vars.update(self.pinter.generate_variable_binding())
 
         #infer variables

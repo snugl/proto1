@@ -128,9 +128,6 @@ class output:
                 offset += 1
 
 
-
-        print(f"[info] optimized {offset} commands")
-
     def assemble(self, routine):
         self.seq.insert(0, command('call', reference(
             name = None,
