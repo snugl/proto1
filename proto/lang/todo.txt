@@ -1,9 +1,5 @@
 
--fix expression emission
-    -expr.py is still using compiler constant at $100
-
 -optimizations
-    -for emission
     -for allocer 
 -bytecode
 
