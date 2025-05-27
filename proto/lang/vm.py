@@ -86,8 +86,9 @@ def run(prog):
                 base = stack #construct new frame
 
             case 'return':
-                base = pull() #reconstruct frame
-                pc = pull()   #reconstruct flow
+                stack = base  #collaps current frame (if it even exists)
+                base = pull() #reconstruct old frame
+                pc = pull()   #reconstruct old flow
 
             #memory manage
             case 'alloc': #allocate n spaces on stack
