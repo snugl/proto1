@@ -98,16 +98,22 @@ def run(prog):
                 stack -= arg
 
             case 'dyn': #alloc acc, base into acc
+                point = stack
                 stack += acc
-                acc = stack
+                acc = point
 
+            #for deref/ref: acc is addr
+            case 'deref': #acc = *acc
+                acc = mem[acc]
+
+            case 'ref': #*acc = pull()
+                mem[acc] = pull()
 
 
 
             #misc
             case 'debug': print(acc)
             case 'halt':  running = False
-
 
 
 def main():
