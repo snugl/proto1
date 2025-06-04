@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import typing
 
 import sym
+import error
 
 @dataclass
 class node:
@@ -10,6 +11,31 @@ class node:
     content : typing.Any
     left  : typing.Any = None
     right : typing.Any = None
+
+
+    #generate reads from acc
+    def write(self, output, ctx):
+        #either variable or dot operator
+
+        match self.kind:
+            case 'var': output('store', ctx.vars[self.content])
+            case 'op' if self.content == sym.op_dot:
+                #preserve original
+                output('push') 
+
+                #compute target addr
+                self.right.generate(output, ctx)
+                output('push')
+                self.left.generate(output, ctx)
+                output('add')
+
+                #perform enref
+                output('ref')
+                
+            case _:
+                error.error("Unable to write to expression");
+                
+
      
     #generate outputs to acc
     def generate(self, output, ctx):
