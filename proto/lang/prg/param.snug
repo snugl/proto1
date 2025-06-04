@@ -17,9 +17,9 @@ rout main
 {
     put x = 0;
 
-    sub print ( n    | x );
-    sub add2  ( base | x, mod | x );
-    sub print ( n    | x );
+    sub print ( n    ~ x );
+    sub add2  ( base ~ x, mod ~ x );
+    sub print ( n    ~ x );
 }
 
 

@@ -6,9 +6,9 @@ rout main
     put _ = 0;
     sub add
     (
-        a | 2,
-        b | 3,
-        sum | _,
+        a ~ 2,
+        b ~ 3,
+        sum ~ _,
     );
 
     debug _;

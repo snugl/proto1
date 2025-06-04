@@ -30,8 +30,8 @@ rout Math::Fac
     jump return ~ n == 0;
 
     put tmp = 0;
-    sub Math::Fac ( n | n - 1, res | tmp   );
-    sub Math::Mul ( a | n    , b   | tmp, c | res);
+    sub Math::Fac ( n ~ n - 1, res ~ tmp   );
+    sub Math::Mul ( a ~ n    , b   ~ tmp, c ~ res);
 
     lab return;
 }
@@ -42,8 +42,8 @@ rout main
 {
     sub Math::Fac
     (
-        n   | 5, 
-        res | _
+        n   ~ 5, 
+        res ~ _
     );
 
     debug _;

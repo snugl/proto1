@@ -25,9 +25,9 @@ rout main
 {
     sub mul
     (
-        a | 3,
-        b | 7,
-        c | _
+        a ~ 3,
+        b ~ 7,
+        c ~ _
     );
     
     debug _;
