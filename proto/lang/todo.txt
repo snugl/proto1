@@ -1,4 +1,7 @@
 
+-ux
+    -ensure routine parameters are bound!!!
+
 -optimizations
 -bytecode
 

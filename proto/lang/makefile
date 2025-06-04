@@ -1,5 +1,5 @@
 
-TARGET = prg/param.snug
+TARGET = prg/fac.snug
 
 run: compile
 	./vm.py build
