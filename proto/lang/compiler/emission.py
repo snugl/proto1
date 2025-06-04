@@ -4,6 +4,7 @@ from dataclasses import field
 import typing
 
 import error
+import optimizer
 
 
 @dataclass
@@ -96,37 +97,10 @@ class output:
         return "\n".join(map(str, self.seq))
 
     def optimize(self):
-        offset = 0
-
-        index = 0
-        while index < len(self.seq)-1:
-            index_low  = index
-            index_high = index + 1
-            index += 1
-
-            low  = self.seq[index_low]
-            high = self.seq[index_high]
-
-            #adjust definition origin
-            if type(low) is definition:
-                low.address -= offset
-
-            if type(low)  in (anno, definition): continue
-            if type(high) in (anno, definition): continue
-
-            if low.inst == 'push' and high.inst == 'pull':
-                self.seq.pop(index_high)
-                self.seq.pop(index_low)
-                offset += 2
-
-            if low.inst == 'alloc' and low.arg == 0:
-                self.seq.pop(index_low)
-                offset += 1
-
-            if low.inst == 'free' and low.arg == 0:
-                self.seq.pop(index_low)
-                offset += 1
-
+        #compiler not mature for optimizations yet!
+        #!TODO
+        #optimizer.optimize_static(self)
+        pass
 
     def assemble(self, routine):
         self.seq.insert(0, command('call', reference(
