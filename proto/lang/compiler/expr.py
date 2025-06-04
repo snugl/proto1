@@ -23,13 +23,17 @@ class node:
                 self.right.generate(output, ctx)
                 output('push')
                 self.left.generate(output, ctx)
-                output({
-                    '+': 'add',
-                    '-': 'sub',
-                    '>': 'greater', #acc is greater
-                    '<': 'lesser',  #acc is lesser
-                    '==': 'equal',
-                }[self.content])
+
+                match self.content:
+                    case sym.op_add: output('add'),
+                    case sym.op_sub: output('sub'),
+                    case sym.op_gt : output('greater'), #acc is greater
+                    case sym.op_lt : output('lesser'),  #acc is lesser
+                    case sym.op_eq : output('equal'),
+                    case sym.op_dot:
+                        output('add')
+                        output('deref')
+
 
 
 def parse_expr(stream):
