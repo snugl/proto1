@@ -1,11 +1,10 @@
 
--ux
-    -ensure routine parameters are bound!!!
+(
+    -design coherence
+        -ensure routine parameters are bound!!!
+)
 
--optimizations
--bytecode
-
-new features:
+-new features
     -dot operator
 
     -memory stuff
@@ -15,7 +14,14 @@ new features:
 
     -structs
     -enums
+
+    -import to build corpus
+
     -stack (user stack io deprecated!!)
         -drop
         -swap
         -dup
+
+-execution model
+    -optimizations
+    -bytecode
