@@ -1,13 +1,18 @@
 
 -optimizations
-    -for allocer 
 -bytecode
 
 new features:
+    -dot operator
+
+    -memory stuff
+        -just straight baabnq copy 
+        -new
+        -static
+
     -structs
     -enums
-    -stack
+    -stack (user stack io deprecated!!)
         -drop
         -swap
         -dup
-    -memory stuff
