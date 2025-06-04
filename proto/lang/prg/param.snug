@@ -1,34 +1,25 @@
 
 
 
-rout add2
+rout add2 ( in base; out mod; )
 {
-    pull value;
-    push value + 2;
-}
-
-rout dup
-{
-    pull _;
-    push _;
-    push _;
+    put mod = base + 2;
 }
 
 
-rout print
+rout print ( in n; )
 {
-    pull _;
-    debug _;
+    debug n;
 }
 
 
 rout main
 {
-    push 3;
+    put x = 0;
 
-    sub add2;
-    sub dup; sub print;
-    sub add2; sub print; 
+    sub print ( n    | x );
+    sub add2  ( base | x, mod | x );
+    sub print ( n    | x );
 }
 
 
