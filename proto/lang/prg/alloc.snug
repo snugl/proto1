@@ -1,0 +1,12 @@
+
+
+rout main
+{
+    put size = 10;
+    new size -> addr; debug addr;
+    new size -> addr; debug addr;
+    new size -> addr; debug addr;
+}
+
+
+
