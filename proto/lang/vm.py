@@ -97,6 +97,12 @@ def run(prog):
             case 'free':  #free n spaces on stack
                 stack -= arg
 
+            case 'dyn': #alloc acc, base into acc
+                stack += acc
+                acc = stack
+
+
+
 
             #misc
             case 'debug': print(acc)

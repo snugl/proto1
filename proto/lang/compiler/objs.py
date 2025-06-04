@@ -25,7 +25,7 @@ class _debug:
 @dataclass
 class _put:
     target : typing.Any
-    expr   : typing.Any
+    expr   : expr.node
     @classmethod
     def parse(cls, stream):
         target = stream.pop()
@@ -138,6 +138,29 @@ class _sub:
 
         #deconstruct in-paramters
         output('free', len(pinter.in_param))
+
+@dataclass
+class _new:
+    size   : expr.node
+    target : str
+
+    @classmethod
+    def parse(cls, stream):
+        size = expr.parse(stream)
+        stream.expect("->")
+        target = stream.pop()
+
+        return cls(size, target)
+
+    def infer(self, ctx):
+        ctx.allocate_variable(self.target)
+
+    def generate(self, output, ctx):
+        self.size.generate(output, ctx)
+        output('dyn')
+        output('store', ctx.vars[self.target])
+    
+     
 
 
 @dataclass
