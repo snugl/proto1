@@ -5,22 +5,17 @@
 )
 
 -new features
-    -dot operator
+    -dot operator /
 
     -memory stuff
         -just straight baabnq copy 
-        -new
+        -new / (strings)
         -static
 
     -structs
     -enums
 
     -import to build corpus
-
-    -stack (user stack io deprecated!!)
-        -drop
-        -swap
-        -dup
 
 -execution model
     -optimizations
