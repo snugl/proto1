@@ -17,6 +17,9 @@ def compile(path):
     #output buffer
     output = emission.output()
 
+    #render global constants
+    root.render_constants()
+
     #actualy compilation
     entry = root.get(entry_name)
     root.routine(output, entry)

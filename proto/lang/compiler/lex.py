@@ -22,7 +22,7 @@ def get_kind(char):
         case '"':               return 'comment'
         case x if x.isalpha():  return 'iden' 
         case x if x.isdigit():  return 'iden'
-        case ":"             :  return 'iden' #colon is part of identifier scoping
+        case ":"             :  return 'iden' #for scoping
         case ';':               return 'eos'
         case ',':               return 'delim'
         case '\n':              return 'newline'
@@ -58,6 +58,10 @@ class stream:
 
     def has(self):
         return len(self.token_buffer) > 0
+
+    def maybe(self, content):
+        if self.peek() == content:
+            self.pop()
 
 def tokenize(path):
     with open(path, "r") as f:

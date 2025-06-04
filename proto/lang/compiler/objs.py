@@ -238,8 +238,49 @@ class _rout:
                 stream.expect(sym.eos)
             stream.expect(sym.param_end)
 
-        stream.expect("{")
+        stream.expect(sym.block_start)
         self.nodes = tree.parse(stream)
-        stream.expect("}")
+        stream.expect(sym.block_end)
 
         return self
+
+
+@dataclass
+class _seq:
+    name : str
+    fields : list[str]
+
+    @classmethod
+    def parse(cls, stream):
+        name = stream.pop()
+        fields = []
+
+        stream.expect(sym.block_start)
+        while stream.peek() != sym.block_end:
+            fields.append(stream.pop())
+            stream.maybe(",") #comma delims are optional
+        
+        stream.expect(sym.block_end)
+
+        return cls(
+            name,
+            fields
+        )
+
+    def get_size(self):
+        return len(self.fields)
+
+    def render_constants(self):
+        consts = {}
+
+        #seq length by name
+        consts[self.name] = self.get_size()
+
+        #seq field offsets by scoped name
+        for offset, field_name  in enumerate(self.fields):
+            name = f"{self.name}::{field_name}"
+            consts[name] = offset
+
+        return consts
+
+

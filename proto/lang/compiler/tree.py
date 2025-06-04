@@ -11,8 +11,9 @@ import error
 
 @dataclass
 class node:
-    #subs : typing.Any = field(default_factory=lambda: {})
-    subs : typing.Any = field(default_factory=lambda: [])
+    subs   : typing.Any = field(default_factory=lambda: [])
+    consts : typing.Any = field(default_factory=lambda: {})
+    
 
     def __iter__(self):
         return iter(self.subs)
@@ -31,6 +32,18 @@ class node:
 
         error.error(f"Unable to resolve routine name: {name}")
 
+
+    #only applies to root.
+    #so all root tree scopes should contain consts,
+    #making them accessable to local compilation context objs._rout._ctx
+    def render_constants(self):
+        for sub in self.subs:
+            if type(sub) is not objs._seq:
+                continue
+
+            self.consts.update(sub.render_constants())
+
+            
 
     def routine(self, output, target):
         #collect and emit dependencies of routine
@@ -56,10 +69,10 @@ def parse(stream):
         name = f"_{iden}"
 
         if not hasattr(objs, name):
-            error.stream_error(stream, f"Invalid statement entry base name: {iden}")
+            error.stream_error(stream, f"Invalid statement name: {iden}")
 
         sub = getattr(objs, name).parse(stream)
-        if iden != "rout":
+        if iden not in ("rout", "seq"):
             stream.expect(sym.eos)
 
         root.subs.append(sub)

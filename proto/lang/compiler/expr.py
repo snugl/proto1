@@ -18,7 +18,8 @@ class node:
         #either variable or dot operator
 
         match self.kind:
-            case 'var': output('store', ctx.vars[self.content])
+            case 'var' if self.content in ctx.vars: #might be global constant
+                output('store', ctx.vars[self.content])
             case 'op' if self.content == sym.op_dot:
                 #preserve original
                 output('push') 
@@ -43,8 +44,10 @@ class node:
         match self.kind:
             case 'num':
                 output('const', self.content)
-            case 'var':
+            case 'var' if self.content in vars:
                 output('load', vars[self.content])
+            case 'var' if self.content in ctx.tree.consts:
+                output('const', ctx.tree.consts[self.content])
             case 'op':
                 self.right.generate(output, ctx)
                 output('push')
@@ -93,6 +96,7 @@ def parse_factor(stream):
                 kind = 'var',
                 content = x
             )
+
 
 def parse(stream):
     return parse_expr(stream)
