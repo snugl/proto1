@@ -10,32 +10,6 @@ import tree
 import abstract
 
 @dataclass
-class _pull:
-    target : typing.Any 
-    @classmethod
-    def parse(cls, stream):
-        return cls(stream.pop())
-
-    def infer(self, ctx):
-        ctx.allocate_variable(self.target)
-
-    def generate(self, output, ctx):
-        output('pull')
-        output('store', ctx.vars[self.target])
-
-
-@dataclass
-class _push:
-    expr : typing.Any
-    @classmethod
-    def parse(cls, stream):
-        return cls(expr.parse(stream))
-
-    def generate(self, output, ctx):
-        self.expr.generate(output, ctx)
-        output('push')
-
-@dataclass
 class _debug:
     expr : typing.Any
     @classmethod
