@@ -2,11 +2,9 @@
 
 
 rout main
-(
-    in a;
-    out b;
-)
 {
-    debug 10;
+    put a = 100;
+    put a.10 = 1234;
+    debug a.10;
 }
 

@@ -2,10 +2,27 @@
 
 rout main
 {
+    "generate local dynamic stack object
     put size = 10;
-    new size -> addr; debug addr;
-    new size -> addr; debug addr;
-    new size -> addr; debug addr;
+    new size -> addr;
+
+    "populate object
+    put i = 0;
+    lab populate;
+        put addr.i = i;
+        put i = i + 1;
+    jump populate ~ i < size;
+
+    "special populate
+    put addr.5 = 100;
+
+    "read-out
+    put i = 0;
+    lab read;
+        debug addr.i; 
+        put i = i + 1;
+    jump read ~ i < size;
+
 }
 
 
