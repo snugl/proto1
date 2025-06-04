@@ -24,21 +24,23 @@ class _debug:
 
 @dataclass
 class _put:
-    target : typing.Any
+    target : expr.node
     expr   : expr.node
     @classmethod
     def parse(cls, stream):
-        target = stream.pop()
+        target = expr.parse(stream) #lvalue
         stream.expect(sym.assign)
-        node = expr.parse(stream)
+        node = expr.parse(stream)   #rvalue
         return cls(target, node)
 
     def infer(self, ctx):
-        ctx.allocate_variable(self.target)
+        if self.target.kind == 'var':
+            ctx.allocate_variable(self.target.content)
+        #!dot operator can not infer!
 
     def generate(self, output, ctx):
         self.expr.generate(output, ctx)
-        output('store', ctx.vars[self.target])
+        self.target.write(output, ctx)
 
 
 
@@ -147,7 +149,7 @@ class _new:
     @classmethod
     def parse(cls, stream):
         size = expr.parse(stream)
-        stream.expect("->")
+        stream.expect(sym.alloc_arrow)
         target = stream.pop()
 
         return cls(size, target)
