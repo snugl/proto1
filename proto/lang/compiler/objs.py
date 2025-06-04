@@ -63,10 +63,10 @@ class _jump:
     def parse(cls, stream):
         label = stream.pop()
         
-        if stream.peek() != sym.cond:
+        if stream.peek() != sym.binding:
             return cls(label, cond=None)
 
-        stream.expect(sym.cond)
+        stream.expect(sym.binding)
         cond = expr.parse(stream)
         return cls(label, cond)
 
@@ -90,8 +90,8 @@ class _sub:
         target = stream.pop()
         cond = None
 
-        if stream.peek() == sym.cond:
-            stream.expect(sym.cond)
+        if stream.peek() == sym.binding:
+            stream.expect(sym.binding)
             cond = expr.parse(stream)
 
         if stream.peek() == sym.eos:
@@ -103,7 +103,7 @@ class _sub:
         while stream.peek() != sym.param_end:
             #callee side
             internal = stream.pop()
-            stream.expect("|")
+            stream.expect(sym.binding)
             #caller side
             external = expr.parse(stream) #if stream.peek() != ";" else None
             if stream.peek() == ",":
