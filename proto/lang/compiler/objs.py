@@ -142,7 +142,7 @@ class _sub:
         output('free', len(pinter.in_param))
 
 @dataclass
-class _new:
+class _trans:
     size   : expr.node
     target : str
 
