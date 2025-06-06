@@ -8,9 +8,9 @@
     -dot operator /
 
     -memory stuff
-        -just straight baabnq copy 
-        -new / (strings)
-        -static
+        -trans (transient, stack objects)/ (strings)
+        -pers  (persistent, heap  objects)
+        -void  (freeing persistent object)
 
     -seq /
 

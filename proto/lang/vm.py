@@ -97,10 +97,11 @@ def run(prog):
             case 'free':  #free n spaces on stack
                 stack -= arg
 
-            case 'dyn': #alloc acc, base into acc
+            case 'trans': #alloc transient acc, base into acc
                 point = stack
                 stack += acc
                 acc = point
+            
 
             #for deref/ref: acc is addr
             case 'deref': #acc = *acc

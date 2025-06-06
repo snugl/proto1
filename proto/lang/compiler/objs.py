@@ -159,7 +159,7 @@ class _trans:
 
     def generate(self, output, ctx):
         self.size.generate(output, ctx)
-        output('dyn')
+        output('trans')
         output('store', ctx.vars[self.target])
     
      
