@@ -1,0 +1,32 @@
+<html>
+    <body>
+        <h1>The Heap</h1>
+        <p>
+            The heap is managed by the VM and located in the upper half of memory, above the stack. <br>
+            It is composed of so called 'block', which contain head along side the actual data. <br>
+            The head stores a pointer to the next block as well as the size of the block. <br>
+            Ergo, when allocating N words, the block containing these words, will have the size N+2. <br>
+        </p>
+        <h2>Block Format</h2>
+        <p>The following is a diagram of the heap block format:</p>
+        <pre>
+    +---------+------+----------+       +---------+------+----------+
+... | Pointer | Size | Data ... |  ...  | Pointer | Size | Data ... | ...
+    +----|----+------+----------+       +----^----+------+----------+
+         |                                   |
+         \-----------------------------------/
+        </pre>
+
+        <p>
+            The heap always contains a hook block at the very base. <br>
+            It's purpose is to point to the first real block, and therefore <br>
+            always has a size of zero, containing no data. <br>
+            <br>
+            ! Caution ! <br>
+            The hook block exists as a side effect of the heap manager unit. <br>
+            It is not explicitly defined in the virtual machine. <br>
+
+        </p>
+
+    </body>
+</html>
