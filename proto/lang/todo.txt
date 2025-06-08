@@ -1,16 +1,17 @@
 
-(
-    -design coherence
-        -ensure routine parameters are bound!!!
-)
 
 -new features
     -dot operator /
 
+    -DECIDE ABOUT HEAP
+        -it has been decided
+
     -memory stuff
-        -trans (transient, stack objects)/ (strings)
-        -pers  (persistent, heap  objects)
-        -void  (freeing persistent object)
+        -trans / (transient, stack objects)
+        -pers  / (persistent, heap  objects)
+        -void  / (freeing persistent object)
+
+        -init  (for initializing objects)
 
     -seq /
 
