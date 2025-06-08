@@ -59,6 +59,7 @@ class node:
                     case sym.op_gt : output('greater'), #acc is greater
                     case sym.op_lt : output('lesser'),  #acc is lesser
                     case sym.op_eq : output('equal'),
+                    case sym.op_mul: output('mul'),
                     case sym.op_dot:
                         output('add')
                         output('deref')

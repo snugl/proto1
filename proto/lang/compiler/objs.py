@@ -161,6 +161,28 @@ class _trans:
         self.size.generate(output, ctx)
         output('trans')
         output('store', ctx.vars[self.target])
+
+
+@dataclass
+class _pers:
+    size   : expr.node
+    target : str
+
+    @classmethod
+    def parse(cls, stream):
+        size = expr.parse(stream)
+        stream.expect(sym.alloc_arrow)
+        target = stream.pop()
+
+        return cls(size, target)
+
+    def infer(self, ctx):
+        ctx.allocate_variable(self.target)
+
+    def generate(self, output, ctx):
+        self.size.generate(output, ctx)
+        output('pers')
+        output('store', ctx.vars[self.target])
     
      
 
