@@ -22,15 +22,21 @@ def lex(raw):
     return prog
 
 
+
 def run(prog):
-     
+
+    mem_size = 65536
+    heap_base = mem_size // 2
+
+
     pc = 0
     acc = 0
-    mem = [0 for _ in range(65536)]
+    mem = [0 for _ in range(mem_size)]
     stack = 0 #stack pointer
     base  = stack #base  pointer
 
     running = True
+
 
     def push(x):
         nonlocal mem, stack
@@ -46,9 +52,6 @@ def run(prog):
         inst, arg = prog[pc]
         pc += 1
 
-        #print(pc, inst, arg, stack, base)
-        #input()
-
         #virtual arg, relative to stack frame
         varg = (base + arg) if arg is not None else 0
 
@@ -61,6 +64,7 @@ def run(prog):
             case 'greater': acc = (acc > pull())
             case 'lesser' : acc = (acc < pull())
             case 'equal':   acc = (acc == pull())
+            case 'mul':     acc = acc * pull()
 
             #stack interface
             case 'push': push(acc)
@@ -97,6 +101,7 @@ def run(prog):
             case 'free':  #free n spaces on stack
                 stack -= arg
 
+            #i know what you are OwO
             case 'trans': #alloc transient acc, base into acc
                 point = stack
                 stack += acc
@@ -109,6 +114,38 @@ def run(prog):
 
             case 'ref': #*acc = pull()
                 mem[acc] = pull()
+
+            
+            #heap
+            case 'pers': #size of block by acc
+                needed = acc + 1
+
+                # *collars and leashes you* let's go for walkies~
+                walker = heap_base
+
+                trial = needed
+                while trial > 0: #trial running
+                    if mem[walker] == 0:
+                        walker += 1
+                        trial  -= 1
+                    else:
+                        walker += mem[walker]
+                        trial = needed #restart trial
+
+                ptr = walker - needed
+                mem[ptr] = needed
+                acc = ptr
+
+            
+            case 'void':
+                start = acc
+                end   = start + mem[start]
+
+                for addr in range(start, end):
+                    mem[addr] = 0
+
+
+                
 
 
 
