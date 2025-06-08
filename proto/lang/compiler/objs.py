@@ -34,9 +34,7 @@ class _put:
         return cls(target, node)
 
     def infer(self, ctx):
-        if self.target.kind == 'var':
-            ctx.allocate_variable(self.target.content)
-        #!dot operator can not infer!
+        self.target.infer(ctx)
 
     def generate(self, output, ctx):
         self.expr.generate(output, ctx)
@@ -151,47 +149,64 @@ class _sub:
 @dataclass
 class _trans:
     size   : expr.node
-    target : str
+    target : expr.node #expr has to be writeable
 
     @classmethod
     def parse(cls, stream):
         size = expr.parse(stream)
         stream.expect(sym.alloc_arrow)
-        target = stream.pop()
+        target = expr.parse(stream)
 
         return cls(size, target)
 
     def infer(self, ctx):
-        ctx.allocate_variable(self.target)
+       self.target.infer(ctx)
 
     def generate(self, output, ctx):
         self.size.generate(output, ctx)
         output('trans')
-        output('store', ctx.vars[self.target])
+        self.target.write(output, ctx)
 
 
 @dataclass
 class _pers:
     size   : expr.node
-    target : str
+    target : expr.node
 
     @classmethod
     def parse(cls, stream):
         size = expr.parse(stream)
         stream.expect(sym.alloc_arrow)
-        target = stream.pop()
+        target = expr.parse(stream)
 
         return cls(size, target)
 
     def infer(self, ctx):
-        ctx.allocate_variable(self.target)
+       self.target.infer(ctx)
 
     def generate(self, output, ctx):
         self.size.generate(output, ctx)
         output('pers')
-        output('store', ctx.vars[self.target])
+        self.target.write(output, ctx)
     
-     
+@dataclass
+class _void:
+    target : expr.node
+
+    @classmethod
+    def parse(cls, stream):
+        target = expr.parse(stream)
+        return cls(target)
+
+    def infer(self, ctx):
+        #should be able to allocate
+        #(though it doesn't make sense lolz)
+        self.target.infer(ctx)
+
+    def generate(self, output, ctx):
+        self.target.generate(output, ctx)
+        output('void')
+
 
 
 @dataclass

@@ -12,6 +12,10 @@ class node:
     left  : typing.Any = None
     right : typing.Any = None
 
+    def infer(self, ctx):
+        #only variable can infer
+        if self.kind == 'var':
+            ctx.allocate_variable(self.content)
 
     #generate reads from acc
     def write(self, output, ctx):
