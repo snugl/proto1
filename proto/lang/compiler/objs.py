@@ -114,6 +114,14 @@ class _sub:
 
         return cls(target, cond, imap)
 
+    def infer(self, ctx):
+        target_obj = ctx.tree.get(self.target)
+        pinter = target_obj.pinter
+
+        for binding_name in pinter.out_param:
+            variable_name = self.imap[binding_name].content
+            ctx.allocate_variable(variable_name)
+
 
     def generate(self, output, ctx):
         target_obj = ctx.tree.get(self.target)
@@ -134,7 +142,6 @@ class _sub:
         #deconstruct out-parameters
         for param in pinter.out_param:
             target = self.imap[param].content
-            ctx.allocate_variable(target)
             output('pull')
             output('store', ctx.vars[target])     
 
