@@ -58,10 +58,13 @@ rout Rect::GetArea( in rect; out area; )
 
 rout main
 {
-    sub Rect::CreateByDim( len ~ 3, hei ~ 7, rect ~ rect );
+    sub Rect::CreateByDim( len ~ 10, hei ~ 7, rect ~ rect );
     put rect.Rect::Color = Spectr::Magenta; "like my eyes
 
     sub Rect::GetArea( rect ~ rect, area ~ _ );
     debug _;
+
+
+    debug rect . (0 - 1);
 }
 
