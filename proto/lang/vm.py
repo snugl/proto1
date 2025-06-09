@@ -115,6 +115,7 @@ def run(prog):
             case 'ref': #*acc = pull()
                 mem[acc] = pull()
 
+
             
             #heap
             case 'pers': #size of block by acc
@@ -129,15 +130,15 @@ def run(prog):
                         walker += 1
                         trial  -= 1
                     else:
-                        walker += mem[walker]
-                        trial = needed #restart trial
+                        walker += mem[walker] #skip block
+                        trial = needed        #restart trial
 
                 ptr = walker - needed
-                mem[ptr] = needed
+                mem[ptr] = needed #size header
                 acc = ptr
 
             
-            case 'void':
+            case 'void': #free block by zero'ing
                 start = acc
                 end   = start + mem[start]
 
