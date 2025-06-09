@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import sys
-import lex
 import tree
 import emission
 import error
@@ -10,17 +9,13 @@ import error
 entry_name = "main"
 
 def compile(path):
-    #lex and parse
-    stream = lex.tokenize(path)
-    root = tree.parse(stream)
+    #lex, parse, expand imports
+    root = tree.prepare(path)
 
     #output buffer
     output = emission.output()
 
-    #render global constants
-    root.render_constants()
-
-    #actualy compilation
+    #actual compilation
     entry = root.get_routine(entry_name)
     root.routine(output, entry)
 
