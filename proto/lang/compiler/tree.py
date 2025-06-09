@@ -25,8 +25,10 @@ class node:
         return self.subs[key]
 
 
-    def get(self, name):
+    def get_routine(self, name):
         for sub in self.subs:
+            if sub is None: continue
+            if type(sub) is not objs._rout: continue
             if sub.name == name:
                 return sub
 
@@ -51,7 +53,7 @@ class node:
             if type(node) is not objs._sub:
                 continue 
 
-            depend = self.get(node.target)
+            depend = self.get_routine(node.target)
             if target.name == depend.name: #recursion
                 continue
 

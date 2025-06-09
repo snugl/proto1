@@ -21,7 +21,7 @@ def compile(path):
     root.render_constants()
 
     #actualy compilation
-    entry = root.get(entry_name)
+    entry = root.get_routine(entry_name)
     root.routine(output, entry)
 
     #verify integrety
