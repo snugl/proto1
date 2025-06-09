@@ -7,11 +7,11 @@ rout main
     put sizeContent  = 3;
     put size = sizeContent + 1;
 
-    trans count -> container;
+    trans count ~ container;
 
     put i = 0;
     lab allocate;
-        pers sizeContent -> container.i;
+        pers sizeContent ~ container.i;
         put i = i + 1;
     jump allocate ~ i < count;
 

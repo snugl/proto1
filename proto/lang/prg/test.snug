@@ -1,10 +1,17 @@
 
 
+use 'lib/block.snug';
 
 rout main
 {
-    put a = 100;
-    put a.10 = 1234;
-    debug a.10;
+    pers 10 ~ B;
+
+    sub len@block
+    (
+        block ~ B,
+        len   ~ _,
+    );
+
+    debug _;
 }
 

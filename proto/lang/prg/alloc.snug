@@ -4,7 +4,7 @@ rout main
 {
     "generate local dynamic stack object
     put size = 10;
-    trans size -> addr;
+    trans size ~ addr;
 
     "populate object
     put i = 0;

@@ -19,7 +19,7 @@ seq Node
 rout main
 {
 
-    trans Node -> node;
+    trans Node ~ node;
 
     put node.Node::Kind = Type::Const;
     put node.Node::Content = 10;

@@ -31,7 +31,7 @@ seq Rect
 
 rout Rect::Alloc( out rect; )
 {
-    pers Rect -> rect;
+    pers Rect ~ rect;
     put rect.Rect::Length = 1;
     put rect.Rect::Height = 1;
     put rect.Rect::Color  = Spectr::Black; "like my fur (i'm a cat btw)
