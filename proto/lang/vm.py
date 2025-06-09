@@ -135,7 +135,7 @@ def run(prog):
 
                 ptr = walker - needed
                 mem[ptr] = needed #size header
-                acc = ptr
+                acc = ptr + 1
 
             
             case 'void': #free block by zero'ing
