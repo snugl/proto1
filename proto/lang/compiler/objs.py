@@ -2,6 +2,7 @@
 from dataclasses import dataclass
 from dataclasses import field
 import typing
+import os
 
 import expr
 import sym
@@ -19,6 +20,26 @@ class _debug:
     def generate(self, output, ctx):
         self.expr.generate(output, ctx)
         output('debug')
+
+
+
+@dataclass
+class _use:
+    path : str
+
+    @classmethod
+    def parse(cls, stream):
+        path = stream.pop()
+        return cls(path = path)
+
+    #called by tree.node itself
+    def expand(self, root):
+        module_filename = os.path.basename(self.path)
+        module_name = os.path.splitext(module_filename)[0]
+
+        module_tree = tree.prepare(self.path)
+        module_tree.namespace(module_name)
+        root.inject(module_tree)
 
 
 
@@ -113,7 +134,7 @@ class _sub:
         return cls(target, cond, imap)
 
     def infer(self, ctx):
-        target_obj = ctx.tree.get(self.target)
+        target_obj = ctx.tree.get_routine(self.target)
         pinter = target_obj.pinter
 
         for binding_name in pinter.out_param:
@@ -122,7 +143,7 @@ class _sub:
 
 
     def generate(self, output, ctx):
-        target_obj = ctx.tree.get(self.target)
+        target_obj = ctx.tree.get_routine(self.target)
         pinter = target_obj.pinter
 
         #construct in-paramter space
