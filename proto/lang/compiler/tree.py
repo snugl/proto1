@@ -6,6 +6,7 @@ import typing
 import objs
 import sym
 import error
+import lex
 
 
 
@@ -23,6 +24,23 @@ class node:
 
     def __getitem__(self, key):
         return self.subs[key]
+
+    def inject(self, other):
+        self.subs += other.subs
+        self.consts.update(other.consts)
+
+
+    def expand(self):
+        for sub in self.subs:
+            if type(sub) is objs._use:
+                sub.expand(self)
+
+    def namespace(self, spacename):
+        print(spacename)
+        for sub in self.subs:
+            if type(sub) is objs._rout or \
+               type(sub) is objs._seq:
+                sub.name = f"{sub.name}@{spacename}"
 
 
     def get_routine(self, name):
@@ -78,5 +96,18 @@ def parse(stream):
             stream.expect(sym.eos)
 
         root.subs.append(sub)
+
+    return root
+
+
+
+#lex, parse, expand imports
+def prepare(path):
+    stream = lex.tokenize(path)
+    root = parse(stream)
+
+    root.render_constants()
+    root.expand()
+
 
     return root
