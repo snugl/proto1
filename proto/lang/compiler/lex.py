@@ -27,6 +27,7 @@ def get_kind(char):
         case ',':               return 'delim'
         case '\n':              return 'newline'
         case ' ':               return 'space'
+        case "'":               return 'quote' #string delim
         case _:                 return 'symbol'
 
 
@@ -70,17 +71,22 @@ def tokenize(path):
     token_buffer = []
     buffer = []
     kind_old = None
-    comment = False
     line = 1
+
+    #modes
+    comment = False
+    string  = False
+
     for char in raw:
         kind_new = get_kind(char)
 
+        if kind_old == 'quote': string = not string
 
         if kind_new == 'comment': comment = True
         if kind_new == 'newline': comment = False
         if comment: continue
 
-        if kind_new != kind_old:
+        if kind_new != kind_old and not string:
             token_content = "".join(buffer)
             buffer = []
 
@@ -89,7 +95,8 @@ def tokenize(path):
                     token_content, line, path
                 ))
 
-        buffer.append(char)
+        if kind_new != 'quote':
+            buffer.append(char)
         kind_old = kind_new
         if char == '\n': line += 1
 
