@@ -175,7 +175,7 @@ class _trans:
     @classmethod
     def parse(cls, stream):
         size = expr.parse(stream)
-        stream.expect(sym.alloc_arrow)
+        stream.expect(sym.binding)
         target = expr.parse(stream)
 
         return cls(size, target)
@@ -197,7 +197,7 @@ class _pers:
     @classmethod
     def parse(cls, stream):
         size = expr.parse(stream)
-        stream.expect(sym.alloc_arrow)
+        stream.expect(sym.binding)
         target = expr.parse(stream)
 
         return cls(size, target)

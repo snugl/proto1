@@ -8,9 +8,6 @@ param_end   = ')'
 block_start = '{'
 block_end   = '}'
 
-seq_constant_delim = '::'
-
-alloc_arrow = '->'
 
 op_add = '+'
 op_sub = '-'
