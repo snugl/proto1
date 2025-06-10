@@ -77,7 +77,7 @@ def parse_expr(stream):
         return left
 
     op = stream.pop()
-    right = parse_factor(stream)
+    right = parse_expr(stream)
     return node(
         kind = 'op',
         content = op,
