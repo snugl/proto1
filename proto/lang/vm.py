@@ -103,9 +103,13 @@ def run(prog):
 
             #i know what you are OwO
             case 'trans': #alloc transient acc, base into acc
+                size = acc + 1
+
                 point = stack
-                stack += acc
-                acc = point
+                stack += size
+
+                acc = point + 1
+                mem[point] = size
             
 
             #for deref/ref: acc is addr
