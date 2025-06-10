@@ -17,6 +17,14 @@ op_eq  = '=='
 op_mul  = '*'
 op_dot = '.'
 
+#precedence
+prec = [
+    ("<", ">", "=="),
+    ("+", "-"),
+    ("*"),
+    ("."),
+]
+
 
 ops = [
     value for name, value in

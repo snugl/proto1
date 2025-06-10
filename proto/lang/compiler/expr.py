@@ -70,14 +70,14 @@ class node:
 
 
 
-def parse_expr(stream):
-    left = parse_factor(stream)
+def parse_expr(stream, prec_level):
+    left = parse_higher(stream, prec_level)
 
-    if stream.peek() not in sym.ops:
+    if stream.peek() not in sym.prec[prec_level]:
         return left
 
     op = stream.pop()
-    right = parse_expr(stream)
+    right = parse_higher(stream, prec_level)
     return node(
         kind = 'op',
         content = op,
@@ -85,10 +85,18 @@ def parse_expr(stream):
         right = right
     )
 
-def parse_factor(stream):
+#parse at higher precedence level
+def parse_higher(stream, prec_level):
+    prec_level_next = prec_level + 1
+    if prec_level_next < len(sym.prec):
+        return parse_expr(stream, prec_level_next)
+    else:
+        return parse_terminal(stream)
+
+def parse_terminal(stream):
     match stream.pop():
         case "(":
-            expr = parse_expr(stream)
+            expr = parse_expr(stream, 0)
             stream.expect(")")
             return expr
         case x if x.isdigit():
@@ -104,6 +112,6 @@ def parse_factor(stream):
 
 
 def parse(stream):
-    return parse_expr(stream)
+    return parse_expr(stream, 0)
 
 
