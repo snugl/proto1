@@ -4,14 +4,23 @@ use 'lib/block.snug';
 
 rout main
 {
-    pers 10 ~ B;
+    trans 10 ~ block;
 
-    sub len@block
-    (
-        block ~ B,
-        len   ~ _,
+    sub range@block (
+        block ~ block,
+        start ~ 0,
+        end ~ 10
     );
 
+    sub sum@block (
+        block ~ block,
+        sum ~ _
+    );
+
+    "sub debug@block ( block ~ block );
+
     debug _;
+
+
 }
 
