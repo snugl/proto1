@@ -87,7 +87,7 @@ def tokenize(path):
         if kind_new == 'newline': comment = False
         if comment: continue
 
-        if kind_new != kind_old and not string:
+        if (kind_new == 'symbol' or kind_new != kind_old) and not string:
             token_content = "".join(buffer)
             buffer = []
 
