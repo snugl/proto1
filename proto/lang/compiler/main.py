@@ -17,7 +17,7 @@ def compile(path):
 
     #actual compilation
     entry = root.get_routine(entry_name)
-    root.routine(output, entry)
+    root.generate(output, entry)
 
     #verify integrety
     pcount = entry.pinter.get_space_size()

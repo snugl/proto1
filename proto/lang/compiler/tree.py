@@ -65,7 +65,7 @@ class node:
 
             
 
-    def routine(self, output, target):
+    def generate(self, output, target):
         #collect and emit dependencies of routine
         for node in target.nodes:
             if type(node) is not objs._sub:
@@ -75,7 +75,7 @@ class node:
             if target.name == depend.name: #recursion
                 continue
 
-            self.routine(output, depend)
+            self.generate(output, depend)
 
         target.generate(output, self)
         return target
