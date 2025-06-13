@@ -6,13 +6,13 @@ rout main
 {
     trans 10 ~ block;
 
-    sub range@block (
+    sub block::range (
         block ~ block,
         start ~ 0,
         end ~ 10
     );
 
-    sub sum@block (
+    sub block::sum (
         block ~ block,
         sum ~ _
     );

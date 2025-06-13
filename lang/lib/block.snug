@@ -2,20 +2,21 @@
 
 
 
-rout len ( 
+rout block::len ( 
     in  block; 
     out len;
 ){
+    "put len = block.(0-1) - 1;
     put len = block.(0-1) - 1;
 }
 
 
-rout sum (
+rout block::sum (
     in block;
     out sum;
 ){
     put sum = 0;
-    sub len@block( block ~ block, len ~ index );
+    sub block::len( block ~ block, len ~ index );
 
     lab loop;
         put index = index - 1;
@@ -24,7 +25,7 @@ rout sum (
 }
 
 
-rout range (
+rout block::range (
     in end;
     in start;
     in block;
@@ -41,7 +42,7 @@ rout range (
 rout debug (
     in block;
 ){
-    sub len@block( block ~ block, len ~ len );
+    sub block::len( block ~ block, len ~ len );
 
     put index = 0;
     lab loop;
