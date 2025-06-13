@@ -1,15 +1,11 @@
 
 
 -new features
+
     -fade out "put" statement
     -fade out "sub" statement
     -pre/post inc/dec??
     -anonymous labels/jumps
-    
-    -iterators??
-        -probably not
-        -too abstract
-
 
     -dot operator /
 
