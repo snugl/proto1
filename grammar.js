@@ -16,6 +16,7 @@ module.exports = grammar({
       $.import,
       $.sequence,
       $.routine,
+      $.comment
     ),
 
     comment: $ => /".+?\n/,
@@ -51,7 +52,7 @@ module.exports = grammar({
 
 
 
-    statement: $ => seq(
+    statement: $ => choice(seq(
       choice(
         $.put,
         $.debug,
@@ -60,7 +61,8 @@ module.exports = grammar({
         $.sub,
         $.lab,
         $.jump,
-      ), $.eos,
+      ), $.eos, ),
+      $.comment
     ),
 
     put:   $ => seq('put', $.expr, '=', $.expr),
