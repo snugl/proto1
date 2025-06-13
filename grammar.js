@@ -108,7 +108,7 @@ module.exports = grammar({
     open_scope:  $ => "{",
     close_scope: $ => "}",
     string: $ => seq('\'', /[^']*/, '\''),
-    iden: $ => /[^'|;|\s|(|)|\d]+/,
+    iden: $ => /[\w:@]+/,
     number: $ => /\d+/,
   }
 });
