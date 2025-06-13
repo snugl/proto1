@@ -18,6 +18,8 @@ module.exports = grammar({
       $.routine,
     ),
 
+    comment: $ => /".+?\n/,
+
     import: $ => seq('use', $.string, $.eos),
 
     sequence: $ => seq(
