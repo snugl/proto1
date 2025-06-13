@@ -22,6 +22,10 @@
         {
           "type": "SYMBOL",
           "name": "routine"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "comment"
         }
       ]
     },
@@ -178,44 +182,53 @@
       ]
     },
     "statement": {
-      "type": "SEQ",
+      "type": "CHOICE",
       "members": [
         {
-          "type": "CHOICE",
+          "type": "SEQ",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "put"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "put"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "debug"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "trans"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "pers"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "sub"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "lab"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "jump"
+                }
+              ]
             },
             {
               "type": "SYMBOL",
-              "name": "debug"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "trans"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "pers"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "sub"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "lab"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "jump"
+              "name": "eos"
             }
           ]
         },
         {
           "type": "SYMBOL",
-          "name": "eos"
+          "name": "comment"
         }
       ]
     },

@@ -315,6 +315,10 @@
       "required": true,
       "types": [
         {
+          "type": "comment",
+          "named": true
+        },
+        {
           "type": "debug",
           "named": true
         },
@@ -405,6 +409,10 @@
       "required": true,
       "types": [
         {
+          "type": "comment",
+          "named": true
+        },
+        {
           "type": "import",
           "named": true
         },
@@ -469,6 +477,10 @@
   },
   {
     "type": "close_scope",
+    "named": true
+  },
+  {
+    "type": "comment",
     "named": true
   },
   {
