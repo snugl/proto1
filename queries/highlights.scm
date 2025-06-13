@@ -1,10 +1,11 @@
-(iden) @type
+(iden) @variable
 (string) @string
 (number) @number
 
+"rout"    @function
+"seq"     @type
+
 "put"     @keyword
-"rout"    @keyword
-"seq"     @keyword
 "sub"     @keyword
 "lab"     @keyword
 "jump"    @keyword
@@ -23,4 +24,4 @@
 "<"  @conditional
 
 (eos) @delimiter
-(comment) @comment
+(comment) @comment @spell

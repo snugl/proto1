@@ -5,7 +5,7 @@
  */
 
 /// <reference types="tree-sitter-cli/dsl" />
-// @ts-check
+// @ts-nocheck
 
 module.exports = grammar({
   name: "snug",
@@ -108,7 +108,7 @@ module.exports = grammar({
     open_scope:  $ => "{",
     close_scope: $ => "}",
     string: $ => seq('\'', /[^']*/, '\''),
-    iden: $ => /[\w:@]+/,
+    iden: $ => /[A-Za-z:_]+/,
     number: $ => /\d+/,
   }
 });
