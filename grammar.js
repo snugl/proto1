@@ -33,7 +33,7 @@ module.exports = grammar({
 
     routine: $ => seq(
       'rout',
-      $.iden,
+      $.rout_name,
       optional($.param_interface),
       $.open_scope,
       repeat($.statement),
@@ -46,9 +46,12 @@ module.exports = grammar({
 
     param_def: $ => seq(
       choice($.key_in, $.key_out),
-      $.iden,
+      $.param_name,
       $.eos,
     ),
+
+    param_name: $ => $.iden,
+    rout_name: $ => $.iden,
 
 
 
@@ -81,8 +84,8 @@ module.exports = grammar({
       )),
       ')'
     ),
-    lab:  $ => seq('lab', $.iden),
-    jump: $ => seq('jump', $.iden, optional(seq(
+    lab:  $ => seq('lab', $.label),
+    jump: $ => seq('jump', $.label, optional(seq(
       $.bind, $.expr
     ))),
 
@@ -100,6 +103,8 @@ module.exports = grammar({
     paran: $ => seq('(', $.expr, ')'),
 
     op: $ => choice('+', '-', '*', '>', '<', '.'),
+
+    label: $ => $.iden,
 
     key_in:  $ => 'in',
     key_out: $ => 'out',

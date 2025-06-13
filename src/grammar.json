@@ -104,7 +104,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "iden"
+          "name": "rout_name"
         },
         {
           "type": "CHOICE",
@@ -173,13 +173,21 @@
         },
         {
           "type": "SYMBOL",
-          "name": "iden"
+          "name": "param_name"
         },
         {
           "type": "SYMBOL",
           "name": "eos"
         }
       ]
+    },
+    "param_name": {
+      "type": "SYMBOL",
+      "name": "iden"
+    },
+    "rout_name": {
+      "type": "SYMBOL",
+      "name": "iden"
     },
     "statement": {
       "type": "CHOICE",
@@ -370,7 +378,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "iden"
+          "name": "label"
         }
       ]
     },
@@ -383,7 +391,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "iden"
+          "name": "label"
         },
         {
           "type": "CHOICE",
@@ -515,6 +523,10 @@
           "value": "."
         }
       ]
+    },
+    "label": {
+      "type": "SYMBOL",
+      "name": "iden"
     },
     "key_in": {
       "type": "STRING",
