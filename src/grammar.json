@@ -559,7 +559,7 @@
     },
     "iden": {
       "type": "PATTERN",
-      "value": "[^'|;|\\s|(|)]+"
+      "value": "[^'|;|\\s|(|)|\\d]+"
     },
     "number": {
       "type": "PATTERN",
