@@ -2,9 +2,12 @@
 (string) @string
 (number) @number
 
-"rout"    @function
-"seq"     @type
+(param_name) @parameter
+(rout_name) @function
+(label) @label
 
+"rout"    @keyword
+"seq"     @keyword
 "put"     @keyword
 "sub"     @keyword
 "lab"     @keyword
@@ -23,5 +26,6 @@
 ">"  @conditional
 "<"  @conditional
 
-(eos) @delimiter
+
+(eos) @punctuation
 (comment) @comment @spell
