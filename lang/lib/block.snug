@@ -39,7 +39,7 @@ rout block::range (
     jump loop ~ i < len;
 }
 
-rout debug (
+rout block::debug (
     in block;
 ){
     sub block::len( block ~ block, len ~ len );

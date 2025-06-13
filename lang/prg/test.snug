@@ -17,7 +17,7 @@ rout main
         sum ~ _
     );
 
-    "sub debug@block ( block ~ block );
+    sub block::debug ( block ~ block );
 
     debug _;
 
