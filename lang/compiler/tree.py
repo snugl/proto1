@@ -35,14 +35,6 @@ class node:
             if type(sub) is objs._use:
                 sub.expand(self)
 
-    def namespace(self, spacename):
-        print(spacename)
-        for sub in self.subs:
-            if type(sub) is objs._rout or \
-               type(sub) is objs._seq:
-                sub.name = f"{sub.name}@{spacename}"
-
-
     def get_routine(self, name):
         for sub in self.subs:
             if sub is None: continue

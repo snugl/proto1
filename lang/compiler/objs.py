@@ -38,7 +38,6 @@ class _use:
         module_name = os.path.splitext(module_filename)[0]
 
         module_tree = tree.prepare(self.path)
-        module_tree.namespace(module_name)
         root.inject(module_tree)
 
 

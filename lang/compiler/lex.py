@@ -23,7 +23,6 @@ def get_kind(char):
         case x if x.isalpha():  return 'iden' 
         case x if x.isdigit():  return 'iden'
         case ":"             :  return 'iden' #for scoping
-        case "@"             :  return 'iden' #for modules
         case ';':               return 'eos'
         case ',':               return 'delim'
         case '\n':              return 'newline'
