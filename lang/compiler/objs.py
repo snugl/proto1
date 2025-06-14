@@ -67,7 +67,11 @@ class _lab:
     label : str
     @classmethod
     def parse(cls, stream):
-        return cls(stream.pop())
+        return cls(
+            stream.pop() if 
+            stream.peek() != sym.eos 
+            else None
+        )
 
     def generate(self, output, ctx):
         output.define_local_label(self.label, ctx.routine.name)
@@ -79,7 +83,9 @@ class _jump:
     cond  : typing.Any
     @classmethod
     def parse(cls, stream):
-        label = stream.pop()
+        label = (stream.pop() if
+            stream.peek() not in (sym.eos, sym.binding)
+            else None)
         
         if stream.peek() != sym.binding:
             return cls(label, cond=None)
