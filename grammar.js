@@ -107,7 +107,7 @@ module.exports = grammar({
     op: $ => choice('+', '-', '*', '>', '<', '.'),
 
     label: $ => $.iden,
-    variable: $ => $.iden,
+    variable: $ => choice($.seq_name, $.iden),
 
     key_in:  $ => 'in',
     key_out: $ => 'out',

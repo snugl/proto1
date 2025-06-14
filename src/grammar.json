@@ -537,8 +537,17 @@
       "name": "iden"
     },
     "variable": {
-      "type": "SYMBOL",
-      "name": "iden"
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "seq_name"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "iden"
+        }
+      ]
     },
     "key_in": {
       "type": "STRING",

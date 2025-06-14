@@ -7,7 +7,7 @@
 (rout_name  (iden) @function)
 (label      (iden) @label)
 
-(seq_name   (iden) @type)
+(seq_name)         @type
 (seq_entry  (iden) @constant)
 
 "rout"    @keyword

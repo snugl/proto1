@@ -506,6 +506,10 @@
         {
           "type": "iden",
           "named": true
+        },
+        {
+          "type": "seq_name",
+          "named": true
         }
       ]
     }
