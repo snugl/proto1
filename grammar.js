@@ -70,10 +70,10 @@ module.exports = grammar({
       $.comment
     ),
 
-    put:   $ => seq('put', $.expr, '=', $.expr),
+    put:   $ => seq('put', $.lexpr, '=', $.expr),
     debug: $ => seq('debug', $.expr),
-    trans: $ => seq('trans', $.expr, $.bind, $.expr),
-    pers:  $ => seq('pers', $.expr, $.bind, $.expr),
+    trans: $ => seq('trans', $.expr, $.bind, $.lexpr),
+    pers:  $ => seq('pers', $.expr, $.bind, $.lexpr),
     sub:   $ => seq(
       'sub', 
       $.rout_name, 
@@ -93,7 +93,7 @@ module.exports = grammar({
 
     expr: $ => choice(
       field("content", $.number),
-      field("content", $.iden),
+      field("content", $.variable),
       $.binary,
       $.paran,
     ),
@@ -104,9 +104,13 @@ module.exports = grammar({
     )),
     paran: $ => seq('(', $.expr, ')'),
 
+    lexpr: $ => seq($.var_decl, $.expr),
+
     op: $ => choice('+', '-', '*', '>', '<', '.'),
 
     label: $ => $.iden,
+    variable: $ => $.iden,
+    var_decl:  $ => $.iden,
 
     key_in:  $ => 'in',
     key_out: $ => 'out',

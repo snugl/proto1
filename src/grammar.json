@@ -257,7 +257,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "expr"
+          "name": "lexpr"
         },
         {
           "type": "STRING",
@@ -299,7 +299,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "expr"
+          "name": "lexpr"
         }
       ]
     },
@@ -320,7 +320,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "expr"
+          "name": "lexpr"
         }
       ]
     },
@@ -440,7 +440,7 @@
           "name": "content",
           "content": {
             "type": "SYMBOL",
-            "name": "iden"
+            "name": "variable"
           }
         },
         {
@@ -503,6 +503,19 @@
         }
       ]
     },
+    "lexpr": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "var_decl"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "expr"
+        }
+      ]
+    },
     "op": {
       "type": "CHOICE",
       "members": [
@@ -533,6 +546,14 @@
       ]
     },
     "label": {
+      "type": "SYMBOL",
+      "name": "iden"
+    },
+    "variable": {
+      "type": "SYMBOL",
+      "name": "iden"
+    },
+    "var_decl": {
       "type": "SYMBOL",
       "name": "iden"
     },

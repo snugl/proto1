@@ -3,6 +3,8 @@ cp_hghl()
 {
     mkdir -p $1
     cp queries/highlights.scm $1
+    cp queries/locals.scm $1
+
 }
 
 cp_hghl ~/.config/nvim/queries/snug
