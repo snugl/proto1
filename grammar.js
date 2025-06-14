@@ -50,8 +50,8 @@ module.exports = grammar({
       $.eos,
     ),
 
-    param_name: $ => $.iden,
-    rout_name: $ => $.iden,
+    param_name: $ => field('mesa', $.iden),
+    rout_name: $  => field('mesa', $.iden),
 
 
 
@@ -104,7 +104,7 @@ module.exports = grammar({
 
     op: $ => choice('+', '-', '*', '>', '<', '.'),
 
-    label: $ => $.iden,
+    label: $ => field('mesa', $.iden),
 
     key_in:  $ => 'in',
     key_out: $ => 'out',
