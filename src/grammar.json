@@ -190,8 +190,8 @@
       "name": "iden"
     },
     "seq_name": {
-      "type": "SYMBOL",
-      "name": "iden"
+      "type": "PATTERN",
+      "value": "[A-Z][A-Za-z:]*"
     },
     "seq_entry": {
       "type": "SYMBOL",
@@ -257,7 +257,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "lexpr"
+          "name": "expr"
         },
         {
           "type": "STRING",
@@ -299,7 +299,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "lexpr"
+          "name": "expr"
         }
       ]
     },
@@ -320,7 +320,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "lexpr"
+          "name": "expr"
         }
       ]
     },
@@ -503,19 +503,6 @@
         }
       ]
     },
-    "lexpr": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "var_decl"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "expr"
-        }
-      ]
-    },
     "op": {
       "type": "CHOICE",
       "members": [
@@ -550,10 +537,6 @@
       "name": "iden"
     },
     "variable": {
-      "type": "SYMBOL",
-      "name": "iden"
-    },
-    "var_decl": {
       "type": "SYMBOL",
       "name": "iden"
     },

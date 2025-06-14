@@ -52,7 +52,7 @@ module.exports = grammar({
 
     param_name: $ => $.iden,
     rout_name:  $ => $.iden,
-    seq_name:   $ => $.iden,
+    seq_name:   $ => /[A-Z][A-Za-z:]*/,
     seq_entry:  $ => $.iden,
 
 
@@ -70,10 +70,10 @@ module.exports = grammar({
       $.comment
     ),
 
-    put:   $ => seq('put', $.lexpr, '=', $.expr),
+    put:   $ => seq('put', $.expr, '=', $.expr),
     debug: $ => seq('debug', $.expr),
-    trans: $ => seq('trans', $.expr, $.bind, $.lexpr),
-    pers:  $ => seq('pers', $.expr, $.bind, $.lexpr),
+    trans: $ => seq('trans', $.expr, $.bind, $.expr),
+    pers:  $ => seq('pers', $.expr, $.bind, $.expr),
     sub:   $ => seq(
       'sub', 
       $.rout_name, 
@@ -104,13 +104,10 @@ module.exports = grammar({
     )),
     paran: $ => seq('(', $.expr, ')'),
 
-    lexpr: $ => seq($.var_decl, $.expr),
-
     op: $ => choice('+', '-', '*', '>', '<', '.'),
 
     label: $ => $.iden,
     variable: $ => $.iden,
-    var_decl:  $ => $.iden,
 
     key_in:  $ => 'in',
     key_out: $ => 'out',

@@ -1,6 +1,7 @@
-(iden) @variable
+(variable (iden) @variable) 
 (string) @string
 (number) @number
+
 
 (param_name (iden) @parameter)
 (rout_name  (iden) @function)
