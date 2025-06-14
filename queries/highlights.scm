@@ -30,6 +30,9 @@
 ">"  @conditional
 "<"  @conditional
 
+(key_in) @keyword
+(key_out) @keyword
 
 (eos) @punctuation
+(bind) @punctuation
 (comment) @comment @spell
