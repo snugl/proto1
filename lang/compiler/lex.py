@@ -30,6 +30,10 @@ def get_kind(char):
         case '\n':              return 'newline'
         case ' ':               return 'space'
         case "'":               return 'quote' #string delim
+        case "(":               return 'open_paran'
+        case ")":               return 'close_paran'
+        case "{":               return 'open_scope'
+        case "}":               return 'close_scope'
         case _:                 return 'symbol'
 
 
@@ -95,7 +99,7 @@ def tokenize(path):
         if kind_new == 'newline': comment = False
         if comment: continue
 
-        if (kind_new == 'symbol' or kind_new != kind_old) and not string:
+        if kind_new != kind_old and not string:
             token_content = "".join(buffer)
             buffer = []
 

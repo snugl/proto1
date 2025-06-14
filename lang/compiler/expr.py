@@ -63,10 +63,14 @@ class node:
                     case sym.op_gt : output('greater'), #acc is greater
                     case sym.op_lt : output('lesser'),  #acc is lesser
                     case sym.op_eq : output('equal'),
+                    case sym.op_neq: output('nequal'),
                     case sym.op_mul: output('mul'),
                     case sym.op_dot:
                         output('add')
                         output('deref')
+
+            case 'string':
+                print(self)
 
 
 
@@ -107,6 +111,11 @@ def parse_terminal(stream):
         case x if x.kind == 'iden':
             return node(
                 kind = 'var',
+                content = x.content
+            )
+        case x if x.kind == 'quote':
+            return node(
+                kind = 'string',
                 content = x.content
             )
         case x:
