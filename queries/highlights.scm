@@ -6,6 +6,9 @@
 (rout_name  (iden) @function)
 (label      (iden) @label)
 
+(seq_name   (iden) @type)
+(seq_entry  (iden) @constant)
+
 "rout"    @keyword
 "seq"     @keyword
 "put"     @keyword

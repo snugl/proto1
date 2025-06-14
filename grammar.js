@@ -25,9 +25,9 @@ module.exports = grammar({
 
     sequence: $ => seq(
       'seq', 
-      $.iden, 
+      $.seq_name, 
       $.open_scope, 
-      repeat(seq($.iden, optional(','))),
+      repeat(seq($.seq_entry, optional(','))),
       $.close_scope,
     ),
 
@@ -51,7 +51,9 @@ module.exports = grammar({
     ),
 
     param_name: $ => $.iden,
-    rout_name: $  => $.iden,
+    rout_name:  $ => $.iden,
+    seq_name:   $ => $.iden,
+    seq_entry:  $ => $.iden,
 
 
 
@@ -74,10 +76,10 @@ module.exports = grammar({
     pers:  $ => seq('pers', $.expr, $.bind, $.expr),
     sub:   $ => seq(
       'sub', 
-      $.iden, 
+      $.rout_name, 
       '(',
       repeat(seq(
-        $.iden, 
+        $.param_name, 
         $.bind, 
         $.expr, 
         optional(',')

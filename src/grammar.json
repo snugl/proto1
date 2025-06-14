@@ -59,7 +59,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "iden"
+          "name": "seq_name"
         },
         {
           "type": "SYMBOL",
@@ -72,7 +72,7 @@
             "members": [
               {
                 "type": "SYMBOL",
-                "name": "iden"
+                "name": "seq_entry"
               },
               {
                 "type": "CHOICE",
@@ -186,6 +186,14 @@
       "name": "iden"
     },
     "rout_name": {
+      "type": "SYMBOL",
+      "name": "iden"
+    },
+    "seq_name": {
+      "type": "SYMBOL",
+      "name": "iden"
+    },
+    "seq_entry": {
       "type": "SYMBOL",
       "name": "iden"
     },
@@ -325,7 +333,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "iden"
+          "name": "rout_name"
         },
         {
           "type": "STRING",
@@ -338,7 +346,7 @@
             "members": [
               {
                 "type": "SYMBOL",
-                "name": "iden"
+                "name": "param_name"
               },
               {
                 "type": "SYMBOL",
