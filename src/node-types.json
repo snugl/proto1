@@ -144,17 +144,16 @@
   {
     "type": "label",
     "named": true,
-    "fields": {
-      "mesa": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "iden",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "iden",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -207,17 +206,16 @@
   {
     "type": "param_name",
     "named": true,
-    "fields": {
-      "mesa": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "iden",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "iden",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -272,17 +270,16 @@
   {
     "type": "rout_name",
     "named": true,
-    "fields": {
-      "mesa": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "iden",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "iden",
+          "named": true
+        }
+      ]
     }
   },
   {

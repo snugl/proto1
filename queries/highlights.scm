@@ -2,9 +2,9 @@
 (string) @string
 (number) @number
 
-(param_name mesa: (iden) @parameter)
-(rout_name  mesa: (iden) @function)
-(label      mesa: (iden) @label)
+(param_name (iden) @parameter)
+(rout_name  (iden) @function)
+(label      (iden) @label)
 
 "rout"    @keyword
 "seq"     @keyword

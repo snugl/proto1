@@ -182,20 +182,12 @@
       ]
     },
     "param_name": {
-      "type": "FIELD",
-      "name": "mesa",
-      "content": {
-        "type": "SYMBOL",
-        "name": "iden"
-      }
+      "type": "SYMBOL",
+      "name": "iden"
     },
     "rout_name": {
-      "type": "FIELD",
-      "name": "mesa",
-      "content": {
-        "type": "SYMBOL",
-        "name": "iden"
-      }
+      "type": "SYMBOL",
+      "name": "iden"
     },
     "statement": {
       "type": "CHOICE",
@@ -533,12 +525,8 @@
       ]
     },
     "label": {
-      "type": "FIELD",
-      "name": "mesa",
-      "content": {
-        "type": "SYMBOL",
-        "name": "iden"
-      }
+      "type": "SYMBOL",
+      "name": "iden"
     },
     "key_in": {
       "type": "STRING",
