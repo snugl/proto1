@@ -104,11 +104,13 @@ def parse_terminal(stream):
                 kind = 'num',
                 content = int(x)
             )
-        case _:
+        case x if x.isalpha() or x in "_":
             return node(
                 kind = 'var',
                 content = x
             )
+        case x:
+            error.stream_error(stream, f"Unable to parse terminal: '{x}'")
 
 
 def parse(stream):
