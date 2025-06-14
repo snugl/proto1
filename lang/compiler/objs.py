@@ -70,7 +70,7 @@ class _lab:
         return cls(stream.pop())
 
     def generate(self, output, ctx):
-        output.define(self.label, ctx.routine.name)
+        output.define_local_label(self.label, ctx.routine.name)
         
 
 @dataclass

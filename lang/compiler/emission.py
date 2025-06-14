@@ -25,33 +25,7 @@ class reference:
     emission : typing.Any
 
     def __str__(self):
-        defi = definition.find(self.emission, self.name, self.routine)
-        return defi.render()
-
-@dataclass
-class definition:
-    name : str
-    routine : str
-    address : int
-    
-
-    def render(self):
-        return str(self.address) 
-
-    @staticmethod
-    def find(emission_ctx, name, routine):
-        for obj in emission_ctx.seq:
-            if type(obj) is not definition:
-                continue
-            
-            if obj.name == name and obj.routine == routine:
-                return obj
-
-        error.error(f"Unable to resolve definition {name} in routine scope {routine}")
-
-    def __str__(self):
-        return f'"label {self.routine}.{self.name}'
-
+        return str(self.emission.lookup_local_label(self.name, self.routine))
 
 
 @dataclass
@@ -66,6 +40,9 @@ class output:
     seq : typing.Any = field(default_factory=lambda: []) 
     addr : int = 0
 
+    # maps definition to address
+    definition_mapper : typing.Any = field(default_factory=lambda: {})
+
     #the link header gets put at the start of the build executable.
     #it consists of 2 commands to call the main routine:
     #   call <address of main>
@@ -76,19 +53,22 @@ class output:
     def annotate(self, msg):
         self.seq.append(anno(msg))
 
-    def define(self, name, routine):
-        label = definition(
-            name = name,
-            routine = routine,
-            address = self.address()
-        )
-        self.seq.append(label)
-
-
     def __call__(self, inst, arg=None):
         cmd = command(inst, arg)
         self.seq.append(cmd)
         self.addr += 1
+
+    def define_local_label(self, name, routine):
+        key = (name, routine)
+        if key in self.definition_mapper:
+            error.error(f"Redefinition of label {name} in scope {routine}")
+        self.definition_mapper[key] = self.address()
+
+    def lookup_local_label(self, name, routine):
+        key = (name, routine)
+        if key not in self.definition_mapper:
+            error.error(f"Label {name} not defined in scope {routine}")
+        return self.definition_mapper[key]
 
     def address(self):
         return self.addr + self.link_header_size
