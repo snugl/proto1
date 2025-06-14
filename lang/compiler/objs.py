@@ -44,6 +44,17 @@ class _debug:
                         output('debug', 1)
 
 
+@dataclass
+class _write:
+    target: expr.node
+
+    @classmethod
+    def parse(cls, stream):
+        return cls(target = expr.parse(stream))
+
+    def generate(self, output, ctx):
+        self.target.generate(output, ctx)
+        output('write')
 
 @dataclass
 class _use:
