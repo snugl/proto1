@@ -1,11 +1,8 @@
 
 
 -new features
-
-    -fade out "put" statement
-    -fade out "sub" statement
-    -pre/post inc/dec??
     -anonymous labels/jumps
+    -string formatting for debugs
 
     -dot operator /
 
