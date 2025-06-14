@@ -155,7 +155,11 @@ def run(prog):
 
 
             #misc
-            case 'debug': print(acc)
+            case 'debug': 
+                match arg:
+                    case 0: print(acc)                      #debug print
+                    case 1: print(chr(acc), end = '')       #debug putchr
+                    case 2: print(acc, end = '')            #debug format
             case 'halt':  running = False
 
 

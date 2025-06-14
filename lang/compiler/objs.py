@@ -12,14 +12,36 @@ import abstract
 
 @dataclass
 class _debug:
-    expr : typing.Any
+    target : typing.Any
+    kind   : str = ''
     @classmethod
     def parse(cls, stream):
-        return cls(expr.parse(stream))
+
+        match stream.peek_raw().kind:
+            case 'quote': return cls(stream.pop(),       "string")
+            case _      : return cls(expr.parse(stream), "expr")
 
     def generate(self, output, ctx):
-        self.expr.generate(output, ctx)
-        output('debug')
+        match self.kind:
+            case "expr":
+                self.target.generate(output, ctx)
+                output('debug', 0) #debug print
+            case "string":
+                reading_format_name = False
+                format_name = []
+                for char in self.target + "\n":
+                    if char == '}':
+                        reading_format_name = False 
+                        var_addr = ctx.vars["".join(format_name)]
+                        output('load', var_addr)
+                        output('debug', 2)
+                    elif char == '{':
+                        reading_format_name = True
+                    elif reading_format_name:
+                        format_name.append(char)
+                    else:
+                        output('const', ord(char))
+                        output('debug', 1)
 
 
 
