@@ -71,7 +71,7 @@ module.exports = grammar({
     ),
 
     put:   $ => seq('put', $.expr, '=', $.expr),
-    debug: $ => seq('debug', $.expr),
+    debug: $ => seq('debug', choice($.expr, $.debug_string)),
     trans: $ => seq('trans', $.expr, $.bind, $.expr),
     pers:  $ => seq('pers', $.expr, $.bind, $.expr),
     sub:   $ => seq(
@@ -108,6 +108,17 @@ module.exports = grammar({
 
     label: $ => $.iden,
     variable: $ => choice($.seq_name, $.iden),
+
+    debug_string: $ => seq(
+      '\'', 
+      repeat(choice(
+        $.debug_literal,
+        $.debug_variable
+      )),
+      '\''
+    ),
+    debug_literal: $ => /[^'{}]+/,
+    debug_variable: $ => seq('{', $.variable, '}'), 
 
     key_in:  $ => 'in',
     key_out: $ => 'out',
