@@ -154,8 +154,8 @@ class _sub:
         #construct out-parameter space
         output('alloc', len(pinter.out_param))
 
-        target_label = emission.reference(None, target_obj.name, output)
-        output('call', target_label)
+        routine_origin = ctx.tree.lookup_routine_origin(target_obj.name)
+        output('call', routine_origin)
 
         #deconstruct out-parameters
         for param in pinter.out_param:
@@ -251,7 +251,7 @@ class _rout:
 
 
     def generate(self, output, tree):
-        output.define(None, self.name)
+        tree.define_routine_origin(self.name, output.address())
 
         #build compilation context
         ctx = self._ctx(

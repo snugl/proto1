@@ -28,12 +28,12 @@ class reference:
         defi = definition.find(self.emission, self.name, self.routine)
         return defi.render()
 
-
 @dataclass
 class definition:
     name : str
     routine : str
     address : int
+    
 
     def render(self):
         return str(self.address) 
@@ -102,12 +102,8 @@ class output:
         #optimizer.optimize_static(self)
         pass
 
-    def assemble(self, routine):
-        self.seq.insert(0, command('call', reference(
-            name = None,
-            routine = routine,
-            emission = self,
-        )))
+    def assemble(self, entry_origin):
+        self.seq.insert(0, command('call', entry_origin))
         self.seq.insert(1, command('halt', None))
 
         return self.render()

@@ -14,7 +14,7 @@ import lex
 class node:
     subs   : typing.Any = field(default_factory=lambda: [])
     consts : typing.Any = field(default_factory=lambda: {})
-    
+    origin_addr : typing.Any = field(default_factory=lambda: {}) 
 
     def __iter__(self):
         return iter(self.subs)
@@ -44,6 +44,12 @@ class node:
 
         error.error(f"Unable to resolve routine name: {name}")
 
+    def define_routine_origin(self, name, addr):
+        self.origin_addr[name] = addr
+
+    def lookup_routine_origin(self, name):
+        return self.origin_addr[name]
+
 
     #only applies to root.
     #so all root tree scopes should contain consts,
@@ -70,7 +76,6 @@ class node:
             self.generate(output, depend)
 
         target.generate(output, self)
-        return target
 
     
 def parse(stream):
