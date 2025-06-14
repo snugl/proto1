@@ -73,7 +73,7 @@ class node:
 def parse_expr(stream, prec_level):
     left = parse_higher(stream, prec_level)
 
-    if stream.peek() not in sym.prec[prec_level]:
+    if str(stream.peek()) not in sym.prec[prec_level]:
         return left
 
     op = stream.pop()
@@ -94,23 +94,23 @@ def parse_higher(stream, prec_level):
         return parse_terminal(stream)
 
 def parse_terminal(stream):
-    match stream.pop():
-        case "(":
+    match stream.pop_raw():
+        case x if x.content == '(':
             expr = parse_expr(stream, 0)
             stream.expect(")")
             return expr
-        case x if x.isdigit():
+        case x if x.kind == 'numb':
             return node(
                 kind = 'num',
-                content = int(x)
+                content = int(x.content)
             )
-        case x if x.isalpha() or x in "_":
+        case x if x.kind == 'iden':
             return node(
                 kind = 'var',
-                content = x
+                content = x.content
             )
         case x:
-            error.stream_error(stream, f"Unable to parse terminal: '{x}'")
+            error.stream_error(stream, f"Unable to parse terminal '{x}' of type {x.kind}")
 
 
 def parse(stream):

@@ -11,6 +11,7 @@ class token:
     content : str = ""
     line    : int = 0
     path    : str = ""
+    kind    : str = ""
 
     def __str__(self):
         return self.content
@@ -20,9 +21,10 @@ class token:
 def get_kind(char):
     match char:
         case '"':               return 'comment'
+        case x if x.isdigit():  return 'numb'
         case x if x.isalpha():  return 'iden' 
-        case x if x.isdigit():  return 'iden'
         case ":"             :  return 'iden' #for scoping
+        case "_"             :  return 'iden' #for naming
         case ';':               return 'eos'
         case ',':               return 'delim'
         case '\n':              return 'newline'
@@ -47,6 +49,13 @@ class stream:
 
     def peek(self):
         return self.token_buffer[0].content
+
+    def peek_raw(self):
+        return self.token_buffer[0]
+
+    def pop_raw(self):
+        self.last_token = self._pop()
+        return self.last_token
 
     def expect(self, content):
         token = self._pop()
@@ -92,7 +101,7 @@ def tokenize(path):
 
             if kind_old not in ('space', 'newline') and token_content:
                 token_buffer.append(token(
-                    token_content, line, path
+                    token_content, line, path, kind_old
                 ))
 
         if kind_new != 'quote':
