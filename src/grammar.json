@@ -233,6 +233,10 @@
                 {
                   "type": "SYMBOL",
                   "name": "jump"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "write"
                 }
               ]
             },
@@ -446,6 +450,19 @@
               "type": "BLANK"
             }
           ]
+        }
+      ]
+    },
+    "write": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "write"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "expr"
         }
       ]
     },

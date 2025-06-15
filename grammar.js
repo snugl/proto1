@@ -66,6 +66,7 @@ module.exports = grammar({
         $.sub,
         $.lab,
         $.jump,
+        $.write,
       ), $.eos, ),
       $.comment
     ),
@@ -90,6 +91,7 @@ module.exports = grammar({
     jump: $ => seq('jump', optional($.label), 
       optional(seq($.bind, $.expr))
     ),
+    write: $ => seq('write', $.expr),
 
     expr: $ => choice(
       field("content", $.number),
