@@ -453,6 +453,14 @@
           }
         },
         {
+          "type": "FIELD",
+          "name": "content",
+          "content": {
+            "type": "SYMBOL",
+            "name": "string"
+          }
+        },
+        {
           "type": "SYMBOL",
           "name": "binary"
         },

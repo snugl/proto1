@@ -94,6 +94,7 @@ module.exports = grammar({
     expr: $ => choice(
       field("content", $.number),
       field("content", $.variable),
+      field("content", $.string),
       $.binary,
       $.paran,
     ),
