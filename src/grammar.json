@@ -394,8 +394,16 @@
           "value": "lab"
         },
         {
-          "type": "SYMBOL",
-          "name": "label"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "label"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
@@ -407,8 +415,16 @@
           "value": "jump"
         },
         {
-          "type": "SYMBOL",
-          "name": "label"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "label"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "CHOICE",

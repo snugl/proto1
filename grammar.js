@@ -86,10 +86,10 @@ module.exports = grammar({
       )),
       ')'
     ),
-    lab:  $ => seq('lab', $.label),
-    jump: $ => seq('jump', $.label, optional(seq(
-      $.bind, $.expr
-    ))),
+    lab:  $ => seq('lab',  optional($.label)),
+    jump: $ => seq('jump', optional($.label), 
+      optional(seq($.bind, $.expr))
+    ),
 
     expr: $ => choice(
       field("content", $.number),
