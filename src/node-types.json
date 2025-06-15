@@ -45,34 +45,11 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "debug_string",
-          "named": true
-        },
-        {
-          "type": "expr",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "debug_string",
-    "named": true,
-    "fields": {},
-    "children": {
       "multiple": false,
       "required": true,
       "types": [
         {
-          "type": "debug_literal",
-          "named": true
-        },
-        {
-          "type": "debug_variable",
+          "type": "expr",
           "named": true
         }
       ]
@@ -476,7 +453,36 @@
   {
     "type": "string",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "string_content",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "string_content",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "debug_literal",
+          "named": true
+        },
+        {
+          "type": "debug_variable",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "sub",
