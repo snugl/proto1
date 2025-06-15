@@ -8,7 +8,7 @@ rout main
     trans 10 ~ block;
 
     sub string::print (
-        block ~ 'hello world'
+        block ~ 'hello world\n'
     );
 
     sub block::range (
