@@ -1,12 +1,9 @@
 
 
-
-
 rout block::len ( 
     in  block; 
     out len;
 ){
-    "put len = block.(0-1) - 1;
     put len = block.(0-1) - 1;
 }
 
@@ -18,10 +15,10 @@ rout block::sum (
     put sum = 0;
     sub block::len( block ~ block, len ~ index );
 
-    lab loop;
+    lab;
         put index = index - 1;
         put sum = sum + block.index;
-    jump loop ~ index > 0;
+    jump ~ index > 0;
 }
 
 
@@ -33,10 +30,10 @@ rout block::range (
     put len = end - start;
     put i = 0;
 
-    lab loop;
+    lab;
         put block.i = start + i;
         put i = i + 1;
-    jump loop ~ i < len;
+    jump ~ i < len;
 }
 
 rout block::debug (
@@ -45,11 +42,21 @@ rout block::debug (
     sub block::len( block ~ block, len ~ len );
 
     put index = 0;
-    lab loop;
+    lab;
         debug block.index;
         put index = index + 1;
-    jump loop ~ index < len;
+    jump ~ index < len;
      
 }
 
+rout block::zero (
+    in block;
+){
+    sub block::len( block ~ block, len ~ i );
+
+    lab;
+        put i = i - 1;
+        put block.i = 0;
+    jump ~ i > 0;
+}
 
