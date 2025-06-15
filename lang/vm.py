@@ -159,7 +159,11 @@ def run(prog):
                 print(chr(acc), end = '')
                 
             case 'string':
-                string = arg.strip("'").encode('utf-8').decode('unicode_escape')
+                string = (arg
+                    .strip("'")
+                    .encode('utf-8')
+                    .decode('unicode_escape') + '\0'
+                )
                 block(len(string))
 
                 for char in string:
