@@ -19,6 +19,7 @@ module.exports = grammar({
       $.comment
     ),
 
+
     comment: $ => /".+?\n/,
 
     import: $ => seq('use', $.string, $.eos),
@@ -72,7 +73,10 @@ module.exports = grammar({
     ),
 
     put:   $ => seq('put', $.expr, '=', $.expr),
-    debug: $ => seq('debug', choice($.expr, $.debug_string)),
+    debug: $ => seq('debug', choice(
+      seq('\'', repeat($.debug_string), '\''), 
+      $.expr
+    )),
     trans: $ => seq('trans', $.expr, $.bind, $.expr),
     pers:  $ => seq('pers', $.expr, $.bind, $.expr),
     sub:   $ => seq(
@@ -112,13 +116,9 @@ module.exports = grammar({
     label: $ => $.iden,
     variable: $ => choice($.seq_name, $.iden),
 
-    debug_string: $ => seq(
-      '\'', 
-      repeat(choice(
+    debug_string: $ => choice(
         $.debug_literal,
         $.debug_variable
-      )),
-      '\''
     ),
     debug_literal: $ => /[^'{}]+/,
     debug_variable: $ => seq('{', $.variable, '}'), 
