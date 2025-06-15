@@ -10,8 +10,6 @@
 (seq_name)         @type
 (seq_entry  (iden) @constant)
 
-(debug_string) @string
-
 
 "rout"    @keyword
 "seq"     @keyword
