@@ -22,6 +22,7 @@
 "trans"   @keyword
 "pers"    @keyword
 "debug"   @keyword
+"write"   @keyword
 
 "use"     @include
 
