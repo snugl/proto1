@@ -1,8 +1,12 @@
 
 
 -new features
-    -anonymous labels/jumps
-    -string formatting for debugs
+    -redundency checks for imports
+        -cyclic imports
+
+    -anonymous labels/jumps /
+    -string formatting for debugs /
+    -string literals /
 
     -dot operator /
 
@@ -11,11 +15,9 @@
         -pers  / (persistent, heap  objects)
         -void  / (freeing persistent object)
 
-        -init  (for initializing objects)
-
     -seq /
 
-    -import to build corpus //
+    -import to build corpus /
 
 -execution model
     -optimizations
