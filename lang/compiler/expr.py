@@ -70,7 +70,7 @@ class node:
                         output('deref')
 
             case 'string':
-                print(self)
+                output('string', f"'{self.content}'")
 
 
 

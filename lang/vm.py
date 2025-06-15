@@ -13,11 +13,13 @@ def lex(raw):
         if not line: continue
         if line.startswith('"'): continue
 
-        comps = line.split(' ')
+        comps = line.split(' ', 1)
         inst = comps[0]
-        arg  = int(comps[1]) if len(comps) > 1 else None
+        arg  = comps[1] if len(comps) > 1 else None
 
-        prog.append((inst, arg))
+        prog.append((inst, 
+            int(arg) if arg and all(x.isdigit() or x in ('-') for x in arg) else arg
+        ))
 
     return prog
 
@@ -48,12 +50,21 @@ def run(prog):
         stack -= 1
         return mem[stack]
 
+    def block(content_size):
+        nonlocal stack, acc
+        real_size = content_size + 1
+
+        push(real_size)
+        acc = stack
+
+
     while pc < len(prog) and running:
         inst, arg = prog[pc]
         pc += 1
 
+
         #virtual arg, relative to stack frame
-        varg = (base + arg) if arg is not None else 0
+        varg = (base + arg) if type(arg) is int else None
 
         match inst:
             case 'const': acc = int(arg)
@@ -103,14 +114,9 @@ def run(prog):
 
             #i know what you are OwO
             case 'trans': #alloc transient acc, base into acc
-                size = acc + 1
-
-                point = stack
+                size = acc
+                block(size)
                 stack += size
-
-                acc = point + 1
-                mem[point] = size
-            
 
             #for deref/ref: acc is addr
             case 'deref': #acc = *acc
@@ -118,7 +124,6 @@ def run(prog):
 
             case 'ref': #*acc = pull()
                 mem[acc] = pull()
-
 
             
             #heap
@@ -149,9 +154,16 @@ def run(prog):
                 for addr in range(start, end):
                     mem[addr] = 0
 
-
+            
+            case 'write':
+                print(chr(acc), end = '')
                 
+            case 'string':
+                string = arg.strip("'").encode('utf-8').decode('unicode_escape')
+                block(len(string))
 
+                for char in string:
+                    push(ord(char))
 
 
             #misc
