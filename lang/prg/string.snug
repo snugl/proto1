@@ -1,0 +1,25 @@
+
+use 'lib/block.snug';
+
+rout print (
+    in block;
+){
+    sub block::len ( block ~ block, len ~ len );
+    put index = 0;
+
+    lab;
+        write block.index;
+        put index = index + 1;
+    jump ~ len > index;
+}
+
+
+
+
+rout main
+{
+    sub print (
+        block ~ 'hello world\n',
+    );
+
+}

@@ -1,10 +1,15 @@
 
 
 use 'lib/block.snug';
+use 'lib/string.snug';
 
 rout main
 {
     trans 10 ~ block;
+
+    sub string::print (
+        block ~ 'hello world'
+    );
 
     sub block::range (
         block ~ block,
@@ -16,6 +21,8 @@ rout main
         block ~ block,
         sum ~ _
     );
+
+    debug 'block pointer: {block}';
 
     sub block::debug ( block ~ block );
 
