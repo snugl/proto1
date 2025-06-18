@@ -29,5 +29,16 @@ rout main
     debug _;
 
 
+
+    sub string::len (
+        block ~ 'my fat fucking ass',
+        len ~ _
+    );
+
+    debug _;
+
+
+
+
 }
 

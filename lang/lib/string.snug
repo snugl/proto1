@@ -14,4 +14,16 @@ rout string::print (
 }
 
 
+rout string::len (
+    in block;
+    out len;
+){
+    put len = 0 - 1;
+
+    lab;
+        put len = len + 1;
+    jump ~ block.len != 0;
+}
+
+
 
