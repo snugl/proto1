@@ -9,6 +9,7 @@ import sym
 import emission
 import tree
 import abstract
+import error
 
 @dataclass
 class _debug:
@@ -188,6 +189,9 @@ class _sub:
         #construct in-paramter space
         #THE ORDER IS IMPORTANT
         for param in pinter.in_param:
+            if param not in self.imap:
+                error.error(f"Required parameter '{param}' in call to routine {self.target} not bound")
+
             self.imap[param].generate(output, ctx)
             output('push')
 
