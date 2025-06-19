@@ -16,9 +16,6 @@ class node:
     consts : typing.Any = field(default_factory=lambda: {})
     origin_addr : typing.Any = field(default_factory=lambda: {}) 
 
-    def __iter__(self):
-        return iter(self.subs)
-
     def __len__(self):
         return len(self.subs)
 
@@ -61,9 +58,13 @@ class node:
 
             self.consts.update(sub.render_constants())
 
+
+    def generate(self, output, ctx):
+        for node in self.subs:
+            node.generate(output, ctx)
             
 
-    def generate(self, output, target):
+    def generate_routine(self, output, target):
         #collect and emit dependencies of routine
         for node in target.sapling:
             if type(node) is not objs._sub:
@@ -73,7 +74,7 @@ class node:
             if target.name == depend.name: #recursion
                 continue
 
-            self.generate(output, depend)
+            self.generate_routine(output, depend)
 
         target.generate(output, self)
 
@@ -89,7 +90,7 @@ def parse(stream):
             error.stream_error(stream, f"Invalid statement name: {iden}")
 
         sub = getattr(objs, name).parse(stream)
-        if iden not in ("rout", "seq"):
+        if iden not in ("rout", "seq", "iter"):
             stream.expect(sym.eos)
 
         root.subs.append(sub)

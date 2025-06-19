@@ -269,6 +269,78 @@ class _void:
 
 
 @dataclass
+class _iter:
+    iterator : expr.node
+    block    : expr.node
+    body     : typing.Any
+    counter_var_addr : int = 0
+
+    @classmethod
+    def parse(cls, stream):
+        #header
+        iterator = expr.parse(stream)
+        stream.expect(sym.binding)
+        block = expr.parse(stream)
+
+        #body
+        stream.expect(sym.block_start)
+        body = tree.parse(stream)
+        stream.expect(sym.block_end)
+
+        return cls(iterator, block, body)
+
+    def infer(self, ctx):
+        self.iterator.infer(ctx)
+        self.counter_var_addr = next(ctx.var_allocer)
+
+    def generate(self, output, ctx):
+        #put block origin onto stack for save-keeping
+        self.block.generate(output, ctx) 
+        output('push')
+
+        #initalize counter
+        output('const', 0)
+        output('store', self.counter_var_addr)
+
+        #loop start
+        loop_start_addr = output.address()
+
+        #update iterator
+        output('dup')
+        output('load', self.counter_var_addr)
+        output('add')
+        output('deref')
+        self.iterator.write(output, ctx)
+
+        self.body.generate(output, ctx)
+
+        #aquire block length
+        output('dup')
+        output('pull')
+        output('dec')
+        output('deref')
+        output('dec') #length of block content, so discard header size
+        output('push')
+    
+        #increment loop
+        output('load', self.counter_var_addr)
+        output('inc')
+        output('store', self.counter_var_addr)
+
+        #repeat loop
+        output('lesser')
+        output('branch', loop_start_addr)
+
+
+
+
+                
+
+
+
+
+
+@dataclass
 class _rout:
     #parse
     name  : str = ""
@@ -316,8 +388,9 @@ class _rout:
 
 
         #generate routine behavior
-        for node in self.sapling:
-            node.generate(output, ctx)
+        self.sapling.generate(output, ctx)
+        #for node in self.sapling:
+        #    node.generate(output, ctx)
 
         #free variable space
         output("free", var_count)

@@ -37,8 +37,8 @@ class node:
                 #perform enref
                 output('ref')
                 
-            case _:
-                error.error("Unable to write to expression");
+            case x:
+                error.error(f"Unable to write to expression {self.content} of type {x}");
                 
 
      
