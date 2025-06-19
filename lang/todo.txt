@@ -4,6 +4,13 @@
     -redundency checks for imports
         -cyclic imports
 
+    -loops /
+        -iter  /
+        -enum  /
+        -count /
+
+    -fix _void.infer
+
     -anonymous labels/jumps /
     -string formatting for debugs /
     -string literals /
