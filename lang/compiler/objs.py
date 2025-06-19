@@ -33,6 +33,7 @@ class _debug:
                     if char == '}':
                         reading_format_name = False 
                         var_addr = ctx.vars["".join(format_name)]
+                        format_name = []
                         output('load', var_addr)
                         output('debug', 2)
                     elif char == '{':
@@ -331,7 +332,75 @@ class _iter:
         output('lesser')
         output('branch', loop_start_addr)
 
+        #remove block origin
+        output('free', 1)
 
+
+
+@dataclass
+class _enum:
+    iterator : expr.node
+    index    : expr.node
+    block    : expr.node
+    body     : typing.Any
+
+    @classmethod
+    def parse(cls, stream):
+        #header
+        iterator = expr.parse(stream)
+        stream.expect(sym.index)
+        index    = expr.parse(stream)
+        stream.expect(sym.binding)
+        block    = expr.parse(stream)
+
+        #body
+        stream.expect(sym.block_start)
+        body = tree.parse(stream)
+        stream.expect(sym.block_end)
+
+        return cls(iterator, index, block, body)
+
+    def infer(self, ctx):
+        self.iterator.infer(ctx)
+        self.index.infer(ctx)
+
+    def generate(self, output, ctx):
+        #put block origin onto stack for save-keeping
+        self.block.generate(output, ctx) 
+        output('push')
+
+        #initalize counter
+        output('const', 0)
+        self.index.write(output, ctx)
+
+        #loop start
+        loop_start_addr = output.address()
+
+        #update iterator
+        output('dup')
+        self.index.generate(output, ctx)
+        output('add')
+        output('deref')
+        self.iterator.write(output, ctx)
+
+        self.body.generate(output, ctx)
+
+        #aquire block length
+        output('dup')
+        output('pull')
+        output('dec')
+        output('deref')
+        output('dec') #length of block content, so discard header size
+        output('push')
+    
+        #increment loop
+        self.index.generate(output, ctx)
+        output('inc')
+        self.index.write(output, ctx)
+
+        #repeat loop
+        output('lesser')
+        output('branch', loop_start_addr)
 
 
                 

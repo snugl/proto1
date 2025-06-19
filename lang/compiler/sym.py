@@ -8,6 +8,8 @@ param_end   = ')'
 block_start = '{'
 block_end   = '}'
 
+index = '@'
+
 
 op_add = '+'
 op_sub = '-'
