@@ -63,21 +63,6 @@ class node:
         for node in self.subs:
             node.generate(output, ctx)
             
-
-    def generate_routine(self, output, target):
-        #collect and emit dependencies of routine
-        for node in target.sapling:
-            if type(node) is not objs._sub:
-                continue 
-
-            depend = self.get_routine(node.target)
-            if target.name == depend.name: #recursion
-                continue
-
-            self.generate_routine(output, depend)
-
-        target.generate(output, self)
-
     
 def parse(stream):
     root = node()

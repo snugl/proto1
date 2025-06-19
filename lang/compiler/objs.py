@@ -360,8 +360,22 @@ class _rout:
             if name not in self.vars.keys():
                 self.vars[name] = next(self.var_allocer)
 
+    def dependencies(self, output, tree):
+        #collect and emit dependencies of routine
+        for node in self.sapling:
+            if type(node) is not _sub:
+                continue 
+
+            depend = tree.get_routine(node.target)
+            if self.name == depend.name: #recursion
+                continue
+
+            depend.generate(output, tree)
+
 
     def generate(self, output, tree):
+        self.dependencies(output, tree)
+
         tree.define_routine_origin(self.name, output.address())
 
         #build compilation context
