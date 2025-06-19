@@ -608,23 +608,26 @@
       ]
     },
     "string_content": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "debug_literal"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "debug_variable"
-        }
-      ]
+      "type": "REPEAT1",
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "string_literal"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "string_format"
+          }
+        ]
+      }
     },
-    "debug_literal": {
+    "string_literal": {
       "type": "PATTERN",
       "value": "[^'{}]+"
     },
-    "debug_variable": {
+    "string_format": {
       "type": "SEQ",
       "members": [
         {

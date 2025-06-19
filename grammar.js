@@ -114,12 +114,12 @@ module.exports = grammar({
     variable: $ => choice($.seq_name, $.iden),
 
     string: $ => seq('\'', $.string_content, '\''),
-    string_content: $ => choice(
-        $.debug_literal,
-        $.debug_variable
-    ),
-    debug_literal: $ => /[^'{}]+/,
-    debug_variable: $ => seq('{', $.variable, '}'), 
+    string_content: $ => repeat1(choice(
+        $.string_literal,
+        $.string_format,
+    )),
+    string_literal: $ => /[^'{}]+/,
+    string_format : $ => seq('{', $.variable, '}'), 
 
     key_in:  $ => 'in',
     key_out: $ => 'out',
