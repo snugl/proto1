@@ -65,7 +65,7 @@ class node:
 
     def generate(self, output, target):
         #collect and emit dependencies of routine
-        for node in target.nodes:
+        for node in target.sapling:
             if type(node) is not objs._sub:
                 continue 
 

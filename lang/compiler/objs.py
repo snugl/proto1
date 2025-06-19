@@ -272,7 +272,7 @@ class _void:
 class _rout:
     #parse
     name  : str = ""
-    nodes : typing.Any = None
+    sapling : typing.Any = None
 
     pinter : abstract.param_interface = field(default_factory=lambda: abstract.param_interface())
 
@@ -304,7 +304,7 @@ class _rout:
         ctx.vars.update(self.pinter.generate_variable_binding())
 
         #infer variables
-        for node in self.nodes:
+        for node in self.sapling:
             if hasattr(node, "infer"):
                 node.infer(ctx)
 
@@ -316,7 +316,7 @@ class _rout:
 
 
         #generate routine behavior
-        for node in self.nodes:
+        for node in self.sapling:
             node.generate(output, ctx)
 
         #free variable space
@@ -342,7 +342,7 @@ class _rout:
             stream.expect(sym.param_end)
 
         stream.expect(sym.block_start)
-        self.nodes = tree.parse(stream)
+        self.sapling = tree.parse(stream)
         stream.expect(sym.block_end)
 
         return self
