@@ -75,7 +75,7 @@ def parse(stream):
             error.stream_error(stream, f"Invalid statement name: {iden}")
 
         sub = getattr(objs, name).parse(stream)
-        if iden not in ("rout", "seq", "iter", "enum"):
+        if iden not in ("rout", "seq", "iter", "enum", "count"):
             stream.expect(sym.eos)
 
         root.subs.append(sub)

@@ -9,7 +9,7 @@ block_start = '{'
 block_end   = '}'
 
 index = '@'
-
+ranger = '..'
 
 op_add = '+'
 op_sub = '-'

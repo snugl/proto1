@@ -403,8 +403,50 @@ class _enum:
         output('branch', loop_start_addr)
 
 
-                
+@dataclass
+class _count:
+    start    : expr.node
+    end      : expr.node
+    index    : expr.node
+    body     : typing.Any
 
+    @classmethod
+    def parse(cls, stream):
+        #header
+        index = expr.parse(stream)
+        stream.expect(sym.binding)
+        start = expr.parse(stream)
+        stream.expect(sym.ranger)
+        end   = expr.parse(stream)
+
+        #body
+        stream.expect(sym.block_start)
+        body = tree.parse(stream)
+        stream.expect(sym.block_end)
+
+        return cls(start, end, index, body)
+
+    def infer(self, ctx):
+        self.index.infer(ctx)
+
+    def generate(self, output, ctx):
+        #initalize index
+        self.start.generate(output, ctx)
+        self.index.write(output, ctx)
+
+        #loop start
+        loop_start_addr = output.address()
+
+        self.body.generate(output, ctx)
+
+        #loop end
+        self.index.generate(output, ctx)
+        output('inc')
+        self.index.write(output, ctx)
+        output('push')
+        self.end.generate(output, ctx)
+        output('greater')
+        output('branch', loop_start_addr)
 
 
 
