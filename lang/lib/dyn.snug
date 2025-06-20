@@ -76,3 +76,14 @@ rout Dyn::pushBack (
 }
 
 
+
+rout Dyn::debug (
+    in block;
+){
+    count i ~ 0 .. block.Dyn::Size
+    {
+        put x = (block.Dyn::Container).i;
+        debug 'Dyn::debug: {x}';
+    }
+}
+
