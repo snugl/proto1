@@ -61,13 +61,13 @@ class output:
     def define_local_label(self, name, routine):
         key = (name, routine)
         if key in self.definition_mapper:
-            error.error(f"Redefinition of label {name} in scope {routine}")
+            error.error(f"Redefinition of label '{name}' in scope '{routine}'")
         self.definition_mapper[key] = self.address()
 
     def lookup_local_label(self, name, routine):
         key = (name, routine)
         if key not in self.definition_mapper:
-            error.error(f"Label {name} not defined in scope {routine}")
+            error.error(f"Label '{name}' not defined in scope '{routine}'")
         return self.definition_mapper[key]
 
     def address(self):
