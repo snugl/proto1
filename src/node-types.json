@@ -41,6 +41,29 @@
     "fields": {}
   },
   {
+    "type": "count",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "bind",
+          "named": true
+        },
+        {
+          "type": "expr",
+          "named": true
+        },
+        {
+          "type": "tree",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "debug",
     "named": true,
     "fields": {},
@@ -50,6 +73,29 @@
       "types": [
         {
           "type": "expr",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "enum",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "bind",
+          "named": true
+        },
+        {
+          "type": "expr",
+          "named": true
+        },
+        {
+          "type": "tree",
           "named": true
         }
       ]
@@ -107,6 +153,29 @@
         },
         {
           "type": "string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "iter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "bind",
+          "named": true
+        },
+        {
+          "type": "expr",
+          "named": true
+        },
+        {
+          "type": "tree",
           "named": true
         }
       ]
@@ -305,14 +374,6 @@
       "required": true,
       "types": [
         {
-          "type": "close_scope",
-          "named": true
-        },
-        {
-          "type": "open_scope",
-          "named": true
-        },
-        {
           "type": "param_interface",
           "named": true
         },
@@ -321,7 +382,7 @@
           "named": true
         },
         {
-          "type": "statement",
+          "type": "tree",
           "named": true
         }
       ]
@@ -397,11 +458,23 @@
           "named": true
         },
         {
+          "type": "count",
+          "named": true
+        },
+        {
           "type": "debug",
           "named": true
         },
         {
+          "type": "enum",
+          "named": true
+        },
+        {
           "type": "eos",
+          "named": true
+        },
+        {
+          "type": "iter",
           "named": true
         },
         {
@@ -531,6 +604,29 @@
     }
   },
   {
+    "type": "tree",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "close_scope",
+          "named": true
+        },
+        {
+          "type": "open_scope",
+          "named": true
+        },
+        {
+          "type": "statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "unit",
     "named": true,
     "fields": {},
@@ -624,6 +720,10 @@
     "named": false
   },
   {
+    "type": "..",
+    "named": false
+  },
+  {
     "type": "<",
     "named": false
   },
@@ -636,6 +736,10 @@
     "named": false
   },
   {
+    "type": "@",
+    "named": false
+  },
+  {
     "type": "bind",
     "named": true
   },
@@ -644,7 +748,15 @@
     "named": true
   },
   {
+    "type": "count",
+    "named": false
+  },
+  {
     "type": "debug",
+    "named": false
+  },
+  {
+    "type": "enum",
     "named": false
   },
   {
@@ -654,6 +766,10 @@
   {
     "type": "iden",
     "named": true
+  },
+  {
+    "type": "iter",
+    "named": false
   },
   {
     "type": "jump",

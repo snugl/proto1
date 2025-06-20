@@ -36,6 +36,10 @@ module.exports = grammar({
       'rout',
       $.rout_name,
       optional($.param_interface),
+      $.tree
+    ),
+
+    tree: $ => seq(
       $.open_scope,
       repeat($.statement),
       $.close_scope,
@@ -59,7 +63,7 @@ module.exports = grammar({
 
 
     statement: $ => choice(seq(
-      choice(
+      choice( //eos terminated
         $.put,
         $.debug,
         $.trans,
@@ -69,6 +73,11 @@ module.exports = grammar({
         $.jump,
         $.write,
       ), $.eos, ),
+      choice( //non terminated
+        $.iter,
+        $.enum,
+        $.count,
+      ),
       $.comment
     ),
 
@@ -93,6 +102,11 @@ module.exports = grammar({
       optional(seq($.bind, $.expr))
     ),
     write: $ => seq('write', $.expr),
+
+    //loops
+    iter:  $ => seq('iter',  $.expr,              $.bind,               $.expr, $.tree),
+    enum:  $ => seq('enum',  $.expr, '@', $.expr, $.bind,               $.expr, $.tree),
+    count: $ => seq('count', $.expr,              $.bind, $.expr, '..', $.expr, $.tree),
 
     expr: $ => choice(
       field("content", $.number),
