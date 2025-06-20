@@ -13,50 +13,53 @@ rout block::sum (
     out sum;
 ){
     put sum = 0;
-    sub block::len( block ~ block, len ~ index );
 
-    lab;
-        put index = index - 1;
-        put sum = sum + block.index;
-    jump ~ index > 0;
+    iter x ~ block
+    {
+        put sum = sum + x;
+    }
 }
 
 
 rout block::range (
-    in end;
-    in start;
+    in block;
+    in offset;
+    in len;
+    in first;
+){
+    count i ~ 0 .. len
+    {
+        put block.(offset + i) = (first + i);
+    }
+}
+
+
+rout block::iota (
     in block;
 ){
-    put len = end - start;
-    put i = 0;
-
-    lab;
-        put block.i = start + i;
-        put i = i + 1;
-    jump ~ i < len;
+    enum x @ i ~ block
+    {
+        put block.i = i;
+    }
 }
+
+
 
 rout block::debug (
     in block;
 ){
-    sub block::len( block ~ block, len ~ len );
-
-    put index = 0;
-    lab;
-        debug block.index;
-        put index = index + 1;
-    jump ~ index < len;
-     
+    iter x ~ block
+    {
+        debug x;
+    }
 }
 
 rout block::zero (
     in block;
 ){
-    sub block::len( block ~ block, len ~ i );
-
-    lab;
-        put i = i - 1;
+    enum _ @ i ~ block
+    {
         put block.i = 0;
-    jump ~ i > 0;
+    }
 }
 
