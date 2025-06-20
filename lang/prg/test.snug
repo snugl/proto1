@@ -1,28 +1,22 @@
 
 
+use 'lib/dyn.snug';
 use 'lib/block.snug';
-use 'lib/string.snug';
 
 rout main
 {
-    put len = 10;
-    trans 10 ~ block;
+    sub Dyn::new (block ~ dyn);
 
-    sub block::iota (
-        block ~ block,
-    );
-
-    sub block::sum (
-        block ~ block,
-        sum ~ _
-    );
-    debug 'block sum: {_}';
-
-    enum x @ i ~ block
-    {
-        debug 'block value {x} at index {i}';
-    }
+    sub Dyn::pushBack(block ~ dyn, value ~ 3);
+    sub Dyn::pushBack(block ~ dyn, value ~ 1);
+    sub Dyn::pushBack(block ~ dyn, value ~ 4);
+    sub Dyn::pushBack(block ~ dyn, value ~ 1);
+    sub Dyn::pushBack(block ~ dyn, value ~ 5);
+    sub Dyn::pushBack(block ~ dyn, value ~ 2);
+    
+    sub Dyn::debug (block ~ dyn);
 
 
+    sub Dyn::void (block ~ dyn);
 }
 
