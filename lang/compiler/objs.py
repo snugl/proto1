@@ -178,6 +178,8 @@ class _sub:
         pinter = target_obj.pinter
 
         for binding_name in pinter.out_param:
+            if binding_name not in self.imap:
+                error.error(f"Required out-parameter '{binding_name}' in call to routine {self.target} not bound")
             variable_name = self.imap[binding_name].content
             ctx.allocate_variable(variable_name)
 
@@ -190,7 +192,7 @@ class _sub:
         #THE ORDER IS IMPORTANT
         for param in pinter.in_param:
             if param not in self.imap:
-                error.error(f"Required parameter '{param}' in call to routine {self.target} not bound")
+                error.error(f"Required in-parameter '{param}' in call to routine {self.target} not bound")
 
             self.imap[param].generate(output, ctx)
             output('push')
