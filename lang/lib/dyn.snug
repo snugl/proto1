@@ -12,77 +12,77 @@ seq Dyn
 
 rout Dyn::newReserve (
     in capacity;
-    out block;
+    out list;
 ){
-    pers Dyn      ~ block;
-    pers capacity ~ block.Dyn::Container;
+    pers Dyn      ~ list;
+    pers capacity ~ list.Dyn::Container;
     
-    put block.Dyn::Size     = 0;
-    put block.Dyn::Capacity = capacity;
+    put list.Dyn::Size     = 0;
+    put list.Dyn::Capacity = capacity;
 }
 
 rout Dyn::new (
-    out block;
+    out list;
 ){
     sub Dyn::newReserve(
         capacity ~ 1,
-        block    ~ block,
+        list     ~ list,
     );
 }
 
 
 rout Dyn::void (
-    in block;
+    in list;
 ){
-    void block.Dyn::Container;
-    void block;
+    void list.Dyn::Container;
+    void list;
 }
 
 
 rout Dyn::ensure (
-    in block;
+    in list;
     in size;
 ){
-    jump done ~ size < block.Dyn::Size; 
-    put block.Dyn::Size = size;
+    jump done ~ size < list.Dyn::Size; 
+    put list.Dyn::Size = size;
 
-    jump done ~ size < block.Dyn::Capacity;
-    put block.Dyn::Capacity = block.Dyn::Capacity * 2;
+    jump done ~ size < list.Dyn::Capacity;
+    put list.Dyn::Capacity = list.Dyn::Capacity * 2;
 
-    pers block.Dyn::Capacity ~ contNew;
-    enum x @ i ~ block.Dyn::Container
+    pers list.Dyn::Capacity ~ contNew;
+    enum x @ i ~ list.Dyn::Container
     {
         put contNew.i = x;
     }
 
-    void block.Dyn::Container;
-    put block.Dyn::Container = contNew;
+    void list.Dyn::Container;
+    put list.Dyn::Container = contNew;
 
     lab done;
 }
 
 
 rout Dyn::pushBack (
-    in block;
+    in list;
     in value;
 ){
-    put index = block.Dyn::Size;
+    put index = list.Dyn::Size;
     sub Dyn::ensure (
-        block ~ block,
-        size ~ block.Dyn::Size + 1,
+        list ~ list,
+        size ~ list.Dyn::Size + 1,
     );
 
-    put (block.Dyn::Container).index = value;
+    put (list.Dyn::Container).index = value;
 }
 
 
 
 rout Dyn::debug (
-    in block;
+    in list;
 ){
-    count i ~ 0 .. block.Dyn::Size
+    count i ~ 0 .. list.Dyn::Size
     {
-        put x = (block.Dyn::Container).i;
+        put x = (list.Dyn::Container).i;
         debug 'Dyn::debug: {x}';
     }
 }
