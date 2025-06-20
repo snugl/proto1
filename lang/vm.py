@@ -76,10 +76,13 @@ def run(prog):
             case 'lesser' : acc = (acc < pull())
             case 'equal':   acc = (acc == pull())
             case 'mul':     acc = acc * pull()
+            case 'inc':     acc += 1
+            case 'dec':     acc -= 1
 
             #stack interface
             case 'push': push(acc)
             case 'pull': acc = pull()
+            case 'dup' : push(mem[stack-1])
 
             #memory interface
             case 'load':  acc = mem[varg]
