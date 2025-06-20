@@ -484,8 +484,11 @@ class _rout:
 
 
     def generate(self, output, tree):
-        self.dependencies(output, tree)
+        #make sure routine is only generated once
+        if tree.check_routine_defined(self.name):
+            return
 
+        self.dependencies(output, tree)
         tree.define_routine_origin(self.name, output.address())
 
         #build compilation context

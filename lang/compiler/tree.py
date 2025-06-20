@@ -44,6 +44,9 @@ class node:
     def define_routine_origin(self, name, addr):
         self.origin_addr[name] = addr
 
+    def check_routine_defined(self, name):
+        return name in self.origin_addr.keys()
+
     def lookup_routine_origin(self, name):
         return self.origin_addr[name]
 
