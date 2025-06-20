@@ -151,7 +151,7 @@ def run(prog):
 
             
             case 'void': #free block by zero'ing
-                start = acc
+                start = acc - 1
                 end   = start + mem[start]
 
                 for addr in range(start, end):
