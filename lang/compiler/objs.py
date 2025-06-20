@@ -475,17 +475,18 @@ class _rout:
             if name not in self.vars.keys():
                 self.vars[name] = next(self.var_allocer)
 
+    #collect and emit dependencies of routine (recursivly *the horror*)
     def dependencies(self, output, tree):
-        #collect and emit dependencies of routine
-        for node in self.sapling:
-            if type(node) is not _sub:
-                continue 
+        def walk(sapling):
+            nonlocal output, tree
+            for node in sapling:
+                if type(node) is _sub:
+                    depend = tree.get_routine(node.target)
+                    depend.generate(output, tree)
+                elif type(node) in (_iter, _enum, _count):
+                    walk(node.body)
 
-            depend = tree.get_routine(node.target)
-            if self.name == depend.name: #recursion
-                continue
-
-            depend.generate(output, tree)
+        walk(self.sapling) 
 
 
     def generate(self, output, tree):
