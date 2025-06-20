@@ -10,6 +10,10 @@
 (seq_name)         @type
 (seq_entry  (iden) @constant)
 
+"iter"    @keyword
+"count"   @keyword
+"enum"    @keyword
+
 
 "rout"    @keyword
 "seq"     @keyword
@@ -38,5 +42,7 @@
 
 (eos)  @punctuation
 ","    @punctuation 
+"@"    @punctuation 
+".."   @punctuation 
 (bind) @punctuation
 (comment) @comment @spell
