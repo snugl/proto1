@@ -1,7 +1,7 @@
 
 use 'lib/block.snug';
 
-rout string::print (
+rout String::print (
     in block;
 ){
     sub block::len ( block ~ block, len ~ len );
@@ -14,7 +14,7 @@ rout string::print (
 }
 
 
-rout string::len (
+rout String::len (
     in block;
     out len;
 ){

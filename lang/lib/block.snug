@@ -1,6 +1,6 @@
 
 
-rout block::len ( 
+rout Block::len ( 
     in  block; 
     out len;
 ){
@@ -8,7 +8,7 @@ rout block::len (
 }
 
 
-rout block::sum (
+rout Block::sum (
     in block;
     out sum;
 ){
@@ -21,7 +21,7 @@ rout block::sum (
 }
 
 
-rout block::range (
+rout Block::range (
     in block;
     in offset;
     in len;
@@ -34,7 +34,7 @@ rout block::range (
 }
 
 
-rout block::iota (
+rout Block::iota (
     in block;
 ){
     enum x @ i ~ block
@@ -45,7 +45,7 @@ rout block::iota (
 
 
 
-rout block::debug (
+rout Block::debug (
     in block;
 ){
     iter x ~ block
@@ -54,7 +54,7 @@ rout block::debug (
     }
 }
 
-rout block::zero (
+rout Block::zero (
     in block;
 ){
     enum _ @ i ~ block
