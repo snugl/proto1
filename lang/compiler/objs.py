@@ -262,11 +262,6 @@ class _void:
         target = expr.parse(stream)
         return cls(target)
 
-    def infer(self, ctx):
-        #should be able to allocate
-        #(though it doesn't make sense lolz)
-        self.target.infer(ctx)
-
     def generate(self, output, ctx):
         self.target.generate(output, ctx)
         output('void')
