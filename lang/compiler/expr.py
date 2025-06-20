@@ -72,6 +72,9 @@ class node:
             case 'string':
                 output('string', f"'{self.content}'")
 
+            case x:
+                error.error(f"Unable to evaluate to expression {self.content} of type {x}");
+
 
 
 def parse_expr(stream, prec_level):
