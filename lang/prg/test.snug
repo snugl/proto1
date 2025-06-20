@@ -5,39 +5,23 @@ use 'lib/string.snug';
 
 rout main
 {
+    put len = 10;
     trans 10 ~ block;
 
-    sub string::print (
-        block ~ 'hello world\n'
-    );
-
-    sub block::range (
+    sub block::iota (
         block ~ block,
-        start ~ 0,
-        end ~ 10
     );
 
     sub block::sum (
         block ~ block,
         sum ~ _
     );
+    debug 'block sum: {_}';
 
-    debug 'block pointer: {block}';
-
-    sub block::debug ( block ~ block );
-
-    debug _;
-
-
-
-    sub string::len (
-        block ~ 'my fat fucking ass',
-        len ~ _
-    );
-
-    debug _;
-
-
+    enum x @ i ~ block
+    {
+        debug 'block value {x} at index {i}';
+    }
 
 
 }
