@@ -292,6 +292,7 @@ class _iter:
     def infer(self, ctx):
         self.iterator.infer(ctx)
         self.counter_var_addr = next(ctx.var_allocer)
+        self.body.infer(ctx)
 
     def generate(self, output, ctx):
         #put block origin onto stack for save-keeping
@@ -362,6 +363,7 @@ class _enum:
     def infer(self, ctx):
         self.iterator.infer(ctx)
         self.index.infer(ctx)
+        self.body.infer(ctx)
 
     def generate(self, output, ctx):
         #put block origin onto stack for save-keeping
@@ -427,6 +429,7 @@ class _count:
 
     def infer(self, ctx):
         self.index.infer(ctx)
+        self.body.infer(ctx)
 
     def generate(self, output, ctx):
         #initalize index
@@ -503,9 +506,7 @@ class _rout:
         ctx.vars.update(self.pinter.generate_variable_binding())
 
         #infer variables
-        for node in self.sapling:
-            if hasattr(node, "infer"):
-                node.infer(ctx)
+        self.sapling.infer(ctx)
 
         #reserve local stack space for variables
         var_count = next(ctx.var_allocer)

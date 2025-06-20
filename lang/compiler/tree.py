@@ -65,6 +65,11 @@ class node:
     def generate(self, output, ctx):
         for node in self.subs:
             node.generate(output, ctx)
+
+    def infer(self, ctx):
+        for node in self.subs:
+            if hasattr(node, "infer"):
+                node.infer(ctx)
             
     
 def parse(stream):
