@@ -5,18 +5,16 @@ use 'lib/block.snug';
 
 rout main
 {
-    sub Dyn::new (block ~ dyn);
+    sub Dyn::new (list ~ dyn);
 
-    sub Dyn::pushBack(block ~ dyn, value ~ 3);
-    sub Dyn::pushBack(block ~ dyn, value ~ 1);
-    sub Dyn::pushBack(block ~ dyn, value ~ 4);
-    sub Dyn::pushBack(block ~ dyn, value ~ 1);
-    sub Dyn::pushBack(block ~ dyn, value ~ 5);
-    sub Dyn::pushBack(block ~ dyn, value ~ 2);
+    count x ~ 0 .. 10
+    {
+        sub Dyn::pushBack(list ~ dyn, value ~ x * x);
+    }
     
-    sub Dyn::debug (block ~ dyn);
+    sub Dyn::debug (list ~ dyn);
 
 
-    sub Dyn::void (block ~ dyn);
+    sub Dyn::void (list ~ dyn);
 }
 
