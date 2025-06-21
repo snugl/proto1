@@ -34,6 +34,7 @@ def get_kind(char):
         case ")":               return 'close_paran'
         case "{":               return 'open_scope'
         case "}":               return 'close_scope'
+        case "`":               return 'backtick'
         case _:                 return 'symbol'
 
 
@@ -87,8 +88,9 @@ def tokenize(path):
     line = 1
 
     #modes
-    comment = False
-    string  = False
+    comment  = False
+    string   = False
+    char_lit = False
 
     for char in raw:
         kind_new = get_kind(char)
@@ -99,11 +101,16 @@ def tokenize(path):
         if kind_new == 'newline': comment = False
         if comment: continue
 
+        if char_lit: kind_new = 'char_lit'
+        if char_lit: char_lit = False
+        if kind_new == 'backtick': char_lit = True
+
+
         if kind_new != kind_old and not string:
             token_content = "".join(buffer)
             buffer = []
 
-            if kind_old not in ('space', 'newline') and token_content:
+            if kind_old not in ('space', 'newline', 'backtick') and token_content:
                 token_buffer.append(token(
                     token_content, line, path, kind_old
                 ))
@@ -113,5 +120,7 @@ def tokenize(path):
         kind_old = kind_new
         if char == '\n': line += 1
 
+    for t in token_buffer:
+        print(t)
     return stream(token_buffer)
 

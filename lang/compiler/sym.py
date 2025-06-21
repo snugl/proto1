@@ -15,17 +15,26 @@ op_add = '+'
 op_sub = '-'
 op_gt  = '>'
 op_lt  = '<'
+op_ge  = '>='
+op_le  = '<='
 op_eq  = '=='
-op_neq  = '!='
-op_mul  = '*'
+op_neq = '!='
+op_mul = '*'
 op_dot = '.'
+op_bit_and = '&'
+op_bit_or  = '|'
+op_boo_and = '&&'
+op_boo_or  = '||'
+
 
 #precedence
 prec = [
-    ("<", ">", "==", "!="),
-    ("+", "-"),
-    ("*"),
-    ("."),
+    (op_boo_and, op_boo_or),
+    (op_gt, op_lt, op_eq, op_neq, op_ge, op_le),
+    (op_bit_and, op_bit_or),
+    (op_add, op_sub),
+    (op_mul),
+    (op_dot),
 ]
 
 

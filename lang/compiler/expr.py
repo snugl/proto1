@@ -44,6 +44,12 @@ class node:
      
     #generate outputs to acc
     def generate(self, output, ctx):
+        def bool_normalize():
+            output('push')
+            output('const', 1)
+            output('and')
+
+
         vars = ctx.vars
         match self.kind:
             case 'num':
@@ -58,19 +64,41 @@ class node:
                 self.left.generate(output, ctx)
 
                 match self.content:
-                    case sym.op_add: output('add'),
-                    case sym.op_sub: output('sub'),
-                    case sym.op_gt : output('greater'), #acc is greater
-                    case sym.op_lt : output('lesser'),  #acc is lesser
-                    case sym.op_eq : output('equal'),
-                    case sym.op_neq: output('nequal'),
-                    case sym.op_mul: output('mul'),
+                    case sym.op_add:     output('add'),
+                    case sym.op_sub:     output('sub'),
+                    case sym.op_bit_or:  output('or')
+                    case sym.op_bit_and: output('adn')
+                    case sym.op_gt :     output('greater'), #acc is greater
+                    case sym.op_lt :     output('lesser'),  #acc is lesser
+                    case sym.op_eq :     output('equal'),
+                    case sym.op_neq:     output('nequal'),
+                    case sym.op_mul:     output('mul'),
+
+
                     case sym.op_dot:
                         output('add')
                         output('deref')
 
+                    case sym.op_ge:
+                        output('inc') #or equal
+                        output('greater')
+                    case sym.op_le:
+                        output('dec') #or equal
+                        output('lesser')
+
+                    case sym.op_boo_or:
+                        output('or')
+                        bool_normalize()
+
+                    case sym.op_boo_and:
+                        output('and')
+                        bool_normalize()
+
             case 'string':
                 output('string', f"'{self.content}'")
+
+            case 'char':
+                output('const', ord(self.content))
 
             case x:
                 error.error(f"Unable to evaluate to expression {self.content} of type {x}");
@@ -119,6 +147,11 @@ def parse_terminal(stream):
         case x if x.kind == 'quote':
             return node(
                 kind = 'string',
+                content = x.content
+            )
+        case x if x.kind == 'char_lit':
+            return node(
+                kind = 'char',
                 content = x.content
             )
         case x:

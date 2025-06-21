@@ -78,6 +78,8 @@ def run(prog):
             case 'mul':     acc = acc * pull()
             case 'inc':     acc += 1
             case 'dec':     acc -= 1
+            case 'or':      acc |= pull()
+            case 'and':     acc &= pull()
 
             #stack interface
             case 'push': push(acc)
