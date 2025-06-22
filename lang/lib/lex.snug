@@ -1,0 +1,89 @@
+
+use 'lib/str.snug';
+use 'lib/mem.snug';
+
+seq Lex::Type
+{
+    Space,
+    Alpha,
+    Number,
+    Sym,
+    None,
+    Termi, "terminator
+}
+
+seq Lex::Token
+{
+    Type,
+    Content,
+    Next,
+}
+
+rout Lex::classify (
+    in char;
+    out type;
+){
+    put type = Lex::Type::Termi;
+    jump ~ 0 == char;
+
+    put type = Lex::Type::Space;
+    jump ~ `  == char;
+        
+    put type = Lex::Type::Alpha;
+    jump ~ 
+        (`A <= char && `Z >= char) ||
+        (`a <= char && `z >= char);
+
+    put type = Lex::Type::Number;
+    jump ~ 
+        (`0 <= char && `9 >= char);
+
+    put type = Lex::Type::Sym;
+    lab;
+}
+
+
+
+rout Lex::tokenize (
+    in source;
+    out stream;
+){
+    trans 64 ~ buffer;
+    put buf_index = 0;
+
+    trans Lex::Token ~ hook;
+    put last = hook;
+
+    put type_old = Lex::Type::None;
+    iter char ~ source
+    {
+        sub Lex::classify ( char ~ char, type ~ type_new );
+
+        jump skip_emit ~ type_new == type_old;
+        jump skip_emit ~ type_old == Lex::Type::None;
+            "copy content
+            pers (buf_index + 1) ~ content;
+            sub Mem::cpy(src ~ buffer, dst ~ content, len ~ buf_index);
+            put buf_index = 0;
+
+            "new token
+            pers Lex::Token ~ token;
+            put token.Lex::Token::Content = content;
+            put token.Lex::Token::Type    = type_old;
+
+            "link
+            put last.Lex::Token::Next = token;
+            put last = token;
+
+        lab skip_emit;
+
+        put buffer.buf_index = char;
+        put buf_index = buf_index + 1;
+        put type_old = type_new;
+    }
+
+    put stream = hook.Lex::Token::Next;
+}
+
+
+
