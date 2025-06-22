@@ -1,0 +1,110 @@
+
+use 'lib/lex.snug';
+
+seq Expr::Type
+{
+    Number,
+    Add,
+    Sub
+}
+
+seq Expr::Node
+{
+    Left,
+    Right,
+    Content,
+    Type
+}
+
+
+
+
+rout Expr::Parse::advance (
+    in river;
+){
+    put river.0 = river.0 + 1;
+}
+
+rout Expr::Parse::peek (
+    in river;
+    out content;
+){
+    put content = (river.0).Lex::Token::Content; 
+}
+
+rout Expr::Parse::pop (
+    in river;
+    out content;
+){
+    sub Expr::Parse::peek   ( river ~ river, content ~ content );
+    sub Expr::Parse::advance( river ~ river );
+}
+
+
+
+
+
+rout Expr::Parse::main (
+    in source;
+    out root;
+){
+    sub Lex::tokenize (
+        source ~ source,
+        stream ~ stream,
+    );
+
+    trans 1 ~ river;
+    put river.0 = stream;
+    
+
+    
+
+}
+
+
+rout Expr::Parse::expr (
+    in river;
+    out node;
+){
+    sub Expr::Parse::term ( river ~ river, node ~ left );
+     
+}
+
+
+rout Expr::Parse::term (
+    in river;
+    out node;
+){
+    sub Expr::Parse::peek   ( river ~ river, content ~ c );
+    sub Expr::Parse::bracket ~ c.0 == `( ( river ~ river, node ~ node );
+    sub Expr::Parse::number  ~ c.0 != `( ( river ~ river, node ~ node );
+}
+
+
+
+
+rout Expr::Parse::bracket (
+    in river;
+    out node;
+){
+    "this is a danger-loving parser and therefore does not validate the presents of the correct token
+    "(in the case for the opening and closing brackets)
+
+    sub Expr::Parse::advance( river ~ river );
+    sub Expr::Parse::expr   ( river ~ river, node ~ node);
+    sub Expr::Parse::advance( river ~ river );
+}
+
+
+rout Expr::Parse::number (
+    in river;
+    out node;
+){
+    sub Expr::Parse::pop( river ~ river, content ~ number );
+    sub Str::toInt( block ~ number, int ~ int );
+
+    pers Expr::Node ~ node;
+    put node.Expr::Node::Content = int;
+    put node.Expr::Node::Content = Expr::Type::Number;
+}
+

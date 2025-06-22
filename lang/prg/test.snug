@@ -1,20 +1,13 @@
 
 
-use 'lib/dyn.snug';
-use 'lib/block.snug';
+use 'lib/expr.snug';
+
 
 rout main
 {
-    sub Dyn::new (list ~ dyn);
-
-    count x ~ 0 .. 10
-    {
-        sub Dyn::pushBack(list ~ dyn, value ~ x * x);
-    }
+    sub Expr::Parse::main ( source ~ '10 - (2 + 1)', root ~ tree);
+    "sub Expr::Parse::main ( source ~ '10', root ~ tree);
     
-    sub Dyn::debug (list ~ dyn);
 
-
-    sub Dyn::void (list ~ dyn);
 }
 
