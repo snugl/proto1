@@ -130,7 +130,7 @@ def parse_higher(stream, prec_level):
 
 def parse_terminal(stream):
     match stream.pop_raw():
-        case x if x.content == '(':
+        case x if x.content == '(' and x.kind == 'open_paran':
             expr = parse_expr(stream, 0)
             stream.expect(")")
             return expr
