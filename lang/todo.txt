@@ -4,8 +4,14 @@
     -redundency checks for imports
         -cyclic imports
 
+    -true recursion !!!
+        -definitions/references for routines
+        -needed for lib/expr.snug
+
     -anon trans alloc
     -fix dot op parsing
+    -rust-like direct parameter interfaces
+        ( a ~ a ) becomes ( a )
 
     -loops /
         -iter  /
