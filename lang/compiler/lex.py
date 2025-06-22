@@ -110,7 +110,7 @@ def tokenize(path):
             token_content = "".join(buffer)
             buffer = []
 
-            if kind_old not in ('space', 'newline', 'backtick') and token_content:
+            if kind_old not in ('space', 'newline', 'backtick', None):
                 token_buffer.append(token(
                     token_content, line, path, kind_old
                 ))
