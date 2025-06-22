@@ -7,7 +7,7 @@ rout Mem::cpy (
 ){
     count i ~ 0 .. len
     {
-        dst.i = src.i;
+        put dst.i = src.i;
     }
 }
 
@@ -19,7 +19,7 @@ rout Mem::set (
 ){
     count i ~ 0 .. len
     {
-        dst.i = ch;
+        put dst.i = ch;
     }
 }
 
