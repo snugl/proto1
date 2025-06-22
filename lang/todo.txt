@@ -4,6 +4,9 @@
     -redundency checks for imports
         -cyclic imports
 
+    -anon trans alloc
+    -fix dot op parsing
+
     -loops /
         -iter  /
         -enum  /
