@@ -120,7 +120,5 @@ def tokenize(path):
         kind_old = kind_new
         if char == '\n': line += 1
 
-    for t in token_buffer:
-        print(t)
     return stream(token_buffer)
 

@@ -178,9 +178,13 @@ def run(prog):
             #misc
             case 'debug': 
                 match arg:
-                    case 0: print(acc)                      #debug print
-                    case 1: print(chr(acc), end = '')       #debug putchr
-                    case 2: print(acc, end = '')            #debug format
+                    case 'expr':   print(acc)
+                    case 'char':   print(chr(acc), end = '')
+                    case 'value':  print(acc, end = '')
+                    case 'string':
+                        while mem[acc]:
+                            print(chr(mem[acc]), end = '')
+                            acc += 1
             case 'halt':  running = False
 
 

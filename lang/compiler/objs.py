@@ -26,24 +26,40 @@ class _debug:
         match self.kind:
             case "expr":
                 self.target.generate(output, ctx)
-                output('debug', 0) #debug print
+                output('debug', 'expr')
             case "string":
-                reading_format_name = False
-                format_name = []
+                read_embed = False
+                embed_buffer = []
                 for char in self.target + "\n":
                     if char == '}':
-                        reading_format_name = False 
-                        var_addr = ctx.vars["".join(format_name)]
-                        format_name = []
+                        read_embed = False 
+                        embed = "".join(embed_buffer)
+
+                        string_mode = embed.startswith('`')
+                        dotopr_mode = '.' in embed
+                        
+                        #python magic lol
+                        (var_name, field_name, *_) = (embed.strip('`').split('.') + [None])
+                        var_addr    = ctx.vars[var_name]
+
                         output('load', var_addr)
-                        output('debug', 2)
+                        if dotopr_mode:
+                            field_value = ctx.tree.consts[field_name]
+                            output('push')
+                            output('const', field_value)
+                            output('add')
+                            output('deref')
+
+                        output('debug', 'string' if string_mode else 'value')
+
+                        embed_buffer = []
                     elif char == '{':
-                        reading_format_name = True
-                    elif reading_format_name:
-                        format_name.append(char)
+                        read_embed = True
+                    elif read_embed:
+                        embed_buffer.append(char)
                     else:
                         output('const', ord(char))
-                        output('debug', 1)
+                        output('debug', 'char')
 
 
 @dataclass
