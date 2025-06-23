@@ -146,7 +146,7 @@ class _jump:
         return cls(label, cond)
 
     def generate(self, output, ctx):
-        target_label = emission.reference(self.label, ctx.routine.name, output)
+        target_label = emission.reference(self.label, ctx.routine.name, output, entry=False)
         if self.cond is None:
             output('jump', target_label)
 
@@ -216,8 +216,9 @@ class _sub:
         #construct out-parameter space
         output('alloc', len(pinter.out_param))
 
-        routine_origin = ctx.tree.lookup_routine_origin(target_obj.name)
-        output('call', routine_origin)
+        #routine_origin = ctx.tree.lookup_routine_origin(target_obj.name)
+        routine_reference = emission.reference(target_obj.name, None, output, entry=True)
+        output('call', routine_reference)
 
         #deconstruct out-parameters
         for param in pinter.out_param:
@@ -507,11 +508,10 @@ class _rout:
 
     def generate(self, output, tree):
         #make sure routine is only generated once
-        if tree.check_routine_defined(self.name):
+        if output.check_routine_defined(self.name):
             return
 
-        self.dependencies(output, tree)
-        tree.define_routine_origin(self.name, output.address())
+        output.define_routine(self.name)
 
         #build compilation context
         ctx = self._ctx(
@@ -543,6 +543,9 @@ class _rout:
         output("free", var_count)
 
         output('return')
+
+        #resolve dependencies
+        self.dependencies(output, tree)
 
 
 

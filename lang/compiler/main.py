@@ -28,7 +28,7 @@ def compile(path):
     output.optimize()
 
     #render ir
-    entry_origin = root.lookup_routine_origin(entry_name)
+    entry_origin = output.lookup_routine(entry_name)
     build = output.assemble(entry_origin)
     
     with open('build', "w") as f:

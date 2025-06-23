@@ -23,9 +23,15 @@ class reference:
     name : str
     routine : str
     emission : typing.Any
+    entry : bool
 
     def __str__(self):
-        return str(self.emission.lookup_local_label(self.name, self.routine))
+        return str(
+            self.emission.lookup_routine(self.name) if self.entry else
+            self.emission.lookup_local_label(self.name, self.routine)
+        )
+
+
 
 
 @dataclass
@@ -42,6 +48,7 @@ class output:
 
     # maps definition to address
     definition_mapper : typing.Any = field(default_factory=lambda: {})
+    routine_mapper    : typing.Any = field(default_factory=lambda: {})
 
     #the link header gets put at the start of the build executable.
     #it consists of 2 commands to call the main routine:
@@ -64,11 +71,25 @@ class output:
             error.error(f"Redefinition of label '{name}' in scope '{routine}'")
         self.definition_mapper[key] = self.address()
 
+    def define_routine(self, name):
+        if name in self.routine_mapper:
+            error.error(f"Redefinition routine '{name}'")
+        self.routine_mapper[name] = self.address()
+
     def lookup_local_label(self, name, routine):
         key = (name, routine)
         if key not in self.definition_mapper:
             error.error(f"Label '{name}' not defined in scope '{routine}'")
         return self.definition_mapper[key]
+
+    def lookup_routine(self, name):
+        if name not in self.routine_mapper:
+            raise Exception()
+            error.error(f"Routine '{name}' not defined")
+        return self.routine_mapper[name]
+
+    def check_routine_defined(self, name):
+        return name in self.routine_mapper
 
     def address(self):
         return self.addr + self.link_header_size

@@ -14,7 +14,6 @@ import lex
 class node:
     subs   : typing.Any = field(default_factory=lambda: [])
     consts : typing.Any = field(default_factory=lambda: {})
-    origin_addr : typing.Any = field(default_factory=lambda: {}) 
 
     def __len__(self):
         return len(self.subs)
@@ -41,14 +40,6 @@ class node:
 
         error.error(f"Unable to resolve routine name: {name}")
 
-    def define_routine_origin(self, name, addr):
-        self.origin_addr[name] = addr
-
-    def check_routine_defined(self, name):
-        return name in self.origin_addr.keys()
-
-    def lookup_routine_origin(self, name):
-        return self.origin_addr[name]
 
 
     #only applies to root.
