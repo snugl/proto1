@@ -10,6 +10,8 @@
 (seq_name)         @type
 (seq_entry  (iden) @constant)
 
+(char_literal) @string
+
 "iter"    @keyword
 "count"   @keyword
 "enum"    @keyword
@@ -29,12 +31,22 @@
 "use"     @include
 
 
-"+"  @operator
-"-"  @operator
-"="  @operator
+"+"   @operator
+"-"   @operator
+"="   @operator
+"."   @operator
+"*"   @operator
+"&"   @operator
+"&&"  @operator
+"|"   @operator
+"||"  @operator
 
-">"  @conditional
-"<"  @conditional
+">"   @conditional
+"<"   @conditional
+"<="  @conditional
+">="  @conditional
+"=="  @conditional
+"!="  @conditional
 
 
 (key_in) @keyword
