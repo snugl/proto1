@@ -4,6 +4,9 @@
     -redundency checks for imports /
         -cyclic imports /
 
+    -decide on conditional sub calls
+        -maybe implement
+
     -stack separation
         -true memory safety
         -persistent routines vs impersistent routines
