@@ -124,7 +124,7 @@ rout Lex::peekContent(
     in stream;
     out content;
 ){
-    sub Lex::peek( stream ~ stream, token ~ token );
+    sub Lex::peekToken( stream ~ stream, token ~ token );
     put content = token.Lex::Token::Content;
 }
 
