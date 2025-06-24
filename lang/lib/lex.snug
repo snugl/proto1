@@ -19,7 +19,16 @@ seq Lex::Token
     Next,
 }
 
-rout Lex::classify (
+seq Lex::Stream
+{
+    Head,
+    Ptr,
+    Index,
+    Size,
+}
+
+
+rout Lex::classify(
     in char;
     out type;
 ){
@@ -44,7 +53,7 @@ rout Lex::classify (
 
 
 
-rout Lex::tokenize (
+rout Lex::tokenize(
     in source;
     out stream;
 ){
@@ -53,6 +62,8 @@ rout Lex::tokenize (
 
     trans Lex::Token ~ hook;
     put last = hook;
+
+    put token_count = 0;
 
     put type_old = Lex::Type::None;
     iter char ~ source
@@ -75,6 +86,8 @@ rout Lex::tokenize (
             put last.Lex::Token::Next = token;
             put last = token;
 
+            put token_count = token_count + 1;
+
         lab skip_emit;
 
         put buffer.buf_index = char;
@@ -82,8 +95,46 @@ rout Lex::tokenize (
         put type_old = type_new;
     }
 
-    put stream = hook.Lex::Token::Next;
+    pers Lex::Stream ~ stream;
+    put stream.Lex::Stream::Index = 0;
+    put stream.Lex::Stream::Size = token_count;
+    put stream.Lex::Stream::Head = hook.Lex::Token::Next;
 }
 
 
+rout Lex::advance(
+    in stream;
+){
+    put stream.Lex::Stream::Ptr = (stream.Lex::Stream::Ptr).Next;
+}
 
+rout Lex::peekToken(
+    in stream;
+    out token;
+){
+    put token = stream.Lex::Stream::Ptr;
+}
+
+rout Lex::peekContent(
+    in stream;
+    out content;
+){
+    sub Lex::peek( stream ~ stream, token ~ token );
+    put content = token.Lex::Token::Content;
+}
+
+rout Lex::popToken(
+    in stream;
+    out token;
+){
+    sub Lex::peekToken( stream ~ stream, token ~ token );
+    sub Lex::advance  ( stream ~ stream );
+}
+
+rout Lex::popContent(
+    in stream;
+    out content;
+){
+    sub Lex::popToken( stream ~ stream, token ~ token );
+    put content = token.Lex::Token::Content;
+}
