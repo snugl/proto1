@@ -72,10 +72,10 @@ rout Lex::tokenize(
 
         jump skip_emit ~ type_new == type_old;
         jump skip_emit ~ type_old == Lex::Type::None;
+        jump skip_emit_reset_buffer ~ type_old == Lex::Type::Space;
             "copy content
             pers (buf_index + 1) ~ content;
             sub Mem::cpy(src ~ buffer, dst ~ content, len ~ buf_index);
-            put buf_index = 0;
 
             "new token
             pers Lex::Token ~ token;
@@ -87,6 +87,9 @@ rout Lex::tokenize(
             put last = token;
 
             put token_count = token_count + 1;
+
+        lab skip_emit_reset_buffer;
+            put buf_index = 0;
 
         lab skip_emit;
 
