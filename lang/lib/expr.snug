@@ -43,7 +43,6 @@ rout Expr::Parse::expr (
     in stream;
     out node;
 ){
-    debug 'expr';
     sub Expr::Parse::term ( stream ~ stream, node ~ left );
     
     sub Lex::peekContent( stream ~ stream, content ~ content ); 
@@ -75,7 +74,6 @@ rout Expr::Parse::term (
     in stream;
     out node;
 ){
-    debug 'term';
     sub Lex::peekContent( stream ~ stream, content ~ content );
     put char = content.0;
 
@@ -86,9 +84,6 @@ rout Expr::Parse::term (
     lab number;
         sub Lex::popContent( stream ~ stream, content ~ number );
         sub Str::toInt( block ~ number, int ~ int );
-
-        debug 'number: {`number}';
-        debug 'int: {int}';
 
         pers Expr::Node ~ node;
         put node.Expr::Node::Content = int;
@@ -117,7 +112,6 @@ rout Expr::eval (
     out val;
 ){
     put type = node.Expr::Node::Type;
-    debug 'type {type}';
 
     jump num ~ type == Expr::Type::Number;
 
@@ -142,5 +136,4 @@ rout Expr::eval (
 
 
     lab done;
-    debug 'val: {val}';
 }
