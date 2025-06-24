@@ -112,6 +112,8 @@ module.exports = grammar({
       field("content", $.number),
       field("content", $.variable),
       field("content", $.string),
+      field("content", $.char_literal),
+      field("content", $.seq_name),
       $.binary,
       $.paran,
     ),
@@ -125,7 +127,7 @@ module.exports = grammar({
     op: $ => choice('+', '-', '*', '>', '<', '.', '||', '&&', '|', '&', '>=', '<=', '==', '!='),
 
     label: $ => $.iden,
-    variable: $ => choice($.char_literal, $.seq_name, $.iden),
+    variable: $ => $.iden,
 
     string: $ => seq('\'', $.string_content, '\''),
     string_content: $ => repeat1(choice(
@@ -133,7 +135,8 @@ module.exports = grammar({
         $.string_format,
     )),
     string_literal: $ => /[^'{}]+/,
-    string_format : $ => seq('{', $.variable, '}'), 
+    string_format : $ => seq('{', optional('`'), $.string_format_content, '}'),
+    string_format_content: $ => seq($.variable, '.', $.variable),
 
     char_literal: $ => /`./,
 

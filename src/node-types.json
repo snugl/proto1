@@ -110,7 +110,15 @@
         "required": false,
         "types": [
           {
+            "type": "char_literal",
+            "named": true
+          },
+          {
             "type": "number",
+            "named": true
+          },
+          {
+            "type": "seq_name",
             "named": true
           },
           {
@@ -551,6 +559,21 @@
       "required": true,
       "types": [
         {
+          "type": "string_format_content",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "string_format_content",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
           "type": "variable",
           "named": true
         }
@@ -662,15 +685,7 @@
       "required": true,
       "types": [
         {
-          "type": "char_literal",
-          "named": true
-        },
-        {
           "type": "iden",
-          "named": true
-        },
-        {
-          "type": "seq_name",
           "named": true
         }
       ]
@@ -765,6 +780,10 @@
   },
   {
     "type": "@",
+    "named": false
+  },
+  {
+    "type": "`",
     "named": false
   },
   {
