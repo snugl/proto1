@@ -17,10 +17,9 @@ rout main
 {
     sub test
     (
-        a | 5;
-        b | ;
+        a ~ 5,
+        b ~ _,
     );
 
-    pull _;
     debug _;
 }

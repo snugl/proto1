@@ -1,12 +1,12 @@
 
 
 
-seq type
+seq Type
 {
     add, sub
 }
 
-seq node
+seq Node
 {
     type,
     prev,
@@ -18,11 +18,11 @@ seq node
 
 rout main
 {
-    new node n;
-    put n.node::type = type::add;
+    pers Node n;
+    put n.Node::Type = Type::Add;
 
     
-    new 10 array;
+    pers 10 array;
     put array.0 = 2;
     put array.1 = 3;
     put array.2 = 5;
