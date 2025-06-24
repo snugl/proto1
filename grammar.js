@@ -28,7 +28,11 @@ module.exports = grammar({
       'seq', 
       $.seq_name, 
       $.open_scope, 
-      repeat(seq($.seq_entry, optional(','))),
+      repeat(seq(
+        $.seq_entry, 
+        optional(','),
+        optional($.comment),
+      )),
       $.close_scope,
     ),
 

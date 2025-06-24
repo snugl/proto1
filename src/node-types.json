@@ -424,6 +424,10 @@
           "named": true
         },
         {
+          "type": "comment",
+          "named": true
+        },
+        {
           "type": "open_scope",
           "named": true
         },
