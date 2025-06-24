@@ -1,8 +1,8 @@
 
 
--new features
-    -redundency checks for imports
-        -cyclic imports
+-lang core
+    -redundency checks for imports /
+        -cyclic imports /
 
     -stack separation
         -true memory safety
@@ -25,13 +25,14 @@
 
     -dot operator /
 
-    -memory stuff
-        -trans / (transient, stack objects)
-        -pers  / (persistent, heap  objects)
-        -void  / (freeing persistent object)
+
+    -potential
+        -memory stuff /
+            -trans / (transient, stack objects)
+            -pers  / (persistent, heap  objects)
+            -void  / (freeing persistent object)
 
     -seq /
-
     -import to build corpus /
 
 -execution model
