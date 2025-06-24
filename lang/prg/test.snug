@@ -6,8 +6,9 @@ use 'lib/expr.snug';
 rout main
 {
     sub Expr::Parse::main ( source ~ '10 - (2 + 1)', root ~ tree);
-    "sub Expr::Parse::main ( source ~ '10', root ~ tree);
-    
+    sub Expr::eval ( node ~ tree, val ~ result );    
+
+    debug 'result: {result}';
 
 }
 
