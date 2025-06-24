@@ -258,6 +258,10 @@
                 {
                   "type": "SYMBOL",
                   "name": "write"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "void"
                 }
               ]
             },
@@ -488,6 +492,19 @@
         {
           "type": "STRING",
           "value": "write"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "expr"
+        }
+      ]
+    },
+    "void": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "void"
         },
         {
           "type": "SYMBOL",

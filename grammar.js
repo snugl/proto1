@@ -76,6 +76,7 @@ module.exports = grammar({
         $.lab,
         $.jump,
         $.write,
+        $.void,
       ), $.eos, ),
       choice( //non terminated
         $.iter,
@@ -106,6 +107,7 @@ module.exports = grammar({
       optional(seq($.bind, $.expr))
     ),
     write: $ => seq('write', $.expr),
+    void: $ => seq('void', $.expr),
 
     //loops
     iter:  $ => seq('iter',  $.expr,              $.bind,               $.expr, $.tree),
