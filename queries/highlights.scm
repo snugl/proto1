@@ -27,6 +27,7 @@
 "pers"    @keyword
 "debug"   @keyword
 "write"   @keyword
+"void"    @keyword
 
 "use"     @include
 
