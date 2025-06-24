@@ -99,13 +99,15 @@ rout Lex::tokenize(
     put stream.Lex::Stream::Index = 0;
     put stream.Lex::Stream::Size = token_count;
     put stream.Lex::Stream::Head = hook.Lex::Token::Next;
+    put stream.Lex::Stream::Ptr  = hook.Lex::Token::Next;
 }
 
 
 rout Lex::advance(
     in stream;
 ){
-    put stream.Lex::Stream::Ptr = (stream.Lex::Stream::Ptr).Next;
+    put stream.Lex::Stream::Ptr = (stream.Lex::Stream::Ptr).Lex::Token::Next;
+    put stream.Lex::Stream::Index = stream.Lex::Stream::Index + 1;
 }
 
 rout Lex::peekToken(
@@ -137,4 +139,14 @@ rout Lex::popContent(
 ){
     sub Lex::popToken( stream ~ stream, token ~ token );
     put content = token.Lex::Token::Content;
+}
+
+rout Lex::has(
+    in stream;
+    out may;
+){
+    put may = (
+        stream.Lex::Stream::Size > 
+        stream.Lex::Stream::Index
+    );
 }
