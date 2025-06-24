@@ -122,10 +122,10 @@ module.exports = grammar({
     )),
     paran: $ => seq('(', $.expr, ')'),
 
-    op: $ => choice('+', '-', '*', '>', '<', '.'),
+    op: $ => choice('+', '-', '*', '>', '<', '.', '||', '&&', '|', '&', '>=', '<=', '==', '!='),
 
     label: $ => $.iden,
-    variable: $ => choice($.seq_name, $.iden),
+    variable: $ => choice($.char_literal, $.seq_name, $.iden),
 
     string: $ => seq('\'', $.string_content, '\''),
     string_content: $ => repeat1(choice(
@@ -134,6 +134,8 @@ module.exports = grammar({
     )),
     string_literal: $ => /[^'{}]+/,
     string_format : $ => seq('{', $.variable, '}'), 
+
+    char_literal: $ => /`./,
 
     key_in:  $ => 'in',
     key_out: $ => 'out',
