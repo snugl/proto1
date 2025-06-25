@@ -68,7 +68,7 @@ rout Lex::tokenize(
     put type_old = Lex::Type::None;
     iter char ~ source
     {
-        sub Lex::classify ( char ~ char, type ~ type_new );
+        sub Lex::classify (char, type ~ type_new);
 
         jump skip_emit ~ type_new == type_old;
         jump skip_emit ~ type_old == Lex::Type::None;
@@ -124,7 +124,7 @@ rout Lex::peekContent(
     in stream;
     out content;
 ){
-    sub Lex::peekToken( stream ~ stream, token ~ token );
+    sub Lex::peekToken(stream, token);
     put content = token.Lex::Token::Content;
 }
 
@@ -132,15 +132,15 @@ rout Lex::popToken(
     in stream;
     out token;
 ){
-    sub Lex::peekToken( stream ~ stream, token ~ token );
-    sub Lex::advance  ( stream ~ stream );
+    sub Lex::peekToken(stream, token);
+    sub Lex::advance  (stream);
 }
 
 rout Lex::popContent(
     in stream;
     out content;
 ){
-    sub Lex::popToken( stream ~ stream, token ~ token );
+    sub Lex::popToken(stream, token);
     put content = token.Lex::Token::Content;
 }
 
