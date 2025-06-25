@@ -178,9 +178,18 @@ class _sub:
         while stream.peek() != sym.param_end:
             #callee side
             internal = stream.pop()
-            stream.expect(sym.binding)
+
             #caller side
-            external = expr.parse(stream) #if stream.peek() != ";" else None
+            if stream.peek() == sym.binding:
+                stream.expect(sym.binding)
+                external = expr.parse(stream) #if stream.peek() != ";" else None
+            else: #auto infer mapped external expression
+                external = expr.node(
+                    kind = 'var',
+                    content = internal
+                )
+
+            #optional delimiter
             if stream.peek() == ",":
                 stream.pop()
 
