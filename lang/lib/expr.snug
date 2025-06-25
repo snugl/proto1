@@ -18,22 +18,14 @@ seq Expr::Node
 
 
 
-
-
-
-
-
 rout Expr::Parse::main (
     in source;
     out root;
 ){
-    sub Lex::tokenize (
-        source ~ source,
-        stream ~ stream,
-    );
+    sub Lex::tokenize(source, stream);
     
-    sub Expr::Parse::expr (
-        stream ~ stream,
+    sub Expr::Parse::expr(
+        stream,
         node ~ root,
     );
 }
@@ -43,9 +35,8 @@ rout Expr::Parse::expr (
     in stream;
     out node;
 ){
-    sub Expr::Parse::term ( stream ~ stream, node ~ left );
-    
-    sub Lex::peekContent( stream ~ stream, content ~ content ); 
+    sub Expr::Parse::term(stream, node ~ left);
+    sub Lex::peekContent (stream, content); 
     
     jump plus  ~ content.0 == `+;
     jump minus ~ content.0 == `-;
@@ -57,9 +48,9 @@ rout Expr::Parse::expr (
     lab minus; put op = Expr::Type::Sub; jump continue;
 
     lab continue;
-        sub Lex::advance( stream ~ stream );
+        sub Lex::advance(stream);
 
-        sub Expr::Parse::expr( stream ~ stream, node ~ right );
+        sub Expr::Parse::expr(stream, node ~ right);
         
         pers Expr::Node ~ node;
         put node.Expr::Node::Type = op;
@@ -74,7 +65,7 @@ rout Expr::Parse::term (
     in stream;
     out node;
 ){
-    sub Lex::peekContent( stream ~ stream, content ~ content );
+    sub Lex::peekContent(stream, content);
     put char = content.0;
 
     jump bracket ~ char == `(;
@@ -82,8 +73,8 @@ rout Expr::Parse::term (
     jump done;
 
     lab number;
-        sub Lex::popContent( stream ~ stream, content ~ number );
-        sub Str::toInt( block ~ number, int ~ int );
+        sub Lex::popContent(stream, content ~ number);
+        sub Str::toInt(block ~ number, int ~ int);
 
         pers Expr::Node ~ node;
         put node.Expr::Node::Content = int;
@@ -94,9 +85,9 @@ rout Expr::Parse::term (
         "this is a danger-loving parser and therefore does not validate the presents of the correct token
         "(in the case for the opening and closing brackets)
 
-        sub Lex::advance     ( stream ~ stream );
-        sub Expr::Parse::expr( stream ~ stream, node ~ node);
-        sub Lex::advance     ( stream ~ stream );
+        sub Lex::advance     (stream);
+        sub Expr::Parse::expr(stream, node);
+        sub Lex::advance     (stream);
         jump done;
 
 
