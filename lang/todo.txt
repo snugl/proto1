@@ -4,10 +4,18 @@
     -redundency checks for imports /
         -cyclic imports /
 
-    -stack separation
-        -true memory safety
-        -persistent routines vs impersistent routines
-        -
+    (
+        -module shorthand
+            -maybe
+
+        -generics
+            -routine pointers
+            -anon functions
+
+        -stack separation
+            -true memory safety
+            -persistent routines vs impersistent routines
+    )
 
     -loops /
         -iter  /
