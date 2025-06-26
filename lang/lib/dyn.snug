@@ -10,7 +10,7 @@ seq Dyn
 
 
 
-rout Dyn::newReserve (
+rout Dyn::newReserve(
     in capacity;
     out list;
 ){
@@ -21,17 +21,17 @@ rout Dyn::newReserve (
     put list.Dyn::Capacity = capacity;
 }
 
-rout Dyn::new (
+rout Dyn::new(
     out list;
 ){
     sub Dyn::newReserve(
         capacity ~ 1,
-        list     ~ list,
+        list,
     );
 }
 
 
-rout Dyn::void (
+rout Dyn::void(
     in list;
 ){
     void list.Dyn::Container;
@@ -39,7 +39,7 @@ rout Dyn::void (
 }
 
 
-rout Dyn::ensure (
+rout Dyn::ensure(
     in list;
     in size;
 ){
@@ -62,13 +62,13 @@ rout Dyn::ensure (
 }
 
 
-rout Dyn::pushBack (
+rout Dyn::pushBack(
     in list;
     in value;
 ){
     put index = list.Dyn::Size;
     sub Dyn::ensure (
-        list ~ list,
+        list,
         size ~ list.Dyn::Size + 1,
     );
 
@@ -77,7 +77,7 @@ rout Dyn::pushBack (
 
 
 
-rout Dyn::debug (
+rout Dyn::debug(
     in list;
 ){
     count i ~ 0 .. list.Dyn::Size
