@@ -85,9 +85,6 @@ class _use:
 
     #called by tree.node itself
     def expand(self, root):
-        module_filename = os.path.basename(self.path)
-        module_name = os.path.splitext(module_filename)[0]
-
         module_tree = tree.prepare(self.path)
         root.inject(module_tree)
 

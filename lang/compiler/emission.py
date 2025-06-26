@@ -19,6 +19,7 @@ class command:
 
 
 @dataclass
+#refers to point (address) in program
 class reference:
     name : str
     routine : str
