@@ -29,4 +29,7 @@ init_prot:
 
     call KERNEL_ADDR
 
+    mov byte [0xb8000], 'X'
+    mov byte [0xb8001], 0x0f
+
     jmp $

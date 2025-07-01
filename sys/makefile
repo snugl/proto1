@@ -1,9 +1,12 @@
 
-KERNEL_ORIGIN=0x9000
-
 
 run: image
 	qemu-system-i386 -fda target/main.bin
+
+
+debug: image
+	qemu-system-i386 -fda target/main.bin -S -s &
+	gdb -ex "target remote localhost:1234" -ex "symbol-file target/kernel.o"
 
 
 image: build_bootloader build_kernel link_kernel
@@ -15,7 +18,8 @@ image: build_bootloader build_kernel link_kernel
 link_kernel:
 	ld -m elf_i386 -nostdlib 	\
 		-o target/kernel.bin	\
-		-Ttext $(KERNEL_ORIGIN)	\
+		-e kmain \
+		-Tlayout.ld				\
 		target/kernel.o 		\
 		--oformat binary
 
@@ -29,3 +33,6 @@ build_bootloader:
 		-f bin \
 		-o target/boot.bin
 
+
+clean:
+	-rm target/*
