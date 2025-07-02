@@ -11,20 +11,21 @@ debug: image
 
 image: build_bootloader build_kernel link_kernel
 	cat \
-		target/boot.bin 	\
-		target/kernel.bin 	\
+		target/boot.bin \
+		target/kernel.bin \
 		> target/main.bin
 
 link_kernel:
-	ld -m elf_i386 -nostdlib 	\
-		-o target/kernel.bin	\
-		-e kmain \
-		-Tlayout.ld				\
-		target/kernel.o 		\
+	ld -m elf_i386 -nostdlib \
+		-o target/kernel.bin \
+		-Tlayout.ld \
+		target/kernel.o \
 		--oformat binary
 
 build_kernel:
-	gcc -m32 -fno-pie -nostdlib -ffreestanding \
+	gcc -m32 -fno-pie \
+		-nostdlib \
+		-ffreestanding \
 		-c src/kernel/main.c \
 		-o target/kernel.o
 

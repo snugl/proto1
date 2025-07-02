@@ -16,15 +16,15 @@ SECTIONS
     /*make sure to avoid collision with vga memory*/
     . = 0x100000;
 
+    /*
     .fs :
     {
         PROVIDE(_fs_entry = .);
         KEEP(*(.fs))
     }
+    */
 
-    .heap :
-    {
-        PROVIDE(_heap_entry = .);
+    .heap : {
         KEEP(*(.heap))
     }
 }
