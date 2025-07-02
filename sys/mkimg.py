@@ -30,7 +30,7 @@ def genNode(path) -> bytes:
 
     content_len = len(content)
 
-    print(f'content length: {content_len})')
+    print(f'content length: {content_len}')
     print(f'name: {name}')
 
     header = struct.pack(

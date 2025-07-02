@@ -22,6 +22,7 @@ link_kernel: build_kernel build_fs
 		target/kernel.o \
 		target/fs.o \
 		--oformat binary
+		
 
 build_kernel:
 	gcc -m32 -fno-pie \
@@ -34,9 +35,10 @@ build_fs:
 	python3 mkimg.py \
 		-o target/fs.bin \
 		fs
-	ld -m elf_i386 -r -b binary \
-		-o target/fs.o \
-		target/fs.bin
+	objcopy -I binary -O elf32-i386 -B i386 \
+		--rename-section .data=.fs \
+		target/fs.bin \
+		target/fs.o
 
 build_bootloader:
 	nasm src/boot/boot.asm \

@@ -13,16 +13,10 @@ SECTIONS
 
     .bss    : { *(.bss COMMON)  }
 
-    /*make sure to avoid collision with vga memory*/
-    . = 0x100000;
-
-    /*
     .fs :
     {
-        PROVIDE(_fs_entry = .);
-        KEEP(*(.fs))
+        KEEP(target/fs.o(.fs))
     }
-    */
 
     .heap : {
         KEEP(*(.heap))
