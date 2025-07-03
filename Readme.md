@@ -1,2 +1,3 @@
-# This project is currently in prototype phase
+# The (prototype) Snug Programming Language
+
 
