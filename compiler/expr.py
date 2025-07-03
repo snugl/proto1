@@ -67,7 +67,7 @@ class node:
                     case sym.op_add:     output('add'),
                     case sym.op_sub:     output('sub'),
                     case sym.op_bit_or:  output('or')
-                    case sym.op_bit_and: output('adn')
+                    case sym.op_bit_and: output('and')
                     case sym.op_gt :     output('greater'), #acc is greater
                     case sym.op_lt :     output('lesser'),  #acc is lesser
                     case sym.op_eq :     output('equal'),
@@ -101,7 +101,7 @@ class node:
                 output('const', ord(self.content))
 
             case x:
-                error.error(f"Unable to evaluate to expression {self.content} of type {x}");
+                error.error(f"Unable to evaluate to expression {self.content} of type {x} and content '{self.content}'");
 
 
 
