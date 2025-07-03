@@ -4,6 +4,12 @@
     -redundency checks for imports /
         -cyclic imports /
 
+    -libs
+        -stack
+
+    -defer
+    -pre/post inc/dec
+
     (
         -module shorthand
             -maybe
@@ -11,10 +17,6 @@
         -generics
             -routine pointers
             -anon functions
-
-        -stack separation
-            -true memory safety
-            -persistent routines vs impersistent routines
     )
 
     -loops /
