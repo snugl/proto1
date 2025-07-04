@@ -23,14 +23,12 @@ rout scan(
 
     lab open;
         "push index
-        debug 'push {index}';
         sub Stack::push(stack, value ~ index, status ~ _);
         jump continue;
 
     lab close;
         "pull other index
         sub Stack::pull(stack, value ~ other, status ~ _);
-        debug 'pull {other}';
         
         "link
         put map.index = other;
