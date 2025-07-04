@@ -1,9 +1,10 @@
 
 
 use 'lib/dyn.snug';
+use 'lib/block.snug';
 
 
-rout test
+rout test_one
 {
     sub Dyn::new(list);
     defer sub Dyn::void(list);
@@ -17,13 +18,26 @@ rout test
     debug list;
 }
 
+rout test_two
+{
+    pers 100 ~ a;
+    defer void a;
+
+    sub Block::iota(block ~ a);
+    sub Block::sum(block ~ a, sum ~ _);
+
+    debug 'sum: {_}';
+    debug 'a  : {a}';
+
+}
+
 
 
 rout main
 {
     count _ ~ 0..1000
     {
-        sub test;
+        sub test_two;
     }
 }
 
