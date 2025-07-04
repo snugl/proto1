@@ -1,6 +1,7 @@
 
 "this is my bf (interpreter) OwO
 use 'lib/block.snug';
+use 'lib/stack.snug';
 
 
 
@@ -8,9 +9,8 @@ rout scan(
     in map;
     in prog;
 ){
-    
-    trans 128 ~ stack;
-    put ptr = 0;
+    sub Stack::new(size ~ 128, stack);
+    defer sub Stack::void(stack);
 
     enum cmd @ index ~ prog
     {
@@ -23,14 +23,14 @@ rout scan(
 
     lab open;
         "push index
-        put stack.ptr = index;
-        put ptr = ptr + 1;
+        debug 'push {index}';
+        sub Stack::push(stack, value ~ index, status ~ _);
         jump continue;
 
     lab close;
         "pull other index
-        put ptr = ptr - 1;
-        put other = stack.ptr;
+        sub Stack::pull(stack, value ~ other, status ~ _);
+        debug 'pull {other}';
         
         "link
         put map.index = other;
@@ -38,6 +38,7 @@ rout scan(
         jump continue;
 
     lab done; 
+
 }
 
 
