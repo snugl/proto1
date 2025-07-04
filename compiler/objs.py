@@ -227,7 +227,7 @@ class _sub:
         output('call', routine_reference)
 
         #deconstruct out-parameters
-        for param in pinter.out_param:
+        for param in pinter.out_param[::-1]:
             target = self.imap[param].content
             output('pull')
             output('store', ctx.vars[target])     
