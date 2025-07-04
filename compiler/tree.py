@@ -67,17 +67,7 @@ def parse(stream):
     root = node()
 
     while stream.has() and stream.peek() != '}':
-        iden = stream.pop()
-        name = f"_{iden}"
-
-        if not hasattr(objs, name):
-            error.stream_error(stream, f"Invalid statement name: {iden}")
-
-        sub = getattr(objs, name).parse(stream)
-        if iden not in ("rout", "seq", "iter", "enum", "count"):
-            stream.expect(sym.eos)
-
-        root.subs.append(sub)
+        root.subs.append(objs.parse(stream))
 
     return root
 

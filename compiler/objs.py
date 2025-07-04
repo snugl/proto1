@@ -476,6 +476,21 @@ class _count:
         output('branch', loop_start_addr)
 
 
+@dataclass
+class _defer:
+    obj: typing.Any
+
+    @classmethod
+    def parse(cls, stream):
+        obj = parse(stream)
+        return cls(obj)
+
+    def generate(self, output, ctx):
+        super = tree.node(
+            subs = [self.obj],
+            consts = {},
+        )
+        ctx.routine.sapling.inject(super)
 
 
 @dataclass
@@ -616,3 +631,17 @@ class _seq:
         return consts
 
 
+
+def parse(stream):
+    iden = stream.pop()
+    name = f"_{iden}"
+
+    namespace = globals()
+    if name not in namespace:
+        error.stream_error(stream, f"Invalid statement name: {iden}")
+
+    obj = namespace[name].parse(stream)
+    if iden not in ("rout", "seq", "iter", "enum", "count", "defer"):
+        stream.expect(sym.eos)
+
+    return obj

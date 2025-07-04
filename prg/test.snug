@@ -1,14 +1,29 @@
 
 
-use 'lib/expr.snug';
+use 'lib/dyn.snug';
+
+
+rout test
+{
+    sub Dyn::new(list);
+    defer sub Dyn::void(list);
+
+    count i ~ 0 .. 10 
+    {
+        sub Dyn::pushBack(list, value ~ i);
+    }
+
+    "sub Dyn::debug(list);
+    debug list;
+}
+
 
 
 rout main
 {
-    sub Expr::Parse::main ( source ~ '10 - (2 + 1)', root ~ tree);
-    sub Expr::eval ( node ~ tree, val ~ result );    
-
-    debug 'result: {result}';
-
+    count _ ~ 0..1000
+    {
+        sub test;
+    }
 }
 
