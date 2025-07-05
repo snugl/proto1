@@ -59,11 +59,14 @@ class node:
             case 'var' if self.content in ctx.tree.consts:
                 output('const', ctx.tree.consts[self.content])
             case 'op':
-                self.right.generate(output, ctx)
-                output('push')
-                self.left.generate(output, ctx)
+                oper = self.content
 
-                match self.content:
+                if oper not in sym.ops_has_lvalue:
+                    self.right.generate(output, ctx)
+                    output('push')
+                    self.left.generate(output, ctx)
+
+                match oper:
                     case sym.op_add:     output('add'),
                     case sym.op_sub:     output('sub'),
                     case sym.op_bit_or:  output('or')
@@ -93,6 +96,42 @@ class node:
                     case sym.op_boo_and:
                         output('and')
                         bool_normalize()
+
+
+                    case sym.op_pre_add:
+                        self.left.generate(output, ctx)
+                        output('push')
+                        self.right.generate(output, ctx)
+                        output('add')
+                        self.left.write(output, ctx)
+
+                    case sym.op_pre_sub:
+                        self.left.generate(output, ctx)
+                        output('push')
+                        self.right.generate(output, ctx)
+                        output('sub')
+                        self.left.write(output, ctx)
+
+
+                    case sym.op_post_add:
+                        self.left.generate(output, ctx)
+                        output('push')
+                        output('dup')
+                        self.right.generate(output, ctx)
+                        output('add')
+                        self.left.write(output, ctx)
+                        output('pull')
+
+                    case sym.op_post_sub:
+                        self.left.generate(output, ctx)
+                        output('push')
+                        output('dup')
+                        self.right.generate(output, ctx)
+                        output('sub')
+                        self.left.write(output, ctx)
+                        output('pull')
+
+
 
             case 'string':
                 output('string', f"'{self.content}'")

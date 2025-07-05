@@ -26,9 +26,15 @@ op_bit_or  = '|'
 op_boo_and = '&&'
 op_boo_or  = '||'
 
+op_pre_add  = '+='
+op_post_add = '=+'
+op_pre_sub  = '-='
+op_post_sub = '=-'
+
 
 #precedence
 prec = [
+    (op_pre_add, op_post_add, op_pre_sub, op_post_sub),
     (op_boo_and, op_boo_or),
     (op_gt, op_lt, op_eq, op_neq, op_ge, op_le),
     (op_bit_and, op_bit_or),
@@ -36,6 +42,8 @@ prec = [
     (op_mul),
     (op_dot),
 ]
+
+ops_has_lvalue = (op_pre_add, op_post_add, op_pre_sub, op_post_sub)
 
 
 ops = [
