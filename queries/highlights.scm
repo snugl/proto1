@@ -28,6 +28,7 @@
 "debug"   @keyword
 "write"   @keyword
 "void"    @keyword
+"defer"   @keyword
 
 "use"     @include
 
