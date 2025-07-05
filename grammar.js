@@ -147,7 +147,7 @@ module.exports = grammar({
     )),
     string_literal: $ => /[^'{}]+/,
     string_format : $ => seq('{', optional('`'), $.string_format_content, '}'),
-    string_format_content: $ => seq($.variable, '.', $.variable),
+    string_format_content: $ => seq($.variable, optional(seq('.', $.variable))),
 
     char_literal: $ => /`./,
 
