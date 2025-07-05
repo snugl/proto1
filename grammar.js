@@ -82,6 +82,7 @@ module.exports = grammar({
         $.iter,
         $.enum,
         $.count,
+        $.defer,
       ),
       $.comment
     ),
@@ -113,6 +114,8 @@ module.exports = grammar({
     iter:  $ => seq('iter',  $.expr,              $.bind,               $.expr, $.tree),
     enum:  $ => seq('enum',  $.expr, '@', $.expr, $.bind,               $.expr, $.tree),
     count: $ => seq('count', $.expr,              $.bind, $.expr, '..', $.expr, $.tree),
+
+    defer: $ => seq('defer', $.statement),
 
     expr: $ => choice(
       field("content", $.number),

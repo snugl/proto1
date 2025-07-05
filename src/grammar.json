@@ -285,6 +285,10 @@
             {
               "type": "SYMBOL",
               "name": "count"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "defer"
             }
           ]
         },
@@ -600,6 +604,19 @@
         {
           "type": "SYMBOL",
           "name": "tree"
+        }
+      ]
+    },
+    "defer": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "defer"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "statement"
         }
       ]
     },
