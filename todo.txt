@@ -9,15 +9,17 @@
         -arena
 
     -defer /
-    -pre/post inc/dec
+    -pre/post add/sub /
+    -default values
+
+    -generics
+        -routine pointers
+        -anon functions
 
     (
         -module shorthand
             -maybe
 
-        -generics
-            -routine pointers
-            -anon functions
     )
 
     -loops /
