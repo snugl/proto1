@@ -97,8 +97,10 @@ module.exports = grammar({
       '(',
       repeat(seq(
         $.param_name, 
-        $.bind, 
-        $.expr, 
+        optional(seq(
+          $.bind, 
+          $.expr, 
+        )),
         optional(',')
       )),
       ')'
