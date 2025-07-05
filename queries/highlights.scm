@@ -41,6 +41,10 @@
 "&&"  @operator
 "|"   @operator
 "||"  @operator
+"+="  @operator
+"-="  @operator
+"=+"  @operator
+"=-"  @operator
 
 ">"   @conditional
 "<"   @conditional
