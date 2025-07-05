@@ -64,7 +64,7 @@ class node:
             case 'op':
                 oper = self.content
 
-                if oper not in sym.ops_has_lvalue:
+                if oper != sym.op_assign:
                     self.right.generate(output, ctx)
                     output('push')
                     self.left.generate(output, ctx)
@@ -106,37 +106,23 @@ class node:
 
 
                     case sym.op_pre_add:
-                        self.left.generate(output, ctx)
-                        output('push')
-                        self.right.generate(output, ctx)
                         output('add')
                         self.left.write(output, ctx)
 
                     case sym.op_pre_sub:
-                        self.left.generate(output, ctx)
-                        output('push')
-                        self.right.generate(output, ctx)
                         output('sub')
                         self.left.write(output, ctx)
 
 
                     case sym.op_post_add:
-                        self.left.generate(output, ctx)
-                        output('push')
-                        output('dup')
-                        self.right.generate(output, ctx)
                         output('add')
                         self.left.write(output, ctx)
-                        output('pull')
+                        output('sub')
 
                     case sym.op_post_sub:
-                        self.left.generate(output, ctx)
-                        output('push')
-                        output('dup')
-                        self.right.generate(output, ctx)
                         output('sub')
                         self.left.write(output, ctx)
-                        output('pull')
+                        output('add')
 
 
 

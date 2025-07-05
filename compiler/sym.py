@@ -46,9 +46,6 @@ prec = [
     (op_dot),
 ]
 
-ops_has_lvalue = (op_assign, op_pre_add, op_post_add, op_pre_sub, op_post_sub)
-
-
 ops = [
     value for name, value in
     list(globals().items()) #list() to make copy
