@@ -224,9 +224,8 @@ class _sub:
 
         #deconstruct out-parameters
         for param in pinter.out_param[::-1]:
-            target = self.imap[param].content
             output('pull')
-            output('store', ctx.vars[target])     
+            self.imap[param].write(output, ctx)
 
         #deconstruct in-paramters
         output('free', len(pinter.in_param))
