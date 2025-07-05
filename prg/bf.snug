@@ -3,16 +3,29 @@
 use 'lib/block.snug';
 use 'lib/stack.snug';
 
+seq Env
+{
+    Prog,
+    Map,
+    Tape,
+    ProgLen,
+    TapeHead,
+    ProgHead,
+}
 
 
 rout scan(
-    in map;
-    in prog;
+    in env;
 ){
+
+    "build loop map
+    trans env.Env::ProgLen ~ env.Env::Map;
+    sub Block::zero(block ~ env.Env::Map);
+
     sub Stack::new(size ~ 128, stack);
     defer sub Stack::void(stack);
 
-    enum cmd @ index ~ prog
+    enum cmd @ index ~ env.Env::Prog
     {
         jump open ~ cmd == `[;
         jump close ~ cmd == `];
@@ -31,37 +44,44 @@ rout scan(
         sub Stack::pull(stack, value ~ other, status ~ _);
         
         "link
-        put map.index = other;
-        put map.other = index;
+        put (env.Env::Map).index = other;
+        put (env.Env::Map).other = index;
         jump continue;
 
     lab done; 
 
 }
 
+rout normalize(
+    in env;
+){
+    put rawTapePtr = (env.Env::Tape)+(env.Env::TapeHead);
+    put rawTapePtr.0 = rawTapePtr.0 & 255;
+}
+
+
 
 rout run(
-    in prog;
-    in tape;
+    in env;
 ){
+    "update program length
     sub Block::len(
-        block ~ prog,
-        len ~ prog_len,
+        block ~ env.Env::Prog,
+        len   ~ env.Env::ProgLen,
     );
 
-    "build loop map
-    trans prog_len ~ map;
-    sub Block::zero(block ~ map);
-    sub scan(map, prog);
 
-    put prog_head = (0 - 1);
-    put cell_head = 0;
+    "build map
+    sub scan(env);
+
+    put env.Env::ProgHead = (0 - 1);
+    put env.Env::TapeHead = 0;
 
     lab loop;
-        put prog_head = prog_head + 1;
+        put env.Env::ProgHead += 1;
 
-        jump done ~ prog_head >= prog_len;
-        put cmd = prog.prog_head;
+        jump done ~ env.Env::ProgHead >= env.Env::ProgLen;
+        put cmd = (env.Env::Prog).(env.Env::ProgHead);
 
         jump add   ~ cmd == `+;
         jump sub   ~ cmd == `-;
@@ -72,23 +92,23 @@ rout run(
         jump out   ~ cmd == `.;
         jump loop;
 
-        lab add;   put tape.cell_head = 255 & (tape.cell_head + 1); jump loop;
-        lab sub;   put tape.cell_head = 255 & (tape.cell_head - 1); jump loop;
-        lab left;  put cell_head      = cell_head - 1;              jump loop;
-        lab right; put cell_head      = cell_head + 1;              jump loop;
+        lab add;   put (env.Env::Tape).(env.Env::TapeHead) += 1; sub normalize(env); jump loop;
+        lab sub;   put (env.Env::Tape).(env.Env::TapeHead) -= 1; sub normalize(env); jump loop;
+        lab left;  put env.Env::TapeHead -= 1;              jump loop;
+        lab right; put env.Env::TapeHead += 1;              jump loop;
 
         lab open;
-            jump loop ~ tape.cell_head != 0;
-            put prog_head = map.prog_head;
+            jump loop ~ (env.Env::Tape).(env.Env::TapeHead) != 0;
+            put env.Env::ProgHead = (env.Env::Map).(env.Env::ProgHead);
             jump loop;
 
         lab close;
-            jump loop ~ tape.cell_head == 0;
-            put prog_head = map.prog_head;
+            jump loop ~ (env.Env::Tape).(env.Env::TapeHead) == 0;
+            put env.Env::ProgHead = (env.Env::Map).(env.Env::ProgHead);
             jump loop;
 
         lab out;
-            write tape.cell_head;
+            write (env.Env::Tape).(env.Env::TapeHead);
             jump loop;
 
 
@@ -98,15 +118,19 @@ rout run(
 
 
 
+
+
 rout main
 {
-    put prog = '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.';
-    debug 'program: {`prog}';
+    trans Env ~ env;
 
-    trans 2048 ~ tape;
-    sub Block::zero(block ~ tape);
+    put env.Env::Prog = '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.';
+    debug 'program: {`env.Env::Prog}';
 
-    sub run(prog, tape);
+    trans 2048 ~ env.Env::Tape;
+    sub Block::zero(block ~ env.Env::Tape);
+
+    sub run(env);
 }
 
 
