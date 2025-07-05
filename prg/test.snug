@@ -4,40 +4,18 @@ use 'lib/dyn.snug';
 use 'lib/block.snug';
 
 
-rout test_one
-{
-    sub Dyn::new(list);
-    defer sub Dyn::void(list);
-
-    count i ~ 0 .. 10 
-    {
-        sub Dyn::pushBack(list, value ~ i);
-    }
-
-    "sub Dyn::debug(list);
-    debug list;
-}
-
-rout test_two
-{
-    pers 100 ~ a;
-    defer void a;
-
-    sub Block::iota(block ~ a);
-    sub Block::sum(block ~ a, sum ~ _);
-
-    debug 'sum: {_}';
-    debug 'a  : {a}';
-
-}
-
 
 
 rout main
 {
-    count _ ~ 0..1000
-    {
-        sub test_two;
-    }
+    
+    put a = 0;
+
+    put b = (a += 1);
+    put c = (a += 2);
+
+    debug 'a: {a}';
+    debug 'b: {b}';
+    debug 'c: {c}';
 }
 
