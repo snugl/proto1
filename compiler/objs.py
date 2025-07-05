@@ -93,20 +93,16 @@ class _use:
 @dataclass
 class _put:
     target : expr.node
-    expr   : expr.node
     @classmethod
     def parse(cls, stream):
-        target = expr.parse(stream) #lvalue
-        stream.expect(sym.assign)
-        node = expr.parse(stream)   #rvalue
-        return cls(target, node)
+        target = expr.parse(stream)
+        return cls(target)
 
     def infer(self, ctx):
         self.target.infer(ctx)
 
     def generate(self, output, ctx):
-        self.expr.generate(output, ctx)
-        self.target.write(output, ctx)
+        self.target.generate(output, ctx)
 
 
 

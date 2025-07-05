@@ -17,6 +17,9 @@ class node:
         if self.kind == 'var':
             ctx.allocate_variable(self.content)
 
+        if self.kind == 'op' and self.content == sym.assign:
+            self.left.infer(ctx)
+
     #generate reads from acc
     def write(self, output, ctx):
         #either variable or dot operator
@@ -67,6 +70,10 @@ class node:
                     self.left.generate(output, ctx)
 
                 match oper:
+                    case sym.op_assign:
+                        self.right.generate(output, ctx)
+                        self.left.write(output, ctx)
+
                     case sym.op_add:     output('add'),
                     case sym.op_sub:     output('sub'),
                     case sym.op_bit_or:  output('or')
@@ -140,7 +147,7 @@ class node:
                 output('const', ord(self.content))
 
             case x:
-                error.error(f"Unable to evaluate to expression {self.content} of type {x} and content '{self.content}'");
+                error.error(f"Unable to evaluate to expression of type {x} and content '{self.content}'");
 
 
 
