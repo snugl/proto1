@@ -1,7 +1,6 @@
 
 from dataclasses import dataclass
 from dataclasses import field
-import typing
 
 import error
 import optimizer
@@ -10,7 +9,7 @@ import optimizer
 @dataclass
 class command: 
     inst : str
-    arg : typing.Any
+    arg : str | None
 
     def __str__(self):
         str_arg = str(self.arg) if self.arg is not None else ''
@@ -21,10 +20,10 @@ class command:
 @dataclass
 #refers to point (address) in program
 class reference:
-    name : str
-    routine : str
-    emission : typing.Any
-    entry : bool
+    name     : str | None
+    routine  : str | None
+    emission : 'output'
+    entry    : bool
 
     def __str__(self):
         return str(
@@ -44,12 +43,12 @@ class anno:
 
 @dataclass
 class output:
-    seq : typing.Any = field(default_factory=lambda: []) 
+    seq : list[command | anno] = field(default_factory=lambda: []) 
     addr : int = 0
 
     # maps definition to address
-    definition_mapper : typing.Any = field(default_factory=lambda: {})
-    routine_mapper    : typing.Any = field(default_factory=lambda: {})
+    definition_mapper : dict[tuple[str, str], int] = field(default_factory=lambda: {})
+    routine_mapper    : dict[str, int]             = field(default_factory=lambda: {})
 
     #the link header gets put at the start of the build executable.
     #it consists of 2 commands to call the main routine:
@@ -85,7 +84,6 @@ class output:
 
     def lookup_routine(self, name):
         if name not in self.routine_mapper:
-            raise Exception()
             error.error(f"Routine '{name}' not defined")
         return self.routine_mapper[name]
 

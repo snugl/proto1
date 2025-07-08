@@ -48,11 +48,11 @@ class stream:
     def _pop(self):
         return self.token_buffer.pop(0)
 
-    def pop(self):
+    def pop(self) -> str:
         self.last_token = self._pop()
         return self.last_token.content
 
-    def peek(self):
+    def peek(self) -> str:
         return self.token_buffer[0].content
 
     def peek_raw(self):

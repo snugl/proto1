@@ -1,8 +1,8 @@
 
 from dataclasses import dataclass
 from dataclasses import field
-import typing
 import os
+import typing
 
 import expr
 import sym
@@ -13,7 +13,7 @@ import error
 
 @dataclass
 class _debug:
-    target : typing.Any
+    target : expr.node | str
     kind   : str = ''
     @classmethod
     def parse(cls, stream):
@@ -23,14 +23,14 @@ class _debug:
             case _      : return cls(expr.parse(stream), "expr")
 
     def generate(self, output, ctx):
-        match self.kind:
-            case "expr":
-                self.target.generate(output, ctx)
+        match self.target:
+            case expr.node() as target:
+                target.generate(output, ctx)
                 output('debug', 'expr')
-            case "string":
+            case str() as target:
                 read_embed = False
                 embed_buffer = []
-                for char in self.target + "\n":
+                for char in target + "\n":
                     if char == '}':
                         read_embed = False 
                         embed = "".join(embed_buffer)
@@ -108,7 +108,7 @@ class _put:
 
 @dataclass
 class _lab:
-    label : str
+    label : str | None
     @classmethod
     def parse(cls, stream):
         return cls(
@@ -123,8 +123,8 @@ class _lab:
 
 @dataclass
 class _jump:
-    label : str
-    cond  : typing.Any
+    label : str | None
+    cond  : expr.node | None
     @classmethod
     def parse(cls, stream):
         label = (stream.pop() if
@@ -150,20 +150,14 @@ class _jump:
 @dataclass
 class _sub:
     target : str
-    cond  : typing.Any
-    imap : typing.Any = field(default_factory=lambda: {})
+    imap : dict[str, expr.node] = field(default_factory=lambda: {})
 
     @classmethod
     def parse(cls, stream):
         target = stream.pop()
-        cond = None
-
-        if stream.peek() == sym.binding:
-            stream.expect(sym.binding)
-            cond = expr.parse(stream)
 
         if stream.peek() == sym.eos:
-            return cls(target, cond)
+            return cls(target)
 
         #interface
         imap = {}
@@ -189,7 +183,7 @@ class _sub:
             imap[internal] = external
         stream.expect(sym.param_end)
 
-        return cls(target, cond, imap)
+        return cls(target, imap)
 
     def infer(self, ctx):
         target_obj = ctx.tree.get_routine(self.target)
@@ -292,7 +286,7 @@ class _void:
 class _iter:
     iterator : expr.node
     block    : expr.node
-    body     : typing.Any
+    body     : 'tree.node'
     counter_var_addr : int = 0
 
     @classmethod
@@ -362,7 +356,7 @@ class _enum:
     iterator : expr.node
     index    : expr.node
     block    : expr.node
-    body     : typing.Any
+    body     : 'tree.node'
 
     @classmethod
     def parse(cls, stream):
@@ -429,7 +423,7 @@ class _count:
     start    : expr.node
     end      : expr.node
     index    : expr.node
-    body     : typing.Any
+    body     : 'tree.node'
 
     @classmethod
     def parse(cls, stream):
@@ -473,7 +467,7 @@ class _count:
 
 @dataclass
 class _defer:
-    obj: typing.Any
+    obj: expr.node
 
     @classmethod
     def parse(cls, stream):
@@ -492,17 +486,17 @@ class _defer:
 class _rout:
     #parse
     name  : str = ""
-    sapling : typing.Any = None
+    sapling : 'tree.node' = field(default_factory=lambda: tree.node())
 
     pinter : abstract.param_interface = field(default_factory=lambda: abstract.param_interface())
 
     #local compilation context
     @dataclass
     class _ctx:
-        vars : typing.Any
+        vars : dict[str, int]
         var_allocer : typing.Iterator
-        tree : typing.Any
-        routine : typing.Any
+        tree : 'tree.node'
+        routine : '_rout'
 
         def allocate_variable(self, name):
             if name not in self.vars.keys():

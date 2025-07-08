@@ -1,6 +1,5 @@
 
 from dataclasses import dataclass
-import typing
 
 import sym
 import error
@@ -8,9 +7,9 @@ import error
 @dataclass
 class node:
     kind : str
-    content : typing.Any
-    left  : typing.Any = None
-    right : typing.Any = None
+    content : str
+    left  : 'node | None' = None
+    right : 'node | None' = None
 
     def infer(self, ctx):
         #only variable can infer
@@ -18,7 +17,8 @@ class node:
             ctx.allocate_variable(self.content)
 
         if self.kind == 'op' and self.content == sym.assign:
-            self.left.infer(ctx)
+            if type(self.left) is node:
+                self.left.infer(ctx)
 
     #generate reads from acc
     def write(self, output, ctx):
@@ -27,7 +27,9 @@ class node:
         match self.kind:
             case 'var' if self.content in ctx.vars: #might be global constant
                 output('store', ctx.vars[self.content])
-            case 'op' if self.content == sym.op_dot:
+            case 'op' if self.content == sym.op_dot and \
+                    type(self.left ) is node and \
+                    type(self.right) is node :
                 #preserve original
                 output('push') 
 
@@ -61,7 +63,7 @@ class node:
                 output('load', vars[self.content])
             case 'var' if self.content in ctx.tree.consts:
                 output('const', ctx.tree.consts[self.content])
-            case 'op':
+            case 'op' if type(self.left) is node and type(self.right) is node:
                 oper = self.content
 
                 if oper != sym.op_assign:
@@ -137,7 +139,7 @@ class node:
 
 
 
-def parse_expr(stream, prec_level):
+def parse_expr(stream, prec_level) -> node:
     left = parse_higher(stream, prec_level)
 
     if str(stream.peek()) not in sym.prec[prec_level]:
@@ -153,14 +155,14 @@ def parse_expr(stream, prec_level):
     )
 
 #parse at higher precedence level
-def parse_higher(stream, prec_level):
+def parse_higher(stream, prec_level) -> node:
     prec_level_next = prec_level + 1
     if prec_level_next < len(sym.prec):
         return parse_expr(stream, prec_level_next)
     else:
         return parse_terminal(stream)
 
-def parse_terminal(stream):
+def parse_terminal(stream) -> node:
     match stream.pop_raw():
         case x if x.content == '(' and x.kind == 'open_paran':
             expr = parse_expr(stream, 0)
@@ -190,7 +192,7 @@ def parse_terminal(stream):
             error.stream_error(stream, f"Unable to parse terminal '{x}' of type {x.kind}")
 
 
-def parse(stream):
+def parse(stream) -> node:
     return parse_expr(stream, 0)
 
 

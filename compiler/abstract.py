@@ -2,12 +2,10 @@
 from dataclasses import dataclass
 from dataclasses import field
 
-import typing
-
 @dataclass
 class param_interface:
-    in_param : typing.Any = field(default_factory=lambda: [])
-    out_param : typing.Any = field(default_factory=lambda: [])
+    in_param  : list[str] = field(default_factory=lambda: [])
+    out_param : list[str] = field(default_factory=lambda: [])
 
     def add_in(self, iden):
         self.in_param.append(iden)

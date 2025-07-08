@@ -1,7 +1,6 @@
 
 from dataclasses import dataclass
 from dataclasses import field
-import typing
 
 import objs
 import sym
@@ -12,8 +11,8 @@ import lex
 
 @dataclass
 class node:
-    subs   : typing.Any = field(default_factory=lambda: [])
-    consts : typing.Any = field(default_factory=lambda: {})
+    subs   : list['node'] = field(default_factory=lambda: [])
+    consts : dict[str, int] = field(default_factory=lambda: {})
 
     def __len__(self):
         return len(self.subs)
