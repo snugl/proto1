@@ -24,9 +24,6 @@ def compile(path):
     if pcount > 0:
         error.error("Cannot bind parameter interface for entry function")
 
-    #optimize emission
-    output.optimize()
-
     #render ir
     entry_origin = output.lookup_routine(entry_name)
     build = output.assemble(entry_origin)

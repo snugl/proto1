@@ -30,7 +30,7 @@ class node:
             if type(sub) is objs._use:
                 sub.expand(self)
 
-    def get_routine(self, name):
+    def get_routine(self, name) -> objs._rout:
         for sub in self.subs:
             if sub is None: continue
             if type(sub) is not objs._rout: continue

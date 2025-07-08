@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from dataclasses import field
 
 import error
-import optimizer
 
 
 @dataclass
@@ -95,12 +94,6 @@ class output:
 
     def render(self):
         return "\n".join(map(str, self.seq))
-
-    def optimize(self):
-        #compiler not mature for optimizations yet!
-        #!TODO
-        #optimizer.optimize_static(self)
-        pass
 
     def assemble(self, entry_origin):
         self.seq.insert(0, command('call', entry_origin))
