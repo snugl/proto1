@@ -8,18 +8,23 @@
         -stack /
         -arena
 
+        -maybe
+        -status
+
     -defer /
     -pre/post add/sub /
-    -default values
+        -deep inference for expressions
 
-    -generics
-        -routine pointers
-        -anon functions
+    -rework loops
+        -cause they're horrible
 
     (
+        -default values
+
         -module shorthand
             -maybe
 
+        -maybe weak inferred type-system
     )
 
     -loops /
