@@ -1,9 +1,6 @@
 
 
 -lang core
-    -redundency checks for imports /
-        -cyclic imports /
-
     -libs
         -stack /
         -arena
@@ -11,9 +8,11 @@
         -maybe
         -status
 
-    -defer /
     -pre/post add/sub /
         -deep inference for expressions
+
+    -phase out write/read
+    -backend
 
     -rework loops
         -cause they're horrible
@@ -32,21 +31,12 @@
         -enum  /
         -count /
 
-    -anonymous labels/jumps /
-    -string formatting for debugs /
-    -string literals /
-
-    -dot operator /
-
 
     -potential
         -memory stuff /
             -trans / (transient, stack objects)
             -pers  / (persistent, heap  objects)
             -void  / (freeing persistent object)
-
-    -seq /
-    -import to build corpus /
 
 -execution model
     -optimizations
