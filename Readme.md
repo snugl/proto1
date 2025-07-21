@@ -1,4 +1,5 @@
-# The (prototype) Snug Programming Language
+# The 1st Snug prototype
+The (prototype) Snug Programming Language
 
 ## Overview
 Snug compiles down to a stack-based IR.
