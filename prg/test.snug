@@ -1,19 +1,16 @@
 
 
-use 'lib/dyn.snug';
 
 
 
 rout main
 {
-    sub Dyn::new(list);
-    defer sub Dyn::void(list);
-    
-    count x ~ 0 .. 10
-    {
-        sub Dyn::pushBack(list, value ~ x);
-    }
+    put a = 10;
+    put b = (a =- 1);
 
-    sub Dyn::debug(list);
+    debug b;
+
+
+
 }
 
