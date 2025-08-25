@@ -117,11 +117,13 @@ class node:
 
 
                     case sym.op_post_add:
+                        output('dup')
                         output('add')
                         self.left.write(output, ctx)
                         output('sub')
 
                     case sym.op_post_sub:
+                        output('dup')
                         output('sub')
                         self.left.write(output, ctx)
                         output('add')
